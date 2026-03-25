@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Car, Plus, Shield, Calendar, CreditCard, PenTool, Trash2, Camera, Palette, ChevronRight, Check, AlertCircle, Fuel, TrendingUp, MoreHorizontal, Activity } from 'lucide-react'
+import { Car, Plus, Shield, Calendar, CreditCard, PenTool, Trash2, Camera, Palette, ChevronRight, Check, AlertCircle, Fuel, TrendingUp, MoreHorizontal, Activity, Compass } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
@@ -41,6 +42,7 @@ const initialVehicles = [
 
 const Vehicles = () => {
   const [vehicles, setVehicles] = useState(initialVehicles)
+  const navigate = useNavigate()
 
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
@@ -71,10 +73,11 @@ const Vehicles = () => {
         {vehicles.map((v, i) => (
           <motion.div
             key={v.id}
+            onClick={() => navigate(`/vehicles/${v.id}`)}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
-            className="glass rounded-[40px] border border-white/5 bg-gradient-to-br from-white/[0.03] to-transparent overflow-hidden group cursor-pointer active:scale-[0.99] transition-all"
+            className="glass rounded-[40px] border border-white/5 bg-gradient-to-br from-white/[0.03] to-transparent overflow-hidden group cursor-pointer active:scale-[0.99] transition-all hover:border-accent/20"
           >
              <div className="p-8 space-y-8">
                 <div className="flex justify-between items-start">

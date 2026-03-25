@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Outlet, NavLink, useLocation } from 'react-router-dom'
-import { Home, ClipboardList, PenTool, BarChart2, User, Plus, Car, Receipt, TrendingUp, Building2, CreditCard } from 'lucide-react'
+import { Home, ClipboardList, PenTool, BarChart2, User, Plus, Car, Receipt, TrendingUp, Building2, CreditCard, Search, Command, Bell } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import WorkspaceSwitcher from './WorkspaceSwitcher'
+import SearchPalette from './SearchPalette'
+import NotificationCenter from './NotificationCenter'
+import ToastSimulator from './ToastSimulator'
 
 function cn(...inputs) {
   return twMerge(clsx(inputs))
@@ -12,6 +15,19 @@ function cn(...inputs) {
 
 const Layout = () => {
   const location = useLocation()
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false)
+  
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault()
+        setIsSearchOpen(prev => !prev)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
   
   const navItems = [
     { icon: Home, path: '/', label: 'Home' },
@@ -23,15 +39,39 @@ const Layout = () => {
   ]
 
   return (
-    <div className="flex flex-col min-h-screen pb-24 sm:pb-0 sm:pl-16 bg-bg overflow-x-hidden">
+    <div className="flex flex-col min-h-screen pb-24 sm:pb-0 sm:pl-16 bg-bg overflow-x-hidden transition-colors duration-500">
+      <SearchPalette isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+      <NotificationCenter isOpen={isNotificationOpen} onClose={() => setIsNotificationOpen(false)} />
+      <ToastSimulator />
+      
       {/* Header */}
       <header className="sticky top-0 z-50 glass px-6 py-4 flex items-center justify-between border-b border-white/5 sm:glass sm:rounded-none sm:border-x-0">
         <WorkspaceSwitcher />
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+           {/* Global Search Trigger */}
+           <button 
+             onClick={() => setIsSearchOpen(true)}
+             className="flex items-center gap-3 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/5 text-muted hover:bg-white/[0.06] hover:text-text cursor-pointer transition-all group"
+           >
+              <Search className="w-4 h-4" />
+              <div className="hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white/5 border border-white/10 opacity-60 group-hover:opacity-100 transition-opacity">
+                 <Command className="w-3 h-3" />
+                 <span className="text-[10px] font-mono font-black">K</span>
+              </div>
+           </button>
+           
+           <button 
+            onClick={() => setIsNotificationOpen(true)}
+            className="p-2 rounded-full border border-white/5 bg-white/[0.03] text-muted hover:bg-white/[0.06] hover:text-text cursor-pointer transition-all relative group"
+           >
+              <Bell className="w-5 h-5 group-hover:animate-swing origin-top" />
+              <div className="absolute top-0 right-0 w-2.5 h-2.5 rounded-full bg-accent border-2 border-bg shadow-[0_0_8px_rgba(108,99,255,0.6)]" />
+           </button>
+
            <NavLink 
             to="/organization" 
             className={({ isActive }) => cn(
-              "p-2 rounded-full border border-white/5 transition-all",
+              "p-2 rounded-full border border-white/5 transition-all hidden sm:flex",
               isActive ? "bg-accent/20 border-accent/20 text-accent shadow-[0_0_12px_rgba(108,99,255,0.4)]" : "bg-white/[0.03] text-muted hover:bg-white/[0.06] hover:text-text cursor-pointer"
             )}
            >
@@ -92,8 +132,8 @@ const Layout = () => {
               <span className="text-[8px] font-mono uppercase tracking-[0.2em] font-black">{item.label}</span>
               {isActive && (
                 <motion.div 
-                  layoutId="nav-active" 
-                  className="absolute -bottom-2 w-1.5 h-1.5 rounded-full bg-accent"
+                   layoutId="nav-active" 
+                   className="absolute -bottom-2 w-1.5 h-1.5 rounded-full bg-accent"
                 />
               )}
             </NavLink>
@@ -110,6 +150,17 @@ const Layout = () => {
             </div>
         </div>
         <div className="flex flex-col gap-8 flex-1">
+          {/* Side Search Trigger */}
+          <button 
+            onClick={() => setIsSearchOpen(true)}
+            className="p-3 text-muted hover:bg-white/[0.03] hover:text-accent transition-all rounded-xl relative group cursor-pointer"
+          >
+             <Search className="w-6 h-6" />
+             <div className="absolute left-16 px-3 py-2 bg-surface2 border border-white/10 rounded-lg text-xs font-mono uppercase tracking-[0.2em] text-text opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-xl font-black">
+                Command Palette
+             </div>
+          </button>
+
           {navItems.filter(i => !i.fab).map((item) => (
             <NavLink
               key={item.path}
@@ -120,17 +171,29 @@ const Layout = () => {
               )}
             >
               <item.icon className="w-6 h-6" />
-              <div className="absolute left-16 px-3 py-2 bg-surface2 border border-white/10 rounded-lg text-xs font-mono uppercase tracking-widest text-text opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-xl">
+              <div className="absolute left-16 px-3 py-2 bg-surface2 border border-white/10 rounded-lg text-xs font-mono uppercase tracking-widest text-text opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-xl font-black">
                 {item.label}
               </div>
               {location.pathname === item.path && (
                 <motion.div 
-                  layoutId="side-nav-active" 
-                  className="absolute left-0 w-1 h-6 bg-accent rounded-r-full -ml-px top-1/2 -translate-y-1/2 shadow-[0_0_12px_rgba(108,99,255,0.6)]"
+                   layoutId="side-nav-active" 
+                   className="absolute left-0 w-1 h-6 bg-accent rounded-r-full -ml-px top-1/2 -translate-y-1/2 shadow-[0_0_12px_rgba(108,99,255,0.6)]"
                 />
               )}
             </NavLink>
           ))}
+          
+          {/* Side Notification Trigger */}
+          <button 
+            onClick={() => setIsNotificationOpen(true)}
+            className="p-3 text-muted hover:bg-white/[0.03] hover:text-accent transition-all rounded-xl relative group cursor-pointer"
+          >
+             <Bell className="w-6 h-6" />
+             <div className="absolute top-3 right-3 w-2 h-2 rounded-full bg-accent shadow-[0_0_8px_rgba(108,99,255,0.8)]" />
+             <div className="absolute left-16 px-3 py-2 bg-surface2 border border-white/10 rounded-lg text-xs font-mono uppercase tracking-[0.2em] text-text opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-xl font-black">
+                Alerts & Notifications
+             </div>
+          </button>
         </div>
         <button className="w-10 h-10 rounded-xl bg-accent shadow-[0_4px_12px_rgba(108,99,255,0.3)] flex items-center justify-center text-white hover:scale-105 active:scale-95 transition-all mb-4">
           <Plus className="w-6 h-6" />

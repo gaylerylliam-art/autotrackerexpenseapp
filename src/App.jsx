@@ -12,6 +12,8 @@ import Layout from './components/Layout'
 import Organization from './pages/Organization'
 import Onboarding from './pages/Onboarding'
 
+import VehicleProfile from './pages/VehicleProfile'
+
 function App() {
   return (
     <Router>
@@ -25,6 +27,7 @@ function App() {
             <Route path="reports" element={<Reports />} />
             <Route path="settings" element={<Settings />} />
             <Route path="vehicles" element={<Vehicles />} />
+            <Route path="vehicles/:id" element={<VehicleProfile />} />
             <Route path="tolls" element={<Tolls />} />
             <Route path="organization" element={<Organization />} />
           </Route>
