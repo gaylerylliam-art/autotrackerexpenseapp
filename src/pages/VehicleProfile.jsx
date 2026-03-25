@@ -1,7 +1,7 @@
 import React from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Car, ChevronLeft, Calendar, FileText, Settings, CreditCard, Fuel, TrendingUp, Activity, MapPin, Wrench, PenTool, Shield, AlertCircle, History, ArrowUpRight, DollarSign } from 'lucide-react'
+import { Car, ChevronLeft, Calendar, FileText, Settings, CreditCard, Fuel, TrendingUp, TrendingDown, Activity, MapPin, Wrench, PenTool, Shield, AlertCircle, History, ArrowUpRight, DollarSign } from 'lucide-react'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
 
 const vehicleData = {
@@ -17,13 +17,19 @@ const vehicleData = {
   fuelEfficiency: '11.2 L/100km',
   nextService: '4,580 km',
   health: 98,
+  purchaseCost: 350000,
+  residualValue: 52500,
+  monthlyDepreciation: 4958,
+  totalDepreciation: 119000,
+  currentValue: 231000,
 }
 
 const costBreakdown = [
-  { name: 'Fuel', value: 5200, color: '#6C63FF' },
-  { name: 'Service', value: 3400, color: '#4CAF50' },
-  { name: 'Tolls', value: 1850, color: '#FF9800' },
-  { name: 'Insurance', value: 2000, color: '#FF5252' },
+  { name: 'Fuel', value: 5200, color: '#f7c948' },
+  { name: 'Service', value: 3400, color: '#6C63FF' },
+  { name: 'Tolls', value: 1850, color: '#3ecf8e' },
+  { name: 'Insurance', value: 2000, color: '#4ade80' },
+  { name: 'Fire & IT', value: 680, color: '#fb923c' },
 ]
 
 const efficiencyHistory = [
@@ -112,6 +118,61 @@ const VehicleProfile = () => {
                <span className="text-[9px] text-muted font-mono font-black uppercase tracking-widest opacity-60">Odometer</span>
                <p className="text-xl font-display font-black tracking-tightest text-text">{vehicleData.odometer}</p>
             </div>
+         </div>
+      </div>
+
+      {/* Asset Value & Depreciation (NEW) */}
+      <div className="glass p-8 rounded-[48px] border border-accent/20 bg-gradient-to-br from-accent/5 to-transparent relative overflow-hidden">
+         <div className="absolute top-0 right-0 w-64 h-64 bg-accent/10 rounded-full -mr-32 -mt-32 blur-3xl pointer-events-none" />
+         <div className="flex flex-col md:flex-row justify-between gap-8 relative z-10 w-full font-body">
+            
+            <div className="space-y-6 flex-1">
+               <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                     <TrendingDown className="w-5 h-5 text-accent" />
+                     <h3 className="font-display font-black text-xl tracking-tightest leading-none text-text">Asset Value</h3>
+                  </div>
+                  <span className="px-3 py-1 rounded-full bg-accent/10 text-accent text-[8px] font-mono font-black uppercase tracking-widest border border-accent/20">Straight-Line Method</span>
+               </div>
+               
+               <div className="grid grid-cols-2 gap-8">
+                  <div className="space-y-1">
+                     <span className="text-[9px] text-muted font-mono font-black uppercase tracking-widest opacity-60">Purchase Cost</span>
+                     <p className="text-2xl font-display font-black tracking-tightest text-text">AED {vehicleData.purchaseCost.toLocaleString()}</p>
+                     <p className="text-[9px] text-muted font-mono uppercase tracking-widest opacity-40">March 2024</p>
+                  </div>
+                  <div className="space-y-1">
+                     <span className="text-[9px] text-muted font-mono font-black uppercase tracking-widest opacity-60 flex items-center gap-1">Net Realizable <ArrowUpRight className="w-2.5 h-2.5" /></span>
+                     <p className="text-2xl font-display font-black tracking-tightest text-accent3">AED {vehicleData.currentValue.toLocaleString()}</p>
+                     <p className="text-[9px] text-muted font-mono uppercase tracking-widest opacity-40">−AED {vehicleData.totalDepreciation.toLocaleString()} Depreciated</p>
+                  </div>
+               </div>
+            </div>
+
+            <div className="w-[1px] bg-gradient-to-b from-transparent via-white/10 to-transparent hidden md:block" />
+            <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-white/10 to-transparent md:hidden" />
+
+            <div className="space-y-6 flex-1">
+               <div className="space-y-2">
+                  <span className="text-[9px] text-muted font-mono font-black uppercase tracking-widest opacity-60 flex items-center gap-1 justify-between">
+                     Depreciation Rate
+                     <span className="text-accent2 italic">5 Years Useful Life</span>
+                  </span>
+                  <div className="h-2 w-full bg-black/40 rounded-full overflow-hidden shadow-inner flex">
+                     <div className="h-full bg-gradient-to-r from-accent to-accent3 shadow-[0_0_12px_rgba(108,99,255,0.4)]" style={{ width: '34%' }} />
+                  </div>
+                  <div className="flex justify-between">
+                     <span className="text-[8px] text-muted font-mono uppercase tracking-widest opacity-40">Year 2</span>
+                     <span className="text-[8px] text-muted font-mono uppercase tracking-widest opacity-40">Est. Resale: AED {vehicleData.residualValue.toLocaleString()}</span>
+                  </div>
+               </div>
+               
+               <div className="flex items-center justify-between border-t border-white/5 pt-4">
+                  <span className="text-[10px] text-muted font-mono font-black uppercase tracking-widest">Monthly Cost</span>
+                  <p className="text-lg font-display font-black tracking-tightest text-accent">AED {vehicleData.monthlyDepreciation.toLocaleString()}</p>
+               </div>
+            </div>
+
          </div>
       </div>
 

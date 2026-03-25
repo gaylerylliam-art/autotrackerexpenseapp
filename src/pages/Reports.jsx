@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie, Legend, LineChart, Line, AreaChart, Area } from 'recharts'
 import { Download, FileText, TrendingUp, Compass, Calendar, Wallet, ArrowUpRight, ArrowDownRight, Fuel, Shield, PenTool, Compass as Toll, XCircle as Fine, MoreHorizontal, Sparkles } from 'lucide-react'
+import { EXPENSE_CATEGORIES } from '../constants/expenseCategories'
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
@@ -18,13 +19,13 @@ const lineData = [
   { name: 'Jun', value: 0 },
 ]
 
-const categoryData = [
-  { name: 'Fuel', value: 43, color: '#f7c948' },
-  { name: 'Maintenance', value: 27, color: '#6c63ff' },
-  { name: 'Insurance', value: 17, color: '#ff6b6b' },
-  { name: 'Tolls', value: 8, color: '#3ecf8e' },
-  { name: 'Other', value: 5, color: '#8890a8' },
-]
+const categoryData = EXPENSE_CATEGORIES
+  .filter(c => c.key !== 'Depreciation')
+  .map((c, i) => ({
+    name: c.label,
+    value: [43, 27, 8, 9, 6, 7][i] ?? 5,
+    color: c.chartColor,
+  }))
 
 const Reports = () => {
   const [period, setPeriod] = useState('Monthly')

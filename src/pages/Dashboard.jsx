@@ -3,13 +3,14 @@ import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Car, TrendingUp, Compass, Calendar, AlertCircle, 
-  ArrowUpRight, Plus, Scan, Sparkles, Bell, Folder, 
-  Receipt, BarChart2, Activity, Fuel, ChevronRight 
+  Receipt, BarChart2, Activity, Fuel, ChevronRight, TrendingDown,
+  Bell, Sparkles, Plus, Shield
 } from 'lucide-react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import Scanner from '../components/Scanner'
+import { EXPENSE_CATEGORIES, CATEGORY_KEYS } from '../constants/expenseCategories'
 
 function cn(...inputs) {
   return twMerge(clsx(inputs))
@@ -30,11 +31,12 @@ const vehicles = [
 ]
 
 const categories = [
-  { name: 'Fuel', icon: '⛽', value: '1.2k', progress: 65, color: '#f7c948' },
-  { name: 'Maintenance', icon: '🔧', value: '760', progress: 45, color: '#ff6b6b' },
-  { name: 'Insurance', icon: '🛡️', value: '480', progress: 30, color: '#6c63ff' },
-  { name: 'Toll', icon: '🛣️', value: '240', progress: 55, color: '#3ecf8e' },
-  { name: 'Other', icon: '📦', value: '127', progress: 20, color: '#8890a8' },
+  { name: CATEGORY_KEYS.FUEL, icon: '⛽', value: '1.2k', progress: 65, color: '#f7c948' },
+  { name: CATEGORY_KEYS.MAINTENANCE, icon: '🔧', value: '760', progress: 45, color: '#ff6b6b' },
+  { name: CATEGORY_KEYS.DEPRECIATION, icon: '📉', value: '4.9k', progress: 85, color: '#6c63ff' },
+  { name: CATEGORY_KEYS.INSURANCE, icon: '🛡️', value: '480', progress: 30, color: '#3ecf8e' },
+  { name: CATEGORY_KEYS.TOLL, icon: '🛣️', value: '240', progress: 15, color: '#8890a8' },
+  { name: 'Fire & Safety and IT & Camera Infrastructure', icon: '🛡️', value: '1.2k', progress: 32, color: '#fb923c' },
 ]
 
 const Dashboard = () => {
@@ -62,6 +64,32 @@ const Dashboard = () => {
         <button className="w-10 h-10 rounded-full glass flex items-center justify-center border border-white/10 text-muted hover:text-text hover:bg-white/5 transition-all outline-none">
            <Bell className="w-5 h-5" />
         </button>
+      </div>
+
+      {/* Master Spend Widget */}
+      <div className="glass p-8 rounded-[48px] border border-accent/20 bg-gradient-to-br from-accent/5 to-transparent relative overflow-hidden shadow-2xl">
+         <div className="absolute top-0 right-0 w-64 h-64 bg-accent/10 rounded-full -mr-32 -mt-32 blur-3xl pointer-events-none" />
+         <div className="flex flex-col md:flex-row justify-between gap-6 relative z-10 w-full">
+            <div className="space-y-2">
+               <span className="text-[10px] text-muted font-mono uppercase tracking-widest font-black flex items-center gap-2 mb-2">Total Monthly Spend <span className="bg-accent2/20 text-accent2 px-2 py-0.5 rounded italic">YTD</span></span>
+               <div className="flex items-baseline gap-2">
+                  <h3 className="text-5xl font-display font-black tracking-tightest leading-none text-text">AED 14,240</h3>
+                  <TrendingUp className="w-5 h-5 text-accent4" />
+               </div>
+            </div>
+            <div className="flex items-center gap-6 bg-surface/50 p-4 rounded-3xl border border-white/5 backdrop-blur-md shrink-0">
+               <div className="space-y-1">
+                  <span className="text-[9px] text-muted font-mono uppercase tracking-widest font-black flex items-center gap-1"><TrendingDown className="w-3 h-3 text-accent" /> Depreciation</span>
+                  <p className="text-lg font-display font-black tracking-tightest text-text">AED 4,958</p>
+               </div>
+               <div className="w-[1px] h-10 bg-white/10" />
+               <div className="space-y-1">
+                  <span className="text-[9px] text-muted font-mono uppercase tracking-widest font-black">Depreciation %</span>
+                  <p className="text-lg font-display font-black tracking-tightest text-accent">34.8%</p>
+               </div>
+            </div>
+         </div>
+         <p className="text-[10px] text-muted font-mono uppercase tracking-widest mt-6 opacity-60">Depreciation contributes approx ~35% of your total vehicle operational costs.</p>
       </div>
 
       {/* Auto-Tracking Status Widget (NEW) */}
@@ -162,6 +190,17 @@ const Dashboard = () => {
              <div className="space-y-1">
                 <h4 className="font-display font-black text-base text-text">Vehicle Cost 2x</h4>
                 <p className="text-[10px] text-muted leading-relaxed font-mono uppercase tracking-widest opacity-60">Toyota LC is costing 2.4x more per km than BMW X5. Check service logs.</p>
+             </div>
+          </div>
+
+          <div className="min-w-[280px] snap-center glass p-6 rounded-[32px] border border-indigo-500/20 bg-gradient-to-br from-indigo-500/5 to-transparent space-y-4">
+             <div className="flex items-center justify-between">
+                <span className="px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 text-[8px] font-mono font-black uppercase tracking-widest">Asset Value</span>
+                <TrendingDown className="w-4 h-4 text-indigo-400" />
+             </div>
+             <div className="space-y-1">
+                <h4 className="font-display font-black text-base text-text">Depreciation Alert</h4>
+                <p className="text-[10px] text-muted leading-relaxed font-mono uppercase tracking-widest opacity-60">BMW X5 deprecation crossing AED 119k milestone. Consider optimum resale window next year.</p>
              </div>
           </div>
         </div>
