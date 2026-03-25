@@ -1,6 +1,6 @@
 import React from 'react'
 import { Outlet, NavLink, useLocation } from 'react-router-dom'
-import { Home, ClipboardList, PenTool, BarChart2, User, Plus, Car, Receipt, TrendingUp, Building2 } from 'lucide-react'
+import { Home, ClipboardList, PenTool, BarChart2, User, Plus, Car, Receipt, TrendingUp, Building2, CreditCard } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
@@ -17,6 +17,7 @@ const Layout = () => {
     { icon: Home, path: '/', label: 'Home' },
     { icon: Receipt, path: '/expenses', label: 'Expenses' },
     { icon: Plus, path: '/add', label: 'Add', fab: true },
+    { icon: CreditCard, path: '/tolls', label: 'Tolls' },
     { icon: Car, path: '/vehicles', label: 'Garage' },
     { icon: TrendingUp, path: '/reports', label: 'Reports' }
   ]
