@@ -1,9 +1,15 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Car, TrendingUp, Compass, Calendar, AlertCircle, ArrowUpRight, Plus, Scan, Sparkles } from 'lucide-react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
+import { Car, TrendingUp, Compass, Calendar, AlertCircle, ArrowUpRight, Plus, Scan, Sparkles, Bell, Folder, Receipt, BarChart2 as BarChart } from 'lucide-react'
+import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
+import { clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 import Scanner from '../components/Scanner'
+
+function cn(...inputs) {
+  return twMerge(clsx(inputs))
+}
 
 const data = [
   { name: 'Jan', total: 4200 },
@@ -19,194 +25,133 @@ const vehicles = [
   { id: 2, name: 'Toyota LC', plate: 'K 67890', color: 'bg-accent2' },
 ]
 
+const categories = [
+  { name: 'Fuel', icon: '⛽', value: '1.2k', progress: 65, color: '#f7c948' },
+  { name: 'Maintenance', icon: '🔧', value: '760', progress: 45, color: '#ff6b6b' },
+  { name: 'Insurance', icon: '🛡️', value: '480', progress: 30, color: '#6c63ff' },
+  { name: 'Toll', icon: '🛣️', value: '240', progress: 55, color: '#3ecf8e' },
+  { name: 'Other', icon: '📦', value: '127', progress: 20, color: '#8890a8' },
+]
+
+const quickActions = [
+  { name: 'Add Expense', icon: Plus, color: 'text-accent' },
+  { name: 'View Reports', icon: BarChart, color: 'text-accent2' },
+  { name: 'Reminders', icon: Bell, color: 'text-accent3' },
+  { name: 'Document Vault', icon: Folder, color: 'text-accent4' },
+]
+
 const Dashboard = () => {
   const [activeVehicle, setActiveVehicle] = useState(vehicles[0])
   const [isScannerOpen, setIsScannerOpen] = useState(false)
 
-  const stats = [
-    { label: 'This Month', value: 'AED 4,820', sub: 'vs last month +12%', icon: TrendingUp, color: 'text-accent' },
-    { label: 'Cost / km', value: 'AED 0.94', sub: 'Avg 0.88', icon: Compass, color: 'text-accent2' },
-    { label: 'Odometer', value: '86,370 km', sub: 'Last sync: Today', icon: Car, color: 'text-accent3' },
-    { label: 'YTD Total', value: 'AED 18,240', sub: '6 months', icon: Calendar, color: 'text-accent4' },
-  ]
-
-  const alerts = [
-    { type: 'critical', title: 'Oil Change Overdue', detail: '850 km overdue (Service at 85,500 km)', date: 'Urgent' },
-    { type: 'warning', title: 'Insurance Renewal', detail: 'Expiring in 18 days (AED 3,200 est.)', date: 'Apr 12' },
-  ]
-
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      {/* Greeting */}
-      <div className="flex flex-col gap-1">
-        <span className="text-muted font-mono text-[11px] uppercase tracking-widest">March 25, 2026</span>
-        <h2 className="text-3xl font-display font-extrabold tracking-tightest">Welcome, <span className="gradient-text">Ahmed</span></h2>
+    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-12">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-2xl font-display font-black tracking-tightest">
+            Good morning, <span className="text-text">Tarik Niche</span> 👋
+          </h2>
+          <span className="text-muted font-mono text-[10px] uppercase tracking-widest font-bold">Friday, March 20, 2026</span>
+        </div>
+        <button className="w-10 h-10 rounded-full glass flex items-center justify-center border border-white/10 text-muted hover:text-text hover:bg-white/5 transition-all">
+           <Bell className="w-5 h-5" />
+        </button>
       </div>
 
-      {/* Vehicle Switcher */}
-      <div className="flex gap-2 p-1 bg-surface2 rounded-xl border border-white/5 w-fit overflow-x-auto">
-        {vehicles.map((v) => (
-          <button
-            key={v.id}
-            onClick={() => setActiveVehicle(v)}
-            className={`
-              px-4 py-2 rounded-lg font-display font-bold text-sm transition-all flex items-center gap-2 whitespace-nowrap
-              ${activeVehicle.id === v.id ? 'bg-accent/15 text-accent shadow-inner' : 'text-muted hover:text-text'}
-            `}
-          >
-            <div className={`w-2 h-2 rounded-full ${v.color}`} />
-            {v.name}
-          </button>
-        ))}
-        <Link to="/vehicles" className="px-4 py-2 text-muted hover:text-text transition-colors">
-          <Plus className="w-4 h-4" />
-        </Link>
-      </div>
-
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {stats.map((stat, i) => (
-          <div key={i} className="glass p-5 rounded-2xl border border-white/5 flex flex-col gap-3 card-hover">
-            <div className="w-10 h-10 rounded-xl bg-surface/50 border border-white/5 flex items-center justify-center">
-              <stat.icon className={`w-5 h-5 ${stat.color}`} />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-muted text-xs font-mono uppercase tracking-wider">{stat.label}</span>
-              <span className="text-lg font-display font-extrabold tracking-tightest mt-1">{stat.value}</span>
-              <span className="text-[10px] text-muted mt-1">{stat.sub}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* OCR Prompt Banner */}
-      <div 
-        onClick={() => setIsScannerOpen(true)}
-        className="bg-gradient-to-r from-accent/20 via-accent2/10 to-bg p-6 rounded-2xl border border-accent/20 relative overflow-hidden group cursor-pointer transition-all hover:bg-accent/25"
-      >
-        <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-accent/20 rounded-full blur-3xl group-hover:bg-accent/30 transition-all opacity-40"></div>
-        <div className="flex items-start justify-between relative z-10">
-          <div className="space-y-2">
-            <h4 className="font-display font-extrabold text-lg flex items-center gap-2">
-              <Scan className="w-5 h-5 text-accent" />
-              Upload Latest Receipt
-            </h4>
-            <p className="text-muted text-sm max-w-[200px]">Auto-scan fuel and maintenance records with AI.</p>
-            <div className="flex items-center gap-2 mt-4 text-accent font-display font-black text-xs uppercase tracking-widest">
-              <Sparkles className="w-4 h-4" />
-              Launch Scanner
-            </div>
-          </div>
-          <motion.div 
-            animate={{ rotate: [0, 5, -5, 0] }}
-            transition={{ repeat: Infinity, duration: 4 }}
-            className="w-20 h-20 bg-surface3 border border-white/10 rounded-xl shadow-2xl flex items-center justify-center"
-          >
-            <Plus className="w-8 h-8 text-accent/50" />
-          </motion.div>
+      {/* By Category Section */}
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h3 className="font-display font-black text-lg tracking-tightest">By Category</h3>
+          <span className="text-[10px] text-muted font-mono uppercase tracking-widest font-bold">AED · this month</span>
+        </div>
+        <div className="space-y-5 glass p-6 rounded-[32px] border border-white/5 bg-white/[0.02]">
+           {categories.map((cat, i) => (
+             <div key={i} className="flex items-center gap-4 group">
+                <div className="w-8 flex flex-col items-center gap-1">
+                   <span className="text-lg leading-none">{cat.icon}</span>
+                   <span className="text-[8px] text-muted font-mono uppercase tracking-tighter whitespace-nowrap">{cat.name}</span>
+                </div>
+                <div className="flex-1 h-2 bg-white/5 rounded-full overflow-hidden relative">
+                   <motion.div 
+                     initial={{ width: 0 }}
+                     animate={{ width: `${cat.progress}%` }}
+                     transition={{ duration: 1, delay: i * 0.1 }}
+                     style={{ backgroundColor: cat.color }}
+                     className="h-full rounded-full shadow-[0_0_10px_rgba(0,0,0,0.5)]"
+                   />
+                </div>
+                <div className="w-12 text-right">
+                   <span className="font-display font-black text-sm tracking-tightest">{cat.value}</span>
+                </div>
+             </div>
+           ))}
         </div>
       </div>
 
-      {/* Alerts */}
+      {/* Quick Actions Grid */}
       <div className="space-y-4">
-        <h3 className="font-display font-extrabold text-xl flex items-center gap-2 tracking-tightest">
-          <AlertCircle className="w-5 h-5 text-accent4" />
-          Priority Alerts
-        </h3>
-        <div className="grid gap-3">
-          {alerts.map((alert, i) => (
-            <div key={i} className={`
-              glass p-4 rounded-xl border flex items-center justify-between card-hover
-              ${alert.type === 'critical' ? 'border-accent4/30 bg-accent4/[0.03]' : 'border-accent3/20'}
-            `}>
-              <div className="space-y-1">
-                <h5 className="font-bold text-sm text-text">{alert.title}</h5>
-                <p className="text-xs text-muted font-body leading-relaxed">{alert.detail}</p>
-              </div>
-              <div className={`px-3 py-1.5 rounded-lg font-mono text-[10px] uppercase tracking-widest border
-                ${alert.type === 'critical' ? 'bg-accent4/10 border-accent4/20 text-accent4' : 'bg-accent3/10 border-accent3/20 text-accent3'}
-              `}>
-                {alert.date}
-              </div>
-            </div>
+        <h3 className="font-display font-black text-lg tracking-tightest px-1">Quick Actions</h3>
+        <div className="grid grid-cols-2 gap-4">
+          {quickActions.map((action, i) => (
+            <button key={i} className="glass p-8 rounded-[32px] border border-white/5 bg-white/[0.01] flex flex-col items-center gap-4 card-hover group active:scale-95 transition-all outline-none border-b-2 border-b-transparent hover:border-b-accent/40">
+               <div className={cn("p-4 rounded-2xl bg-surface transition-all group-hover:scale-110", action.color)}>
+                  <action.icon className="w-6 h-6" />
+               </div>
+               <span className="font-display font-black text-xs tracking-tightest uppercase text-muted group-hover:text-text transition-colors">{action.name}</span>
+            </button>
           ))}
         </div>
       </div>
 
-      {/* Chart */}
-      <div className="glass p-6 rounded-2xl border border-white/5 space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            <h3 className="font-display font-extrabold text-xl tracking-tightest">Spending Trend</h3>
-            <p className="text-xs text-muted font-mono uppercase tracking-widest">Last 6 Months (AED)</p>
-          </div>
-          <button className="p-2 border border-white/10 rounded-lg text-muted hover:text-text transition-colors">
-            <BarChart2 className="w-5 h-5" />
-          </button>
+      {/* Upload Receipt Banner - Refined */}
+      <div 
+        onClick={() => setIsScannerOpen(true)}
+        className="glass rounded-[32px] border border-white/10 bg-gradient-to-br from-indigo-500/10 via-bg to-bg p-8 relative overflow-hidden group cursor-pointer active:scale-[0.98] transition-all"
+      >
+        <div className="absolute top-0 right-0 p-8 text-accent/20 group-hover:text-accent/40 transition-colors">
+           <ArrowUpRight className="w-12 h-12" />
         </div>
-        <div className="h-[240px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data}>
-              <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-              <XAxis 
-                dataKey="name" 
-                axisLine={false} 
-                tickLine={false} 
-                tick={{ fill: '#8890a8', fontSize: 10, fontFamily: 'DM Mono' }} 
-                dy={10}
-              />
-              <YAxis hide />
-              <Tooltip 
-                cursor={{ fill: 'rgba(255,255,255,0.03)' }}
-                contentStyle={{ 
-                  backgroundColor: '#13151c', 
-                  borderColor: 'rgba(255,255,255,0.1)',
-                  borderRadius: '12px',
-                  color: '#e8e9f0',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
-                }}
-                labelStyle={{ fontFamily: 'Syne', fontWeight: 800, marginBottom: '4px' }}
-                itemStyle={{ color: '#6c63ff', fontSize: '12px', fontFamily: 'DM Mono' }}
-              />
-              <Bar 
-                dataKey="total" 
-                radius={[6, 6, 0, 0]} 
-                barSize={32}
-              >
-                {data.map((entry, index) => (
-                  <Cell 
-                    key={`cell-${index}`} 
-                    fill={index === data.length - 1 ? '#6c63ff' : '#22263a'} 
-                    className="hover:fill-accent transition-all duration-300"
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+        
+        <div className="flex items-center gap-6 relative z-10">
+           <div className="w-16 h-16 rounded-2xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shadow-2xl">
+              <div className="relative">
+                <Receipt className="w-8 h-8" />
+                <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-accent2 rounded-full border-2 border-bg" />
+              </div>
+           </div>
+           
+           <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                 <h4 className="font-display font-black text-xl tracking-tightest">Upload Receipt</h4>
+                 <span className="px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 text-[8px] font-mono font-black uppercase tracking-widest border border-indigo-500/20 flex items-center gap-1">
+                    <Sparkles className="w-2 h-2" />
+                    AI OCR
+                 </span>
+              </div>
+              <p className="text-muted text-[11px] leading-relaxed max-w-[220px]">
+                Auto-extract supplier, amount, date & VAT from any receipt
+              </p>
+           </div>
+        </div>
+
+        <div className="mt-8 flex items-center justify-between border-t border-white/5 pt-6">
+           <div className="flex gap-4">
+              {[
+                { label: 'WhatsApp', dot: 'bg-green-500' },
+                { label: 'Camera', dot: 'bg-orange-400' },
+                { label: 'Files / PDF', dot: 'bg-yellow-400' },
+              ].map((pill, i) => (
+                <div key={i} className="flex items-center gap-2">
+                   <div className={cn("w-1.5 h-1.5 rounded-full", pill.dot)} />
+                   <span className="text-[10px] text-muted font-mono uppercase tracking-widest font-black">{pill.label}</span>
+                </div>
+              ))}
+           </div>
+           <span className="text-[9px] text-accent/60 font-mono font-black tracking-widest uppercase">JPG · PNG · PDF</span>
         </div>
       </div>
 
-      {/* AI Insights Card */}
-      <div className="glass p-6 rounded-2xl border border-white/10 bg-gradient-to-br from-surface to-accent/5 overflow-hidden relative">
-        <div className="absolute top-0 right-0 p-4">
-          <motion.div 
-            animate={{ scale: [1, 1.2, 1] }} 
-            transition={{ repeat: Infinity, duration: 2 }}
-            className="w-2 h-2 rounded-full bg-accent shadow-[0_0_12px_rgba(108,99,255,0.8)]"
-          />
-        </div>
-        <h4 className="font-mono text-[10px] uppercase tracking-widest text-accent mb-4">AI Intelligence Layer</h4>
-        <p className="text-muted text-sm leading-relaxed mb-6 font-medium italic">
-          "Your fuel cost increased 18% in March vs February. This may be due to higher mileage on Sheikh Zayed Road. We recommend checking your tire pressure for optimal efficiency."
-        </p>
-        <button className="flex items-center gap-2 text-text text-[11px] font-mono uppercase tracking-widest transition-all hover:gap-3 group">
-          View Detail Forecast
-          <ArrowUpRight className="w-3 h-3 text-accent group-hover:-translate-y-1 transition-transform" />
-        </button>
-      </div>
-
-      {/* Placeholder at bottom for spacing */}
-      <div className="h-4" />
       <Scanner isOpen={isScannerOpen} onClose={() => setIsScannerOpen(false)} />
     </div>
   )

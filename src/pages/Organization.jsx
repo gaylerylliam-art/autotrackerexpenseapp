@@ -1,100 +1,111 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Building2, Users, CreditCard, ShieldCheck, Mail, Phone, MapPin, ChevronRight, PieChart, Activity, Briefcase, Check } from 'lucide-react'
+import { Building2, Users, CreditCard, ShieldCheck, Mail, Phone, MapPin, ChevronRight, PieChart, Activity, Briefcase, Check, MoreHorizontal, Sparkles, TrendingUp } from 'lucide-react'
+import { clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
+
+function cn(...inputs) {
+  return twMerge(clsx(inputs))
+}
 
 const Organization = () => {
   const team = [
-    { name: 'Sameer Jamil', role: 'Fleet Manager', status: 'Online', avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=80&h=80&fit=crop' },
-    { name: 'Sarah Ahmed', role: 'Internal Driver', status: 'On Trip', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop' },
-    { name: 'Kevin Durant', role: 'Support Agent', status: 'Offline', avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&h=80&fit=crop' },
+    { name: 'John Doe', role: 'Fleet Manager', status: 'Online', avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=80&h=80&fit=crop' },
+    { name: 'Sarah Smith', role: 'Driver — X5', status: 'On Trip', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop' },
+    { name: 'Michael Chen', role: 'Driver — Land Cruiser', status: 'Offline', avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&h=80&fit=crop' },
   ]
 
   const metrics = [
-    { label: 'Active Fleet', value: '18 Units', icon: Briefcase, color: 'text-accent' },
-    { label: 'Total Drivers', value: '24', icon: Users, color: 'text-accent2' },
-    { label: 'Fleet Health', value: '94.2%', icon: Activity, color: 'text-accent3' },
-    { label: 'Monthly ROI', value: '+$4.2k', icon: PieChart, color: 'text-accent4' },
+    { label: 'Active Fleet', value: '6 Units', icon: Briefcase, color: 'text-accent' },
+    { label: 'Total Drivers', value: '12', icon: Users, color: 'text-accent2' },
+    { label: 'Fleet Health', value: '88%', icon: Activity, color: 'text-accent3' },
+    { label: 'ROI (Est.)', value: '+14.2%', icon: TrendingUp, color: 'text-accent4' },
   ]
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="flex flex-col gap-1">
-        <span className="text-muted font-mono text-[11px] uppercase tracking-widest font-bold">Workspace Configuration</span>
-        <h2 className="text-3xl font-display font-extrabold tracking-tightest">Aramex <span className="gradient-text">Logistics</span></h2>
+    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+             <h2 className="text-2xl font-display font-black tracking-tightest">Fleet Management</h2>
+             <span className="px-2 py-0.5 rounded-md bg-accent/10 border border-accent/20 text-[8px] font-mono font-black text-accent uppercase tracking-widest">ARAMEX</span>
+          </div>
+          <p className="text-[10px] text-muted font-mono font-black uppercase tracking-widest">6 active vehicles</p>
+        </div>
+        <button className="w-10 h-10 rounded-full glass border border-white/10 flex items-center justify-center text-muted hover:text-text active:scale-95 transition-all">
+           <MoreHorizontal className="w-5 h-5" />
+        </button>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* Metrics Grid */}
+      <div className="grid grid-cols-2 gap-4">
         {metrics.map((m, i) => (
-          <div key={i} className="glass p-5 rounded-2xl border border-white/5 space-y-3">
-             <div className="w-10 h-10 rounded-xl bg-surface2 flex items-center justify-center border border-white/5">
-                <m.icon className={`w-5 h-5 ${m.color}`} />
+          <div key={i} className="glass p-5 rounded-[24px] border border-white/5 space-y-4 card-hover">
+             <div className="flex items-center justify-between">
+                <span className="text-[9px] text-muted font-mono font-black uppercase tracking-widest opacity-60 leading-none">{m.label}</span>
+                <m.icon className={cn("w-3.5 h-3.5", m.color)} />
              </div>
-             <div>
-                <p className="text-[10px] text-muted font-mono uppercase tracking-widest font-black leading-none mb-1">{m.label}</p>
-                <p className="text-xl font-display font-black tracking-tightest">{m.value}</p>
-             </div>
+             <h3 className="text-xl font-display font-black tracking-tightest text-text leading-tight">{m.value}</h3>
           </div>
         ))}
       </div>
 
       {/* Subscription Card */}
-      <div className="glass rounded-[32px] overflow-hidden border border-accent/20 bg-gradient-to-br from-accent/10 to-transparent p-8 relative group">
-        <div className="absolute right-0 top-0 p-8 opacity-20 group-hover:opacity-40 transition-opacity">
-           <ShieldCheck className="w-32 h-32 text-accent" />
+      <div className="glass rounded-[40px] border border-white/5 bg-gradient-to-br from-indigo-500/10 via-bg to-bg p-8 relative overflow-hidden group active:scale-[0.99] transition-all">
+        <div className="absolute top-0 right-0 p-8 text-accent/10 group-hover:text-accent/20 transition-colors">
+           <ShieldCheck className="w-24 h-24" />
         </div>
+        
         <div className="relative z-10 space-y-6">
-           <div className="flex flex-col gap-2">
-              <span className="px-3 py-1 rounded-full bg-accent/20 text-accent text-[9px] font-mono uppercase tracking-widest font-black w-fit">Enterprise Plan</span>
-              <h3 className="text-2xl font-display font-black tracking-tightest">Active Subscription</h3>
-              <p className="text-muted text-sm max-w-sm leading-relaxed">
-                Your organization is currently on the <strong>Fleet Enterprise</strong> plan. Next billing on April 14, 2026.
+           <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                 <h4 className="font-display font-black text-xl tracking-tightest">Enterprise Plan</h4>
+                 <span className="px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 text-[8px] font-mono font-black uppercase tracking-widest border border-indigo-500/20 flex items-center gap-1">
+                    <Sparkles className="w-2 h-2" />
+                    PRO
+                 </span>
+              </div>
+              <p className="text-muted text-[11px] leading-relaxed max-w-[220px]">
+                Unlimited vehicles, specialized reports & AI fleet forecasting.
               </p>
            </div>
-           <div className="flex items-center gap-4 text-xs font-mono text-muted uppercase tracking-widest">
-              <span className="flex items-center gap-2"><CreditCard className="w-4 h-4" /> **** 9012</span>
-              <span className="flex items-center gap-2 text-accent2"><Check className="w-4 h-4" /> Verified Business</span>
-           </div>
-           <button className="px-8 py-3 bg-accent text-white rounded-xl font-display font-black text-xs uppercase tracking-widest active:scale-95 transition-all shadow-xl shadow-accent/20">
-              Billing Settings
+           
+           <button className="px-8 py-3 bg-white text-black rounded-xl font-display font-black text-xs uppercase tracking-widest active:scale-95 transition-all shadow-xl shadow-white/10">
+              Upgrade to Unlimited
            </button>
         </div>
       </div>
 
-      {/* Team Management */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-           <h3 className="font-display font-black text-xl tracking-tightest">Fleet Personnel</h3>
-           <button className="p-2 glass rounded-lg text-muted hover:text-text hover:bg-white/5 transition-all border border-white/10">
-              <Users className="w-4 h-4" />
-           </button>
-        </div>
-        <div className="grid gap-3">
-           {team.map((member, i) => (
-             <div key={i} className="glass p-4 rounded-2xl border border-white/5 flex items-center justify-between card-hover group cursor-pointer active:scale-[0.98] transition-all">
-                <div className="flex items-center gap-4">
-                   <div className="w-12 h-12 rounded-xl bg-surface2 overflow-hidden border border-white/10">
-                      <img src={member.avatar} alt="" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
-                   </div>
-                   <div className="space-y-0.5">
-                      <h4 className="font-display font-black text-sm tracking-tightest">{member.name}</h4>
-                      <p className="text-[10px] text-muted font-mono uppercase tracking-widest font-bold italic">{member.role}</p>
-                   </div>
-                </div>
-                <div className="flex items-center gap-4">
-                   <span className={`text-[10px] font-mono font-black uppercase tracking-widest px-2 py-1 rounded-full border ${
-                     member.status === 'Online' ? 'bg-accent2/10 border-accent2/20 text-accent2 shadow-[0_0_10px_rgba(62,207,142,0.2)]' : 
-                     member.status === 'On Trip' ? 'bg-accent/10 border-accent/20 text-accent shadow-[0_0_10px_rgba(108,99,255,0.2)]' : 
-                     'bg-white/5 border-white/10 text-muted'
-                   }`}>
-                      {member.status}
-                   </span>
-                   <ChevronRight className="w-4 h-4 text-muted group-hover:text-text translate-x-0 group-hover:translate-x-1 transition-all" />
-                </div>
-             </div>
-           ))}
-        </div>
+      {/* Team Members Section */}
+      <div className="space-y-6">
+         <div className="flex items-center justify-between px-1">
+            <h3 className="font-display font-black text-lg tracking-tightest">Team Members</h3>
+            <span className="text-[10px] text-accent font-mono font-black uppercase tracking-widest">Add Member</span>
+         </div>
+
+         <div className="space-y-3">
+            {team.map((member, i) => (
+              <div key={i} className="glass p-4 rounded-[24px] border border-white/5 flex items-center justify-between card-hover group cursor-pointer active:scale-[0.98] transition-all">
+                 <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-[18px] bg-surface2 overflow-hidden border border-white/10 group-hover:scale-105 transition-transform">
+                       <img src={member.avatar} alt="" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
+                    </div>
+                    <div className="space-y-1">
+                       <h4 className="font-display font-black text-[13px] tracking-tight group-hover:text-text transition-colors">{member.name}</h4>
+                       <p className="text-[9px] text-muted font-mono font-black uppercase tracking-widest italic opacity-60 underline decoration-accent/20">{member.role}</p>
+                    </div>
+                 </div>
+                 <div className="flex items-center gap-3">
+                    <div className={cn("w-1.5 h-1.5 rounded-full", member.status === 'Online' ? "bg-accent2 shadow-[0_0_8px_rgba(62,207,142,0.5)]" : member.status === 'On Trip' ? "bg-accent shadow-[0_0_8px_rgba(108,99,255,0.5)]" : "bg-white/10")} />
+                    <span className="text-[9px] text-muted font-mono font-black uppercase tracking-widest opacity-60">{member.status}</span>
+                 </div>
+              </div>
+            ))}
+         </div>
       </div>
 
+      {/* Bottom spacer */}
       <div className="h-4" />
     </div>
   )

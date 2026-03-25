@@ -1,6 +1,6 @@
 import React from 'react'
 import { Outlet, NavLink, useLocation } from 'react-router-dom'
-import { Home, ClipboardList, PenTool, BarChart2, User, Plus, Car } from 'lucide-react'
+import { Home, ClipboardList, PenTool, BarChart2, User, Plus, Car, Receipt, TrendingUp, Building2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
@@ -15,29 +15,28 @@ const Layout = () => {
   
   const navItems = [
     { icon: Home, path: '/', label: 'Home' },
-    { icon: ClipboardList, path: '/expenses', label: 'Expenses' },
+    { icon: Receipt, path: '/expenses', label: 'Expenses' },
     { icon: Plus, path: '/add', label: 'Add', fab: true },
-    { icon: PenTool, path: '/maintenance', label: 'Service' },
-    { icon: BarChart2, path: '/reports', label: 'Reports' },
-    { icon: User, path: '/settings', label: 'Profile' }
+    { icon: Car, path: '/vehicles', label: 'Garage' },
+    { icon: TrendingUp, path: '/reports', label: 'Reports' }
   ]
 
   return (
-    <div className="flex flex-col min-h-screen pb-24 sm:pb-0 sm:pl-16">
+    <div className="flex flex-col min-h-screen pb-24 sm:pb-0 sm:pl-16 bg-bg overflow-x-hidden">
       {/* Header */}
       <header className="sticky top-0 z-50 glass px-6 py-4 flex items-center justify-between border-b border-white/5 sm:glass sm:rounded-none sm:border-x-0">
         <WorkspaceSwitcher />
         <div className="flex items-center gap-4">
-          <NavLink 
-            to="/vehicles" 
+           <NavLink 
+            to="/organization" 
             className={({ isActive }) => cn(
               "p-2 rounded-full border border-white/5 transition-all",
               isActive ? "bg-accent/20 border-accent/20 text-accent shadow-[0_0_12px_rgba(108,99,255,0.4)]" : "bg-white/[0.03] text-muted hover:bg-white/[0.06] hover:text-text cursor-pointer"
             )}
-          >
-            <Car className="w-5 h-5" />
-          </NavLink>
-          <div className="w-9 h-9 rounded-full bg-surface3 border border-white/10 overflow-hidden ring-2 ring-accent/20 cursor-pointer hover:ring-accent/40 transition-all">
+           >
+              <Building2 className="w-5 h-5" />
+           </NavLink>
+           <div className="w-9 h-9 rounded-full bg-surface3 border border-white/10 overflow-hidden ring-2 ring-accent/20 cursor-pointer hover:ring-accent/40 transition-all">
             <img 
               src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&h=80&fit=crop" 
               alt="User" 
@@ -63,7 +62,7 @@ const Layout = () => {
       </main>
 
       {/* Persistence Bottom Navigation (Mobile) */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 glass h-20 px-4 flex items-center justify-between border-t border-white/5 sm:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-[60] glass h-20 px-4 flex items-center justify-between border-t border-white/5 sm:hidden">
         {navItems.map((item, index) => {
           if (item.fab) {
             return (
@@ -73,26 +72,27 @@ const Layout = () => {
                 >
                   <Plus className="w-8 h-8" />
                 </button>
-                <span className="text-[10px] font-mono text-muted mt-1 uppercase tracking-wider">Log</span>
+                <div className="text-[10px] font-mono text-muted mt-1 uppercase tracking-wider font-black">LOG</div>
               </div>
             )
           }
           
+          const isActive = location.pathname === item.path
           return (
             <NavLink
               key={item.path}
               to={item.path}
-              className={({ isActive }) => cn(
-                "flex flex-col items-center gap-1 min-w-[50px] transition-all",
+              className={cn(
+                "flex flex-col items-center gap-1 min-w-[50px] transition-all relative px-2",
                 isActive ? "text-accent" : "text-muted hover:text-text"
               )}
             >
-              <item.icon className="w-6 h-6" />
-              <span className="text-[10px] font-mono uppercase tracking-wider">{item.label}</span>
-              {location.pathname === item.path && (
+              <item.icon className={cn("w-6 h-6 transition-all", isActive && "scale-110 drop-shadow-lg")} />
+              <span className="text-[8px] font-mono uppercase tracking-[0.2em] font-black">{item.label}</span>
+              {isActive && (
                 <motion.div 
                   layoutId="nav-active" 
-                  className="w-1 h-1 rounded-full bg-accent mt-0.5"
+                  className="absolute -bottom-2 w-1.5 h-1.5 rounded-full bg-accent"
                 />
               )}
             </NavLink>
@@ -103,7 +103,10 @@ const Layout = () => {
       {/* Side Navigation (Desktop) */}
       <nav className="fixed left-0 top-0 bottom-0 z-50 w-16 glass hidden sm:flex flex-col items-center py-8 border-r border-white/5">
         <div className="mb-12">
-           <WorkspaceSwitcher />
+            {/* Minimalist Logo */}
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-accent to-accent2 flex items-center justify-center text-white shadow-lg">
+               <span className="font-display font-black text-lg">A</span>
+            </div>
         </div>
         <div className="flex flex-col gap-8 flex-1">
           {navItems.filter(i => !i.fab).map((item) => (
