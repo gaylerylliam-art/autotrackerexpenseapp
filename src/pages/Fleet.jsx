@@ -16,6 +16,8 @@ import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { supabase } from '../utils/supabase'
 import { calculateDepreciation, calculateTCO } from '../utils/depreciationEngine'
+import AppCard from '../components/AppCard'
+import logo from '../assets/logo.png'
 
 function cn(...inputs) { return twMerge(clsx(inputs)) }
 
@@ -75,12 +77,17 @@ const Fleet = () => {
       
       {/* 1. Header & Tab Navigation */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-         <div className="space-y-1">
-            <h1 className="text-3xl font-display font-bold text-slate-900 tracking-tight">Fleet Intelligence</h1>
-            <div className="flex items-center gap-4">
-               <p className="text-sm text-slate-500 font-medium">Monitoring 48 active assets in the Aramex Fleet.</p>
-               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-               <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-widest">Live Syncing</span>
+         <div className="flex items-center gap-6">
+            <div className="w-14 h-14 rounded-[22px] bg-white border border-slate-100 shadow-xl shadow-blue-500/5 flex items-center justify-center p-3">
+               <img src={logo} alt="AutoTrack" className="w-full h-full object-contain" />
+            </div>
+            <div className="space-y-1">
+               <h1 className="text-3xl font-display font-bold text-slate-900 tracking-tight">Fleet Intelligence</h1>
+               <div className="flex items-center gap-4">
+                  <p className="text-sm text-slate-500 font-medium italic">Monitoring 48 active assets in the Aramex Fleet.</p>
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-widest">Live Syncing</span>
+               </div>
             </div>
          </div>
          
@@ -105,10 +112,12 @@ const Fleet = () => {
             { label: 'Avg Cost per KM', val: `AED ${stats.avgCPK}`, trend: '↓ 4%', sub: 'Fleet-wide Average', icon: Activity, color: 'text-emerald-600', bg: 'bg-emerald-50' },
             { label: 'Safety Issues', val: `${stats.issues} Items`, trend: 'Urgent', sub: 'Action Required', icon: ShieldCheck, color: 'text-rose-600', bg: 'bg-rose-50' },
           ].map((card, i) => (
-            <motion.div 
+            <AppCard 
                key={i} 
-               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
-               className="premium-card p-6 flex flex-col justify-between h-44"
+               showLogo={true} 
+               logoPosition="background" 
+               logoOpacity={5}
+               className="p-6 flex flex-col justify-between h-44"
             >
                <div className="flex items-center justify-between">
                   <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center", card.bg)}>
@@ -127,7 +136,7 @@ const Fleet = () => {
                   <h3 className="text-2xl font-display font-bold text-slate-900">{card.val}</h3>
                   <p className="text-[10px] text-slate-400 font-medium italic">{card.sub}</p>
                </div>
-            </motion.div>
+            </AppCard>
          ))}
       </div>
 
@@ -135,7 +144,7 @@ const Fleet = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
          
          {/* Asset Performance Table */}
-         <div className="lg:col-span-8 premium-card p-0 overflow-hidden shadow-premium">
+         <AppCard showLogo={true} logoPosition="top-right" className="lg:col-span-8 p-0 overflow-hidden shadow-premium">
             <div className="p-8 border-b border-slate-100 flex items-center justify-between">
                <div>
                   <h3 className="text-lg font-bold text-slate-900">Vehicle Performance Matrix</h3>
@@ -160,8 +169,8 @@ const Fleet = () => {
                         <tr key={v.id} className="group hover:bg-slate-50 transition-all cursor-pointer">
                            <td className="px-8 py-6">
                               <div className="flex items-center gap-4">
-                                 <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-primary group-hover:text-white transition-all">
-                                    <Car className="w-5 h-5" />
+                                 <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-primary group-hover:text-white transition-all overflow-hidden p-2">
+                                    <img src={logo} alt="" className="w-full h-full object-contain opacity-20 group-hover:opacity-100 transition-opacity" />
                                  </div>
                                  <div className="space-y-0.5">
                                     <span className="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors">{v.make} {v.model}</span>
@@ -191,12 +200,12 @@ const Fleet = () => {
                   </tbody>
                </table>
             </div>
-         </div>
+         </AppCard>
 
          {/* Advanced Intelligence & Analysis */}
          <div className="lg:col-span-4 space-y-8">
             {/* Category Breakdown */}
-            <div className="premium-card p-8 group">
+            <AppCard showLogo={true} logoPosition="background" logoOpacity={8} className="p-8 group">
                <h3 className="text-lg font-bold text-slate-900 mb-2">Cost Distribution</h3>
                <p className="text-xs text-slate-500 font-medium mb-8">Fleet-wide categories</p>
                
@@ -210,7 +219,7 @@ const Fleet = () => {
                         </Pie>
                      </RePieChart>
                   </ResponsiveContainer>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
                      <span className="text-2xl font-bold text-slate-900 leading-none">88%</span>
                      <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1">Efficiency</span>
                   </div>
@@ -230,20 +239,20 @@ const Fleet = () => {
                      </div>
                   ))}
                </div>
-            </div>
+            </AppCard>
 
             {/* Premium Gating Comparison */}
-            <div className={cn("premium-card p-8 relative overflow-hidden", !isPremium && "opacity-60")}>
+            <AppCard showLogo={true} logoPosition="background" logoOpacity={10} className={cn("p-8 relative overflow-hidden", !isPremium && "opacity-60")}>
                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 shadow-sm">
+                  <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 shadow-sm relative z-10">
                      <Layers className="w-6 h-6" />
                   </div>
-                  <div>
+                  <div className="relative z-10">
                      <h4 className="font-bold text-slate-900">Vehicle Comparison</h4>
                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Cross-Fleet Analytics</p>
                   </div>
                </div>
-               <div className="space-y-4">
+               <div className="space-y-4 relative z-10">
                   <p className="text-xs text-slate-500 leading-relaxed font-medium capitalize">Analyze and compare vehicle efficiency vs maintenance costs to optimize operations.</p>
                   <div className="h-20 w-full bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-center">
                      <BarChartIcon className="w-7 h-7 text-slate-200" />
@@ -254,7 +263,7 @@ const Fleet = () => {
                      </button>
                   )}
                </div>
-            </div>
+            </AppCard>
          </div>
       </div>
       

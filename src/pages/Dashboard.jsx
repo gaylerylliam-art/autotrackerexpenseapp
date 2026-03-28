@@ -17,8 +17,8 @@ import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 import { supabase } from '../utils/supabase'
-
-function cn(...inputs) { return twMerge(clsx(inputs)) }
+import AppCard from '../components/AppCard'
+import logo from '../assets/logo.png'
 
 const Dashboard = () => {
   const navigate = useNavigate()
@@ -130,9 +130,16 @@ const Dashboard = () => {
       
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-         <div>
-            <h1 className="text-3xl font-display font-bold text-slate-900 tracking-tight">Dashboard</h1>
-            <p className="text-slate-500 font-medium">Monitoring {stats.vehicleCount} vehicles in the {profile?.company || 'Personal'} account.</p>
+         <div className="flex items-center gap-6">
+            <div className="w-16 h-16 rounded-3xl bg-white border border-slate-100 shadow-xl shadow-blue-500/5 flex items-center justify-center p-3 relative group">
+               <img src={logo} alt="AutoTrack" className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500" />
+            </div>
+            <div>
+               <h1 className="text-3xl font-display font-bold text-slate-900 tracking-tight flex items-center gap-2">
+                  Dashboard
+               </h1>
+               <p className="text-slate-500 font-medium italic">Monitoring {stats.vehicleCount} vehicles in the {profile?.company || 'Personal'} account.</p>
+            </div>
          </div>
          
          <div className="flex items-center gap-3 bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm">
@@ -161,7 +168,7 @@ const Dashboard = () => {
       {/* KPI Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
          {KPI_CARDS.map((kpi, i) => (
-            <div key={i} className="premium-card p-6 flex flex-col justify-between h-40">
+            <AppCard key={i} showLogo={true} logoPosition="top-right" className="p-6 flex flex-col justify-between h-40">
                <div className="flex items-center justify-between mb-4">
                   <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center", kpi.bg)}>
                      <kpi.icon className={cn("w-6 h-6", kpi.color)} />
@@ -178,14 +185,14 @@ const Dashboard = () => {
                   <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">{kpi.label}</p>
                   <h3 className="text-2xl font-display font-bold text-slate-900">{kpi.value}</h3>
                </div>
-            </div>
+            </AppCard>
          ))}
       </div>
 
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
          {/* Main Expenditure Chart */}
-         <div className="lg:col-span-2 premium-card p-8">
+         <AppCard showLogo={true} logoPosition="top-right" className="lg:col-span-2 p-8">
             <div className="flex items-center justify-between mb-8">
                <div>
                   <h3 className="text-lg font-bold text-slate-900">Expense Trends</h3>
@@ -220,10 +227,10 @@ const Dashboard = () => {
                   </AreaChart>
                </ResponsiveContainer>
             </div>
-         </div>
+         </AppCard>
 
          {/* Category Breakdown */}
-         <div className="premium-card p-8 flex flex-col">
+         <AppCard showLogo={true} logoPosition="background" logoOpacity={8} className="p-8 flex flex-col">
             <h3 className="text-lg font-bold text-slate-900 mb-2">Categories</h3>
             <p className="text-xs text-slate-500 mb-8">Cost distribution by type</p>
             <div className="flex-1 flex flex-col justify-center">
@@ -236,7 +243,7 @@ const Dashboard = () => {
                         <Tooltip />
                      </RePieChart>
                   </ResponsiveContainer>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
                      <span className="text-3xl font-display font-bold text-slate-900">{categorySpecs[0]?.value || 0}%</span>
                      <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{categorySpecs[0]?.name || 'N/A'}</span>
                   </div>
@@ -253,11 +260,11 @@ const Dashboard = () => {
                   ))}
                </div>
             </div>
-         </div>
+         </AppCard>
       </div>
 
       {/* Recent Activity Section */}
-      <div className="premium-card overflow-hidden">
+      <AppCard showLogo={true} logoPosition="top-right" className="overflow-hidden">
          <div className="p-8 border-b border-slate-100 flex items-center justify-between">
             <div>
                <h3 className="text-lg font-bold text-slate-900">Recent Activity</h3>
@@ -273,8 +280,8 @@ const Dashboard = () => {
             ) : recentExpenses.map((expense, i) => (
                <div key={i} className="p-6 flex items-center justify-between hover:bg-slate-50 transition-all group">
                   <div className="flex items-center gap-4">
-                     <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-primary group-hover:text-white transition-all">
-                        {expense.category === 'Fuel' ? <Fuel className="w-6 h-6" /> : <CreditCard className="w-6 h-6" />}
+                     <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-primary group-hover:text-white transition-all overflow-hidden p-2">
+                        <img src={logo} alt="" className="w-full h-full object-contain opacity-20 group-hover:opacity-100 transition-opacity" />
                      </div>
                      <div>
                         <h4 className="font-bold text-slate-900">{expense.vendor || 'Unknown Provider'}</h4>
@@ -301,7 +308,7 @@ const Dashboard = () => {
                Add New Transaction
             </button>
          </div>
-      </div>
+      </AppCard>
       
       {/* Footer Info */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-4 px-2 text-slate-400">
