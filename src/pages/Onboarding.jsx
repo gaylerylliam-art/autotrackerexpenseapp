@@ -11,6 +11,7 @@ import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../utils/supabase'
+import Logo from '../components/Logo'
 
 function cn(...inputs) { return twMerge(clsx(inputs)) }
 
@@ -85,13 +86,11 @@ const Onboarding = () => {
                   className="saas-card p-12 lg:p-24 space-y-16 max-w-4xl mx-auto border-white/10 shadow-premium bg-white/5 backdrop-blur-2xl"
                >
                   <div className="space-y-6 text-center">
-                     <div className="flex justify-center mb-10">
-                        <div className="w-24 h-24 rounded-[32px] bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-glow shadow-primary/10">
-                           <ShieldCheck className="w-12 h-12 stroke-[2.5]" />
-                        </div>
+                     <div className="flex justify-center mb-8">
+                        <Logo type="full" className="h-20" animate={true} />
                      </div>
-                     <h1 className="text-5xl lg:text-7xl font-display font-black text-slate-900 italic uppercase tracking-tighter leading-none underline decoration-primary/20 decoration-8 underline-offset-8">Auto<span className="text-primary">Track</span> <br/> Setup</h1>
-                     <p className="text-[12px] text-slate-500 font-mono font-bold uppercase tracking-[0.3em] opacity-70 italic">Secure individual & fleet expense management</p>
+                     <h1 className="text-5xl lg:text-7xl font-display font-black text-slate-900 italic uppercase tracking-tighter leading-none underline decoration-primary/20 decoration-8 underline-offset-8">Setup <br/> Profile</h1>
+                     <p className="text-[12px] text-slate-700 font-mono font-bold uppercase tracking-[0.3em] italic">Secure individual & fleet expense management</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-10 border-t border-white/5">
@@ -101,7 +100,7 @@ const Onboarding = () => {
                         </div>
                         <div className="space-y-3">
                            <h3 className="text-xl font-display font-black text-slate-900 italic uppercase tracking-tighter">Location Tracking</h3>
-                           <p className="text-[11px] text-slate-600 font-display font-medium leading-relaxed">We use GPS coordinates to accurately log your trips and calculate tax reimbursements. All location data is encrypted for your privacy.</p>
+                           <p className="text-[11px] text-slate-700 font-display font-medium leading-relaxed">We use GPS coordinates to accurately log your trips and calculate tax reimbursements. All location data is encrypted for your privacy.</p>
                         </div>
                      </div>
                      <div className="space-y-6 flex gap-8 group">
@@ -110,7 +109,7 @@ const Onboarding = () => {
                         </div>
                         <div className="space-y-3">
                            <h3 className="text-xl font-display font-black text-slate-900 italic uppercase tracking-tighter">Smart Insights</h3>
-                           <p className="text-[11px] text-slate-600 font-display font-medium leading-relaxed">We analyze your spending patterns to provide AI-powered cost saving suggestions. We never share your private data with third parties.</p>
+                           <p className="text-[11px] text-slate-700 font-display font-medium leading-relaxed">We analyze your spending patterns to provide AI-powered cost saving suggestions. We never share your private data with third parties.</p>
                         </div>
                      </div>
                   </div>
@@ -124,7 +123,7 @@ const Onboarding = () => {
                         )}>
                            <CheckCircle2 className="w-6 h-6 stroke-[3]" />
                         </div>
-                        <span className="text-[12px] font-mono font-bold text-slate-600 uppercase tracking-widest italic leading-none group-hover:text-slate-900 transition-colors">I accept the Terms of Service & Privacy Policy</span>
+                        <span className="text-[12px] font-mono font-bold text-slate-700 uppercase tracking-widest italic leading-none group-hover:text-slate-900 transition-colors">I accept the Terms of Service & Privacy Policy</span>
                      </label>
 
                      <button disabled={!agreed} onClick={() => setStep(2)} className={cn("h-18 px-16 btn-primary text-sm font-black italic tracking-[0.2em] shadow-glow disabled:opacity-30")}>
@@ -142,41 +141,44 @@ const Onboarding = () => {
                   className="saas-card p-12 lg:p-24 space-y-16 max-w-4xl mx-auto border-white/10 shadow-premium bg-white/5 backdrop-blur-2xl"
                >
                   <div className="text-center space-y-6">
+                     <div className="flex justify-center mb-8">
+                        <Logo type="icon" className="h-16" />
+                     </div>
                      <h2 className="text-6xl font-display font-black text-slate-900 italic uppercase tracking-tighter leading-none">Your <span className="text-primary">Profile</span></h2>
-                     <p className="text-[12px] text-slate-500 font-mono font-bold uppercase tracking-[0.4em] opacity-70 italic">Set up your personal or business account</p>
+                     <p className="text-[12px] text-slate-700 font-mono font-bold uppercase tracking-[0.4em] italic leading-relaxed">Set up your personal or business account</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-10">
                      <div className="space-y-6">
-                        <label className="text-[11px] text-slate-500 font-mono font-black uppercase tracking-widest italic pl-2">Your Name</label>
+                        <label className="text-[11px] text-slate-700 font-mono font-black uppercase tracking-widest italic pl-2">Your Name</label>
                         <div className="relative group">
-                           <User className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-white/20 group-focus-within:text-primary transition-all" />
+                           <User className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-400 group-focus-within:text-primary transition-all" />
                            <input 
                               placeholder="FULL NAME" 
                               value={formData.full_name} 
                               onChange={e => setFormData(p => ({ ...p, full_name: e.target.value.toUpperCase() }))}
-                              className="w-full h-18 bg-white/5 border border-white/10 rounded-2xl px-16 text-lg font-display font-black italic text-white focus:outline-none focus:bg-white/10 focus:border-primary/40 transition-all uppercase"
+                              className="w-full h-18 bg-white/5 border border-slate-200 rounded-2xl px-16 text-lg font-display font-black italic text-slate-900 focus:outline-none focus:bg-white focus:border-primary/40 transition-all uppercase"
                            />
                         </div>
                      </div>
                      <div className="space-y-6">
-                        <label className="text-[11px] text-slate-500 font-mono font-black uppercase tracking-widest italic pl-2">Company Name</label>
+                        <label className="text-[11px] text-slate-700 font-mono font-black uppercase tracking-widest italic pl-2">Company Name</label>
                         <div className="relative group">
-                           <Briefcase className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-white/20 group-focus-within:text-primary transition-all" />
+                           <Briefcase className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-400 group-focus-within:text-primary transition-all" />
                            <input 
                               placeholder="COMPANY NAME" 
                               value={formData.company} 
                               onChange={e => setFormData(p => ({ ...p, company: e.target.value.toUpperCase() }))}
-                              className="w-full h-18 bg-white/5 border border-white/10 rounded-2xl px-16 text-lg font-display font-black italic text-white focus:outline-none focus:bg-white/10 focus:border-primary/40 transition-all uppercase"
+                              className="w-full h-18 bg-white/5 border border-slate-200 rounded-2xl px-16 text-lg font-display font-black italic text-slate-900 focus:outline-none focus:bg-white focus:border-primary/40 transition-all uppercase"
                            />
                         </div>
                      </div>
                      <div className="space-y-6">
-                        <label className="text-[11px] text-text-muted font-mono font-black uppercase tracking-widest italic pl-2">Your Role</label>
+                        <label className="text-[11px] text-slate-700 font-mono font-black uppercase tracking-widest italic pl-2">Your Role</label>
                         <select 
                            value={formData.role} 
                            onChange={e => setFormData(p => ({ ...p, role: e.target.value }))}
-                           className="w-full h-18 bg-white border-2 border-slate-100 rounded-2xl px-12 text-[12px] font-display font-black italic text-slate-900 focus:outline-none focus:bg-white focus:border-primary/40 transition-all uppercase tracking-widest appearance-none"
+                           className="w-full h-18 bg-white border-2 border-slate-200 rounded-2xl px-12 text-[12px] font-display font-black italic text-slate-900 focus:outline-none focus:bg-white focus:border-primary/40 transition-all uppercase tracking-widest appearance-none"
                         >
                            <option value="Fleet Manager">Fleet Manager</option>
                            <option value="Owner Operator">Owner Driver</option>
@@ -184,14 +186,14 @@ const Onboarding = () => {
                         </select>
                      </div>
                      <div className="space-y-6">
-                        <label className="text-[11px] text-text-muted font-mono font-black uppercase tracking-widest italic pl-2">Preferred Currency</label>
+                        <label className="text-[11px] text-slate-700 font-mono font-black uppercase tracking-widest italic pl-2">Preferred Currency</label>
                         <div className="grid grid-cols-2 gap-4">
                            {['AED', 'USD'].map(c => (
                               <button 
                                  key={c} onClick={() => setFormData(p => ({ ...p, currency: c }))}
                                  className={cn(
                                     "h-18 rounded-2xl border font-display font-black italic text-[11px] tracking-widest transition-all",
-                                    formData.currency === c ? "bg-primary border-primary text-white shadow-glow" : "bg-white/5 border-white/10 text-white/40 hover:bg-white/10"
+                                    formData.currency === c ? "bg-primary border-primary text-white shadow-glow" : "bg-white border-slate-200 text-slate-500 hover:bg-slate-50"
                                  )}
                               >
                                  {c}
@@ -221,8 +223,11 @@ const Onboarding = () => {
                   className="space-y-16"
                >
                   <div className="text-center space-y-6">
+                     <div className="flex justify-center mb-8">
+                        <Logo type="icon" className="h-16" />
+                     </div>
                      <h2 className="text-6xl font-display font-black text-slate-900 italic uppercase tracking-tighter leading-none">Choose <span className="text-primary">Your Plan</span></h2>
-                     <p className="text-[12px] text-slate-500 font-mono font-bold uppercase tracking-[0.4em] opacity-70 italic">Select the best fit for your needs</p>
+                     <p className="text-[12px] text-slate-700 font-mono font-bold uppercase tracking-[0.4em] italic">Select the best fit for your needs</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
