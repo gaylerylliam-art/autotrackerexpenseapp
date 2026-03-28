@@ -89,8 +89,8 @@ const Onboarding = () => {
                      <div className="flex justify-center mb-8">
                         <Logo type="full" className="h-20" animate={true} />
                      </div>
-                     <h1 className="text-5xl lg:text-7xl font-display font-black text-slate-950 italic uppercase tracking-tighter leading-none underline decoration-primary/20 decoration-8 underline-offset-8">Setup <br/> Profile</h1>
-                     <p className="text-[12px] text-slate-900 font-mono font-bold uppercase tracking-[0.3em] italic">Secure individual & fleet expense management</p>
+                     <h1 className="text-5xl lg:text-7xl font-display font-black text-gray-900 italic uppercase tracking-tighter leading-none underline decoration-primary/20 decoration-8 underline-offset-8">Auto<span className="text-primary">Track</span> <br/> Setup</h1>
+                     <p className="text-[12px] text-gray-700 font-mono font-bold uppercase tracking-[0.3em] italic">Secure individual & fleet expense management</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-10 border-t border-white/5">
@@ -99,8 +99,8 @@ const Onboarding = () => {
                            <MapPin className="w-7 h-7 text-primary" />
                         </div>
                         <div className="space-y-3">
-                           <h3 className="text-xl font-display font-black text-slate-950 italic uppercase tracking-tighter">Location Tracking</h3>
-                           <p className="text-[11px] text-slate-800 font-display font-bold leading-relaxed">We use GPS coordinates to accurately log your trips and calculate tax reimbursements. All location data is encrypted for your privacy.</p>
+                           <h3 className="text-xl font-display font-black text-gray-800 italic uppercase tracking-tighter">Location Tracking</h3>
+                           <p className="text-[11px] text-gray-700 font-display font-bold leading-relaxed">We use GPS coordinates to accurately log your trips and calculate tax reimbursements. All location data is encrypted for your privacy.</p>
                         </div>
                      </div>
                      <div className="space-y-6 flex gap-8 group">
@@ -108,8 +108,8 @@ const Onboarding = () => {
                            <Database className="w-7 h-7 text-primary" />
                         </div>
                         <div className="space-y-3">
-                           <h3 className="text-xl font-display font-black text-slate-950 italic uppercase tracking-tighter">Smart Insights</h3>
-                           <p className="text-[11px] text-slate-800 font-display font-bold leading-relaxed">We analyze your spending patterns to provide AI-powered cost saving suggestions. We never share your private data with third parties.</p>
+                           <h3 className="text-xl font-display font-black text-gray-800 italic uppercase tracking-tighter">Smart Insights</h3>
+                           <p className="text-[11px] text-gray-700 font-display font-bold leading-relaxed">We analyze your spending patterns to provide AI-powered cost saving suggestions. We never share your private data with third parties.</p>
                         </div>
                      </div>
                   </div>
@@ -123,7 +123,7 @@ const Onboarding = () => {
                         )}>
                            <CheckCircle2 className="w-6 h-6 stroke-[3]" />
                         </div>
-                        <span className="text-[12px] font-mono font-black text-slate-900 uppercase tracking-widest italic leading-none group-hover:text-primary transition-colors">I accept the Terms of Service & Privacy Policy</span>
+                        <span className="text-[12px] font-mono font-black text-gray-700 uppercase tracking-widest italic leading-none group-hover:text-primary transition-colors">I accept the Terms of Service & Privacy Policy</span>
                      </label>
 
                      <button disabled={!agreed} onClick={() => setStep(2)} className={cn("h-18 px-16 btn-primary text-sm font-black italic tracking-[0.2em] shadow-glow disabled:opacity-30")}>
@@ -144,13 +144,13 @@ const Onboarding = () => {
                      <div className="flex justify-center mb-8">
                         <Logo type="icon" className="h-16" />
                      </div>
-                     <h2 className="text-6xl font-display font-black text-slate-950 italic uppercase tracking-tighter leading-none">Your <span className="text-primary">Profile</span></h2>
-                     <p className="text-[12px] text-slate-900 font-mono font-bold uppercase tracking-[0.4em] italic leading-relaxed">Set up your personal or business account</p>
+                     <h2 className="text-6xl font-display font-black text-gray-900 italic uppercase tracking-tighter leading-none">Your <span className="text-primary">Profile</span></h2>
+                     <p className="text-[12px] text-gray-700 font-mono font-bold uppercase tracking-[0.4em] italic leading-relaxed">Set up your personal or business account</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-10">
                      <div className="space-y-6">
-                        <label className="text-[11px] text-slate-900 font-mono font-black uppercase tracking-widest italic pl-2">Your Name</label>
+                        <label className="text-[11px] text-gray-800 font-mono font-black uppercase tracking-widest italic pl-2">Your Name</label>
                         <div className="relative group">
                            <User className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-400 group-focus-within:text-primary transition-all" />
                            <input 
@@ -162,7 +162,7 @@ const Onboarding = () => {
                         </div>
                      </div>
                      <div className="space-y-6">
-                        <label className="text-[11px] text-slate-900 font-mono font-black uppercase tracking-widest italic pl-2">Company Name</label>
+                        <label className="text-[11px] text-gray-800 font-mono font-black uppercase tracking-widest italic pl-2">Company Name</label>
                         <div className="relative group">
                            <Briefcase className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-400 group-focus-within:text-primary transition-all" />
                            <input 
@@ -174,11 +174,11 @@ const Onboarding = () => {
                         </div>
                      </div>
                      <div className="space-y-6">
-                        <label className="text-[11px] text-slate-900 font-mono font-black uppercase tracking-widest italic pl-2">Your Role</label>
+                        <label className="text-[11px] text-gray-800 font-mono font-black uppercase tracking-widest italic pl-2">Your Role</label>
                         <select 
                            value={formData.role} 
                            onChange={e => setFormData(p => ({ ...p, role: e.target.value }))}
-                            className="w-full h-18 bg-slate-50 border-2 border-slate-200 rounded-2xl px-12 text-[12px] font-display font-black italic text-slate-950 focus:outline-none focus:bg-white focus:border-primary/40 transition-all uppercase tracking-widest appearance-none"
+                            className="w-full h-18 bg-gray-50 border-2 border-gray-200 rounded-2xl px-12 text-[12px] font-display font-black italic text-gray-900 focus:outline-none focus:bg-white focus:border-primary/40 transition-all uppercase tracking-widest appearance-none"
                         >
                            <option value="Fleet Manager">Fleet Manager</option>
                            <option value="Owner Operator">Owner Driver</option>
@@ -186,14 +186,14 @@ const Onboarding = () => {
                         </select>
                      </div>
                      <div className="space-y-6">
-                        <label className="text-[11px] text-slate-900 font-mono font-black uppercase tracking-widest italic pl-2">Preferred Currency</label>
+                        <label className="text-[11px] text-gray-800 font-mono font-black uppercase tracking-widest italic pl-2">Preferred Currency</label>
                         <div className="grid grid-cols-2 gap-4">
                            {['AED', 'USD'].map(c => (
                               <button 
                                  key={c} onClick={() => setFormData(p => ({ ...p, currency: c }))}
                                  className={cn(
                                     "h-18 rounded-2xl border font-display font-black italic text-[11px] tracking-widest transition-all",
-                                    formData.currency === c ? "bg-primary border-primary text-white shadow-glow" : "bg-white border-slate-300 text-slate-900 hover:bg-slate-50"
+                                    formData.currency === c ? "bg-primary border-primary text-white shadow-glow" : "bg-white border-gray-300 text-gray-900 hover:bg-gray-50"
                                  )}
                               >
                                  {c}
@@ -226,8 +226,8 @@ const Onboarding = () => {
                      <div className="flex justify-center mb-8">
                         <Logo type="icon" className="h-16" />
                      </div>
-                     <h2 className="text-6xl font-display font-black text-slate-950 italic uppercase tracking-tighter leading-none">Choose <span className="text-primary">Your Plan</span></h2>
-                     <p className="text-[12px] text-slate-900 font-mono font-bold uppercase tracking-[0.4em] italic">Select the best fit for your needs</p>
+                     <h2 className="text-6xl font-display font-black text-gray-900 italic uppercase tracking-tighter leading-none">Choose <span className="text-primary">Your Plan</span></h2>
+                     <p className="text-[12px] text-gray-700 font-mono font-bold uppercase tracking-[0.4em] italic">Select the best fit for your needs</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -236,7 +236,7 @@ const Onboarding = () => {
                            key={plan.id}
                            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
                            className={cn(
-                              "saas-card p-12 flex flex-col justify-between group h-full relative border-slate-200 shadow-premium bg-white/90",
+                              "saas-card p-12 flex flex-col justify-between group h-full relative border-gray-200 shadow-premium bg-white/90",
                               plan.highlight && "border-primary/40 ring-2 ring-primary/10 shadow-glow shadow-primary/10"
                            )}
                         >
@@ -248,17 +248,17 @@ const Onboarding = () => {
                            <div className="space-y-12">
                               <div className="space-y-4">
                                  <span className={cn("text-[10px] font-mono font-black uppercase tracking-widest italic opacity-60 leading-none block", plan.color)}>{plan.desc}</span>
-                                 <h3 className="text-4xl font-display font-black text-slate-950 italic leading-none">{plan.name}</h3>
+                                 <h3 className="text-4xl font-display font-black text-gray-900 italic leading-none">{plan.name}</h3>
                                  <div className="flex items-end gap-3 pt-4">
-                                    <span className="text-5xl font-mono font-black italic tracking-tighter leading-none text-slate-950">{plan.price}</span>
-                                    <span className="text-[11px] text-slate-900 uppercase font-black tracking-widest italic opacity-70 mb-1">/MON</span>
+                                    <span className="text-5xl font-mono font-black italic tracking-tighter leading-none text-gray-900">{plan.price}</span>
+                                    <span className="text-[11px] text-gray-500 uppercase font-black tracking-widest italic opacity-80 mb-1">/MON</span>
                                  </div>
                               </div>
                               <div className="space-y-6 border-t border-slate-200 pt-10">
                                  {plan.features.map((f, j) => (
                                     <div key={j} className="flex items-center gap-4 group/feat">
                                        <CheckCircle2 className="w-5 h-5 text-primary" />
-                                       <span className="text-[11px] font-display font-bold text-slate-900 leading-none uppercase italic group-hover/feat:text-slate-950 transition-colors">{f}</span>
+                                       <span className="text-[11px] font-display font-bold text-gray-700 leading-none uppercase italic group-hover/feat:text-gray-900 transition-colors">{f}</span>
                                     </div>
                                  ))}
                               </div>
@@ -268,7 +268,7 @@ const Onboarding = () => {
                               disabled={loading}
                               className={cn(
                                  "w-full h-16 btn-primary mt-12 text-[10px] font-black italic shadow-premium relative overflow-hidden",
-                                 plan.id === 'free' ? "bg-slate-100 text-slate-900 border border-slate-200 hover:bg-slate-200" : ""
+                                 plan.id === 'free' ? "bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200" : ""
                               )}
                            >
                               {loading ? <Loader2 className="w-6 h-6 animate-spin text-white mx-auto" /> : `Select ${plan.name} Plan`}
@@ -278,7 +278,7 @@ const Onboarding = () => {
                   </div>
 
                   <div className="text-center">
-                     <button onClick={() => setStep(2)} className="text-[10px] font-mono font-black text-slate-900 uppercase tracking-[0.3em] hover:text-primary transition-all italic underline underline-offset-4">Go Back</button>
+                     <button onClick={() => setStep(2)} className="text-[10px] font-mono font-black text-gray-700 uppercase tracking-[0.3em] hover:text-primary transition-all italic underline underline-offset-4">Go Back</button>
                   </div>
                </motion.div>
             )}
