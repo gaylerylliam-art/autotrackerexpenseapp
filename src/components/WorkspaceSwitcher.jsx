@@ -22,7 +22,7 @@ const WorkspaceSwitcher = () => {
           <activeWorkspace.icon className="w-4 h-4" />
         </div>
         <div className="flex flex-col items-start">
-          <h1 className="font-display font-black text-xs tracking-tightest uppercase group-hover:text-accent transition-colors">
+          <h1 className="font-display font-black text-xs tracking-tighter uppercase group-hover:text-accent transition-colors">
             {activeWorkspace.name}
           </h1>
           <span className="text-[9px] text-muted font-mono uppercase tracking-widest flex items-center gap-1 font-bold">
@@ -41,13 +41,13 @@ const WorkspaceSwitcher = () => {
               animate={{ opacity: 1 }} 
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 z-40" 
+              className="fixed inset-0 z-[90] bg-black/40 backdrop-blur-sm" 
             />
             <motion.div 
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              className="absolute top-full left-0 mt-3 w-64 glass rounded-2xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-50 overflow-hidden"
+              className="absolute top-full left-0 mt-3 w-64 bg-[#161D33] border border-white/10 rounded-2xl shadow-[0_32px_128px_rgba(0,0,0,0.8)] z-[100] overflow-hidden backdrop-blur-2xl"
             >
               <div className="p-2 space-y-1">
                 <p className="px-3 py-2 text-[10px] text-muted font-mono uppercase tracking-widest font-black">Switch Workspace</p>

@@ -1,314 +1,367 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { Car, ChevronLeft, Calendar, FileText, Settings, CreditCard, Fuel, TrendingUp, TrendingDown, Activity, MapPin, Wrench, PenTool, Shield, AlertCircle, History, ArrowUpRight, DollarSign } from 'lucide-react'
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
+import { motion, AnimatePresence } from 'framer-motion'
+import { 
+  Plus, Calendar, DollarSign, Activity, AlertCircle, 
+  ChevronRight, BadgeInfo, FileText, History, Settings,
+  Car, ShieldCheck, TrendingUp, MapPin, Gauge, Fuel, User,
+  ArrowUpRight, ArrowDownRight, Zap, Info, ShieldAlert,
+  Loader2, Globe, Clock, Landmark, Navigation, Wrench, Database,
+  Terminal, Signal
+} from 'lucide-react'
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
+import { supabase } from '../utils/supabase'
+import { calculateDepreciation, calculateTCO } from '../utils/depreciationEngine'
 
-const vehicleData = {
-  make: 'BMW',
-  model: 'X5',
-  variant: 'M Sport 2024',
-  plate: 'P 12345',
-  color: 'Sapphire Black',
-  engine: '3.0L B58 Turbo Inline-6',
-  odometer: '87,420 km',
-  totalSpent: 12450,
-  costPerKm: 0.14,
-  fuelEfficiency: '11.2 L/100km',
-  nextService: '4,580 km',
-  health: 98,
-  purchaseCost: 350000,
-  residualValue: 52500,
-  monthlyDepreciation: 4958,
-  totalDepreciation: 119000,
-  currentValue: 231000,
-}
-
-const costBreakdown = [
-  { name: 'Fuel', value: 5200, color: '#f7c948' },
-  { name: 'Service', value: 3400, color: '#6C63FF' },
-  { name: 'Tolls', value: 1850, color: '#3ecf8e' },
-  { name: 'Insurance', value: 2000, color: '#4ade80' },
-  { name: 'Fire & IT', value: 680, color: '#fb923c' },
-]
-
-const efficiencyHistory = [
-  { month: 'Jan', value: 11.5 },
-  { month: 'Feb', value: 11.2 },
-  { month: 'Mar', value: 10.8 },
-  { month: 'Apr', value: 11.4 },
-  { month: 'May', value: 11.2 },
-]
-
-const recentServices = [
-  { date: 'Feb 15, 2026', type: 'Brake Pads', cost: 'AED 850', provider: 'Al Futtaim', odometer: '82,100 km' },
-  { date: 'Dec 12, 2025', type: 'Oil & Filter', cost: 'AED 450', provider: 'Dynatrade', odometer: '75,400 km' },
-  { date: 'Sep 20, 2025', type: 'Tyre Rotation', cost: 'AED 200', provider: 'Orange Auto', odometer: '65,000 km' },
-]
+function cn(...inputs) { return twMerge(clsx(inputs)) }
 
 const VehicleProfile = () => {
   const { id } = useParams()
   const navigate = useNavigate()
+  const [vehicle, setVehicle] = useState(null)
+  const [expenses, setExpenses] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [tco, setTco] = useState(null)
+  const [recentServices, setRecentServices] = useState([])
+  const [valuationTrend, setValuationTrend] = useState([])
+
+  useEffect(() => {
+    if (id) {
+      fetchData()
+    }
+  }, [id])
+
+  const fetchData = async () => {
+    setLoading(true)
+    try {
+      const { data: v, error: vErr } = await supabase
+        .from('vehicles')
+        .select('*')
+        .eq('id', id)
+        .single()
+      
+      if (vErr) throw vErr
+
+      const { data: exps, error: eErr } = await supabase
+        .from('expenses')
+        .select('*')
+        .eq('vehicle_id', id)
+        .order('date', { ascending: false })
+
+      if (eErr) throw eErr
+
+      const dep = calculateDepreciation(v)
+      const totalSpend = exps?.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0) || 0
+      
+      setVehicle({ ...v, ...dep })
+      setExpenses(exps || [])
+      setTco(calculateTCO(v, totalSpend))
+      
+      setValuationTrend([
+        { name: 'Purchase', value: parseFloat(v.purchase_price) },
+        { name: 'Current', value: dep.currentValue },
+        { name: 'Residual', value: dep.residualValue }
+      ])
+
+      setRecentServices(exps?.filter(e => e.category === 'Service' || e.category === 'Maintenance' || e.category === 'Repair').slice(0, 3).map(e => ({
+        type: e.subcategory || e.category,
+        provider: e.vendor || 'Unknown Provider',
+        date: new Date(e.date).toLocaleDateString(),
+        cost: e.amount.toLocaleString(),
+        odometer: e.odometer_reading ? `${e.odometer_reading} km` : '---'
+      })) || [])
+
+    } catch (err) {
+      console.error('Error fetching vehicle data:', err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="h-[60vh] flex items-center justify-center">
+        <Loader2 className="w-10 h-10 text-primary animate-spin" />
+      </div>
+    )
+  }
+
+  if (!vehicle) {
+    return (
+      <div className="text-center p-20">
+        <AlertCircle className="w-16 h-16 text-rose-500 mx-auto mb-6" />
+        <h2 className="text-2xl font-bold text-slate-900">Vehicle not found</h2>
+        <button onClick={() => navigate('/vehicles')} className="mt-6 text-primary font-bold hover:underline">Back to fleet</button>
+      </div>
+    )
+  }
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-32">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <button 
-          onClick={() => navigate(-1)}
-          className="w-10 h-10 rounded-full glass border border-white/10 flex items-center justify-center text-muted hover:text-text active:scale-90 transition-all"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-        <div className="flex items-center gap-2">
-           <button className="p-2 rounded-xl glass border border-white/5 text-muted hover:text-accent transition-colors">
-              <History className="w-5 h-5" />
-           </button>
-           <button className="p-2 rounded-xl glass border border-white/5 text-muted hover:text-accent transition-colors">
-              <Settings className="w-5 h-5" />
-           </button>
-        </div>
-      </div>
-
-      {/* Hero Card */}
-      <div className="relative overflow-hidden glass p-8 rounded-[48px] border border-white/10 shadow-2xl">
-         <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full -mr-32 -mt-32 blur-3xl" />
-         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 relative z-10">
-            <div className="space-y-4">
-               <div>
-                  <h1 className="text-4xl font-display font-black tracking-tightest leading-tight">
-                    {vehicleData.make} <span className="text-text/60 italic">{vehicleData.model}</span>
-                  </h1>
-                  <p className="text-[10px] text-accent font-mono font-black uppercase tracking-widest leading-none mt-1">{vehicleData.variant}</p>
+    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      {/* 1. Vehicle Identity Card */}
+      <div className="premium-card p-10 overflow-hidden relative">
+         <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full -mr-48 -mt-48 blur-3xl" />
+         <div className="absolute bottom-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full -mr-32 -mb-32 blur-3xl opacity-50" />
+         
+         <div className="relative flex flex-col lg:flex-row items-center gap-12">
+            <div className="relative group">
+               <div className="w-48 h-48 rounded-[40px] bg-slate-100 overflow-hidden border-4 border-white shadow-2xl relative z-10">
+                  <img src={vehicle.image_url || "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=400&h=400&fit=crop"} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                </div>
-               <div className="flex flex-wrap gap-4">
-                  <div className="px-4 py-2 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center gap-3">
-                     <span className="text-[10px] font-mono text-muted uppercase font-black">Plate</span>
-                     <span className="text-sm font-display font-black tracking-tightest text-text italic underline decoration-accent/20">{vehicleData.plate}</span>
+               <div className="absolute -inset-4 bg-primary/20 rounded-[48px] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            </div>
+
+            <div className="flex-1 space-y-6 text-center lg:text-left">
+               <div>
+                  <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 mb-3">
+                     <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest border border-primary/10">Active Asset</span>
+                     <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-widest border border-slate-200">Main Fleet</span>
                   </div>
-                  <div className="px-4 py-2 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center gap-3">
-                     <span className="text-[10px] font-mono text-muted uppercase font-black">Condition</span>
-                     <div className="flex items-center gap-1.5">
-                        <div className="w-2 h-2 rounded-full bg-accent2 shadow-[0_0_8px_rgba(76,175,80,0.5)]" />
-                        <span className="text-xs font-display font-black tracking-tightest text-accent2">EXCELLENT</span>
+                  <h1 className="text-4xl lg:text-5xl font-display font-bold tracking-tight text-slate-900">{vehicle.make} <span className="text-primary">{vehicle.model}</span></h1>
+                  <p className="text-slate-400 font-bold uppercase tracking-[0.2em] mt-2 flex items-center justify-center lg:justify-start gap-3 text-sm">
+                     <Hash className="w-4 h-4 text-primary" /> {vehicle.plate}
+                  </p>
+               </div>
+
+               <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-6">
+                  {[
+                    { label: 'Asset Value', val: `AED ${vehicle.currentValue.toLocaleString()}`, icon: DollarSign, color: 'text-emerald-600' },
+                    { label: 'Year/Model', val: vehicle.year, icon: Calendar, color: 'text-blue-600' },
+                    { label: 'Depreciation', val: `-${vehicle.totalDepreciationPercentage}%`, icon: TrendingUp, color: 'text-rose-600' },
+                    { label: 'Fuel Type', val: vehicle.fuel_type || 'Petrol', icon: Fuel, color: 'text-amber-600' },
+                  ].map((stat, i) => (
+                    <div key={i} className="space-y-1">
+                       <div className="flex items-center gap-2 text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-none">
+                          <stat.icon className={cn("w-3.5 h-3.5", stat.color)} />
+                          {stat.label}
+                       </div>
+                       <p className="text-lg font-bold text-slate-900 leading-none">{stat.val}</p>
+                    </div>
+                  ))}
+               </div>
+            </div>
+
+            <div className="lg:w-72 w-full">
+               <div className="premium-card p-6 bg-slate-900 text-white relative overflow-hidden group/tco">
+                  <div className="absolute top-0 right-0 p-4 opacity-10">
+                     <Activity className="w-16 h-16" />
+                  </div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 relative z-10">Lifetime TCO</p>
+                  <h2 className="text-3xl font-display font-bold mb-4 relative z-10">AED {tco?.totalTCO.toLocaleString()}</h2>
+                  <div className="space-y-3 relative z-10">
+                     <div className="flex justify-between items-center text-[10px] uppercase font-bold text-slate-400">
+                        <span>Utilization</span>
+                        <span className="text-blue-400">84%</span>
+                     </div>
+                     <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                        <div className="h-full bg-blue-500 rounded-full" style={{ width: '84%' }} />
                      </div>
                   </div>
+                  <button className="w-full mt-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-bold transition-all border border-white/5 relative z-10 flex items-center justify-center gap-2">
+                     Generate Report <ArrowUpRight className="w-4 h-4" />
+                  </button>
                </div>
-            </div>
-            <div className="w-20 h-20 rounded-3xl glass border border-accent/20 flex items-center justify-center text-accent shadow-lg shadow-accent/10">
-               <Car className="w-12 h-12" />
-            </div>
-         </div>
-
-         {/* Grid Stats */}
-         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 pt-8 border-t border-white/5 font-body">
-            <div className="space-y-1">
-               <span className="text-[9px] text-muted font-mono font-black uppercase tracking-widest opacity-60">Total Cost</span>
-               <p className="text-xl font-display font-black tracking-tightest text-text">AED {vehicleData.totalSpent.toLocaleString()}</p>
-            </div>
-            <div className="space-y-1">
-               <span className="text-[9px] text-muted font-mono font-black uppercase tracking-widest opacity-60">Cost / KM</span>
-               <p className="text-xl font-display font-black tracking-tightest text-accent">AED {vehicleData.costPerKm}</p>
-            </div>
-            <div className="space-y-1">
-               <span className="text-[9px] text-muted font-mono font-black uppercase tracking-widest opacity-60">Avg Consumption</span>
-               <p className="text-xl font-display font-black tracking-tightest text-text">{vehicleData.fuelEfficiency}</p>
-            </div>
-            <div className="space-y-1">
-               <span className="text-[9px] text-muted font-mono font-black uppercase tracking-widest opacity-60">Odometer</span>
-               <p className="text-xl font-display font-black tracking-tightest text-text">{vehicleData.odometer}</p>
             </div>
          </div>
       </div>
 
-      {/* Asset Value & Depreciation (NEW) */}
-      <div className="glass p-8 rounded-[48px] border border-accent/20 bg-gradient-to-br from-accent/5 to-transparent relative overflow-hidden">
-         <div className="absolute top-0 right-0 w-64 h-64 bg-accent/10 rounded-full -mr-32 -mt-32 blur-3xl pointer-events-none" />
-         <div className="flex flex-col md:flex-row justify-between gap-8 relative z-10 w-full font-body">
-            
-            <div className="space-y-6 flex-1">
+      {/* 2. Key Analytics Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+         <div className="lg:col-span-2 space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+               <div className="premium-card p-8 flex items-center justify-between group hover:border-primary/20 transition-all">
+                  <div className="space-y-4">
+                     <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                        <ShieldCheck className="w-6 h-6" />
+                     </div>
+                     <div>
+                        <p className="text-[11px] text-slate-400 font-bold uppercase tracking-widest">Compliance Status</p>
+                        <h3 className="text-xl font-bold text-slate-900">Valid until 2025</h3>
+                     </div>
+                  </div>
+                  <div className="text-right">
+                     <span className="px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-600 text-[10px] font-bold border border-emerald-100">OPTIMAL</span>
+                  </div>
+               </div>
+
+               <div className="premium-card p-8 flex items-center justify-between group hover:border-amber-400/20 transition-all">
+                  <div className="space-y-4">
+                     <div className="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform">
+                        <Gauge className="w-6 h-6" />
+                     </div>
+                     <div>
+                        <p className="text-[11px] text-slate-400 font-bold uppercase tracking-widest">Service Health</p>
+                        <h3 className="text-xl font-bold text-slate-900">Critical: 1.2k km</h3>
+                     </div>
+                  </div>
+                  <div className="text-right">
+                     <span className="px-3 py-1.5 rounded-xl bg-amber-50 text-amber-600 text-[10px] font-bold border border-amber-100">WARNING</span>
+                  </div>
+               </div>
+            </div>
+
+            <div className="premium-card p-10 h-[380px] relative">
+               <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center gap-4">
+                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                        <Database className="w-6 h-6" />
+                     </div>
+                     <h4 className="font-display font-bold text-xl tracking-tight text-slate-900">Asset Valuation <span className="text-primary">Timeline</span></h4>
+                  </div>
+                  <div className="flex gap-2">
+                     {['1Y', '2Y', '5Y'].map(t => <button key={t} className={cn("px-4 py-1.5 rounded-lg text-[10px] font-bold transition-all", t === '1Y' ? "bg-primary text-white" : "bg-slate-50 text-slate-400 hover:bg-slate-100")}>{t}</button>)}
+                  </div>
+               </div>
+               <div className="h-64 mt-4">
+                  <ResponsiveContainer width="100%" height="100%">
+                     <AreaChart data={valuationTrend}>
+                        <defs>
+                           <linearGradient id="effGrad" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.15}/>
+                              <stop offset="95%" stopColor="#3B82F6" stopOpacity={0}/>
+                           </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                        <XAxis dataKey="name" hide />
+                        <YAxis hide />
+                        <Tooltip 
+                           contentStyle={{ borderRadius: '16px', backgroundColor: '#fff', border: '1px solid #e2e8f0', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', fontSize: '11px', fontWeight: 'bold' }}
+                        />
+                        <Area type="monotone" dataKey="value" stroke="#3B82F6" fillOpacity={1} fill="url(#effGrad)" strokeWidth={3} />
+                     </AreaChart>
+                  </ResponsiveContainer>
+               </div>
+            </div>
+         </div>
+
+         <div className="premium-card p-10 space-y-8 flex flex-col justify-between group">
+            <div className="space-y-8">
                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                     <TrendingDown className="w-5 h-5 text-accent" />
-                     <h3 className="font-display font-black text-xl tracking-tightest leading-none text-text">Asset Value</h3>
+                  <div className="flex items-center gap-4">
+                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                        <Zap className="w-6 h-6" />
+                     </div>
+                     <h4 className="font-display font-bold text-xl tracking-tight text-slate-900">Predictive <span className="text-primary">ROI</span></h4>
                   </div>
-                  <span className="px-3 py-1 rounded-full bg-accent/10 text-accent text-[8px] font-mono font-black uppercase tracking-widest border border-accent/20">Straight-Line Method</span>
+                  <Info className="w-5 h-5 text-slate-300" />
                </div>
                
-               <div className="grid grid-cols-2 gap-8">
-                  <div className="space-y-1">
-                     <span className="text-[9px] text-muted font-mono font-black uppercase tracking-widest opacity-60">Purchase Cost</span>
-                     <p className="text-2xl font-display font-black tracking-tightest text-text">AED {vehicleData.purchaseCost.toLocaleString()}</p>
-                     <p className="text-[9px] text-muted font-mono uppercase tracking-widest opacity-40">March 2024</p>
+               <div className="space-y-10">
+                  <div className="p-6 rounded-3xl bg-slate-50 border border-slate-100 relative group/insight">
+                     <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center shadow-lg transform group-hover/insight:scale-110 transition-all">
+                        <Sparkles className="w-4 h-4" />
+                     </div>
+                     <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Sell Signal</p>
+                     <p className="text-base font-bold text-slate-900 leading-tight">Optimal replacement window opens in <span className="text-primary">14 months</span>.</p>
                   </div>
-                  <div className="space-y-1">
-                     <span className="text-[9px] text-muted font-mono font-black uppercase tracking-widest opacity-60 flex items-center gap-1">Net Realizable <ArrowUpRight className="w-2.5 h-2.5" /></span>
-                     <p className="text-2xl font-display font-black tracking-tightest text-accent3">AED {vehicleData.currentValue.toLocaleString()}</p>
-                     <p className="text-[9px] text-muted font-mono uppercase tracking-widest opacity-40">−AED {vehicleData.totalDepreciation.toLocaleString()} Depreciated</p>
+
+                  <div className="space-y-6">
+                     {[
+                        { label: 'Maintenance ROI', val: '2.4x', percentage: 70, color: 'bg-primary' },
+                        { label: 'Fuel efficiency', val: '+12%', percentage: 85, color: 'bg-emerald-500' },
+                        { label: 'Market Resale', val: 'High', percentage: 92, color: 'bg-blue-500' },
+                     ].map((item, idx) => (
+                        <div key={idx} className="space-y-2">
+                           <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest mb-1">
+                              <span className="text-slate-400">{item.label}</span>
+                              <span className="text-slate-900">{item.val}</span>
+                           </div>
+                           <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                              <motion.div initial={{ width: 0 }} animate={{ width: `${item.percentage}%` }} transition={{ duration: 1, delay: idx * 0.1 }} className={cn("h-full rounded-full", item.color)} />
+                           </div>
+                        </div>
+                     ))}
                   </div>
                </div>
             </div>
 
-            <div className="w-[1px] bg-gradient-to-b from-transparent via-white/10 to-transparent hidden md:block" />
-            <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-white/10 to-transparent md:hidden" />
-
-            <div className="space-y-6 flex-1">
-               <div className="space-y-2">
-                  <span className="text-[9px] text-muted font-mono font-black uppercase tracking-widest opacity-60 flex items-center gap-1 justify-between">
-                     Depreciation Rate
-                     <span className="text-accent2 italic">5 Years Useful Life</span>
-                  </span>
-                  <div className="h-2 w-full bg-black/40 rounded-full overflow-hidden shadow-inner flex">
-                     <div className="h-full bg-gradient-to-r from-accent to-accent3 shadow-[0_0_12px_rgba(108,99,255,0.4)]" style={{ width: '34%' }} />
-                  </div>
-                  <div className="flex justify-between">
-                     <span className="text-[8px] text-muted font-mono uppercase tracking-widest opacity-40">Year 2</span>
-                     <span className="text-[8px] text-muted font-mono uppercase tracking-widest opacity-40">Est. Resale: AED {vehicleData.residualValue.toLocaleString()}</span>
-                  </div>
-               </div>
-               
-               <div className="flex items-center justify-between border-t border-white/5 pt-4">
-                  <span className="text-[10px] text-muted font-mono font-black uppercase tracking-widest">Monthly Cost</span>
-                  <p className="text-lg font-display font-black tracking-tightest text-accent">AED {vehicleData.monthlyDepreciation.toLocaleString()}</p>
-               </div>
-            </div>
-
+            <button className="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold text-xs hover:bg-primary transition-all shadow-xl shadow-slate-200 group-hover:scale-[1.02]">
+               Full Valuation Analysis
+            </button>
          </div>
       </div>
 
-      {/* Analysis Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-         {/* Cost Distribution */}
-         <div className="glass p-8 rounded-[40px] border border-white/5 space-y-6">
-            <div className="flex items-center justify-between">
-               <h3 className="font-display font-black text-lg tracking-tightest leading-none text-text italic">Cost Analysis</h3>
-               <TrendingUp className="w-5 h-5 text-accent opacity-50" />
+      {/* 3. History and Locations */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+         <div className="premium-card p-10 space-y-8 group">
+            <div className="flex items-center gap-4">
+               <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                  <MapPin className="w-6 h-6" />
+               </div>
+               <h4 className="font-display font-bold text-xl tracking-tight text-slate-900">Usage <span className="text-primary">Spots</span></h4>
             </div>
-            <div className="h-44 flex items-center justify-center">
-               <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                     <Pie
-                        data={costBreakdown}
-                        innerRadius={60}
-                        outerRadius={80}
-                        paddingAngle={5}
-                        dataKey="value"
-                     >
-                        {costBreakdown.map((entry, index) => (
-                           <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                     </Pie>
-                     <Tooltip 
-                       contentStyle={{ borderRadius: '20px', backgroundColor: '#0A0A0B', border: '1px solid #1A1A1E' }}
-                     />
-                  </PieChart>
-               </ResponsiveContainer>
-            </div>
-            <div className="flex flex-wrap gap-x-6 gap-y-2 font-mono">
-               {costBreakdown.map((c) => (
-                  <div key={c.name} className="flex items-center gap-2">
-                     <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: c.color }} />
-                     <span className="text-[9px] text-muted uppercase tracking-widest font-black leading-none">{c.name}</span>
-                  </div>
-               ))}
-            </div>
-         </div>
-
-         {/* Consumption Trend */}
-         <div className="glass p-8 rounded-[40px] border border-white/5 space-y-6">
-            <div className="flex items-center justify-between">
-               <h3 className="font-display font-black text-lg tracking-tightest leading-none text-text">Consumption Efficiency</h3>
-               <Fuel className="w-5 h-5 text-accent3 opacity-50" />
-            </div>
-            <div className="h-44">
-               <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={efficiencyHistory}>
-                     <defs>
-                        <linearGradient id="colorEfficiency" x1="0" y1="0" x2="0" y2="1">
-                           <stop offset="5%" stopColor="#FF9800" stopOpacity={0.3}/>
-                           <stop offset="95%" stopColor="#FF9800" stopOpacity={0}/>
-                        </linearGradient>
-                     </defs>
-                     <Tooltip 
-                        contentStyle={{ borderRadius: '20px', backgroundColor: '#0A0A0B', border: '1px solid #1A1A1E' }}
-                     />
-                     <Area type="monotone" dataKey="value" stroke="#FF9800" fillOpacity={1} fill="url(#colorEfficiency)" strokeWidth={3} />
-                  </AreaChart>
-               </ResponsiveContainer>
-            </div>
-            <div className="space-y-1">
-               <p className="text-[10px] text-muted font-mono uppercase tracking-widest font-black leading-none italic">Trend: Optimizing</p>
-               <p className="text-[9px] text-accent3 font-mono uppercase tracking-widest font-black opacity-60">7% improvement this quarter</p>
-            </div>
-         </div>
-      </div>
-
-      {/* Timeline Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-         {/* Toll Activity Heatmap Placeholder */}
-         <div className="glass p-6 rounded-[32px] border border-white/5 space-y-6 md:col-span-1">
-            <div className="flex items-center justify-between">
-               <h4 className="font-display font-black text-sm tracking-tightest leading-none text-text uppercase">Toll Footprint</h4>
-               <MapPin className="w-4 h-4 text-accent4 opacity-50" />
-            </div>
-            <div className="space-y-4">
+            <div className="space-y-6">
                {[
-                 { gate: 'Al Garhoud', usage: 'High', color: 'bg-accent4' },
-                 { gate: 'Al Maktoum', usage: 'Med', color: 'bg-accent3' },
-                 { gate: 'Mamzar South', usage: 'Low', color: 'bg-accent2' },
-               ].map((gate) => (
-                 <div key={gate.gate} className="flex flex-col gap-2">
-                    <div className="flex justify-between items-center px-1">
-                       <span className="text-[10px] text-muted font-mono font-black uppercase tracking-widest leading-none">{gate.gate}</span>
-                       <span className={`text-[9px] font-mono font-black uppercase tracking-widest leading-none bg-white/5 px-2 py-0.5 rounded italic opacity-60`}>{gate.usage}</span>
+                 { gate: 'Business District', usage: 'Frequent', percentage: 75, color: 'bg-primary' },
+                 { gate: 'Residential Bay', usage: 'Regular', percentage: 45, color: 'bg-blue-400' },
+                 { gate: 'Industrial Zone', usage: 'Occasional', percentage: 15, color: 'bg-slate-300' },
+               ].map((item, i) => (
+                 <div key={i} className="space-y-2 group/spot">
+                    <div className="flex justify-between items-center">
+                       <span className="text-xs text-slate-500 font-bold uppercase tracking-widest group-hover/spot:text-slate-900 transition-colors">{item.gate}</span>
+                       <span className="text-[10px] font-bold text-primary">{item.percentage}%</span>
                     </div>
-                    <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                       <div className={`h-full ${gate.color} opacity-40`} style={{ width: gate.usage === 'High' ? '80%' : gate.usage === 'Med' ? '40%' : '15%' }} />
+                    <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                       <motion.div initial={{ width: 0 }} animate={{ width: `${item.percentage}%` }} className={cn("h-full rounded-full transition-all duration-1000", item.color)} />
                     </div>
                  </div>
                ))}
             </div>
          </div>
 
-         {/* Maintenance History */}
-         <div className="glass p-6 rounded-[32px] border border-white/5 space-y-6 md:col-span-2">
+         <div className="lg:col-span-2 premium-card p-10 space-y-8">
             <div className="flex items-center justify-between">
-               <h4 className="font-display font-black text-sm tracking-tightest leading-none text-text uppercase">Recent Service Tokens</h4>
-               <History className="w-4 h-4 text-accent2 opacity-50" />
+               <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                     <History className="w-6 h-6" />
+                  </div>
+                  <h4 className="font-display font-bold text-xl tracking-tight text-slate-900">Service <span className="text-primary">History</span></h4>
+               </div>
+               <button className="text-[10px] font-bold text-primary uppercase tracking-widest hover:underline">Full History</button>
             </div>
-            <div className="grid gap-3 font-body">
-               {recentServices.map((service, idx) => (
-                 <div key={idx} className="glass p-4 rounded-2xl border border-white/5 flex items-center justify-between group hover:bg-white/[0.02] transition-colors">
-                    <div className="flex items-center gap-4">
-                       <div className="w-10 h-10 rounded-xl bg-accent2/10 border border-accent2/20 flex items-center justify-center text-accent2">
-                          <Wrench className="w-5 h-5" />
+            <div className="grid gap-4">
+               {recentServices.length === 0 ? (
+                 <div className="p-10 text-center border-2 border-dashed border-slate-100 rounded-[32px]">
+                   <p className="text-slate-400 font-medium italic text-sm">No service history found for this vehicle.</p>
+                 </div>
+               ) : recentServices.map((service, idx) => (
+                 <div key={idx} className="p-5 rounded-[24px] bg-slate-50 border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-6 group/item hover:bg-white hover:border-primary/20 transition-all shadow-sm">
+                    <div className="flex items-center gap-5">
+                       <div className="w-14 h-14 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-primary group-hover/item:scale-110 transition-transform">
+                          <Wrench className="w-6 h-6" />
                        </div>
-                       <div>
-                          <p className="font-display font-black text-sm tracking-tightest group-hover:text-accent2 transition-colors">{service.type}</p>
-                          <p className="text-[9px] text-muted font-mono uppercase tracking-widest font-black leading-none italic">{service.provider} • {service.date}</p>
+                       <div className="space-y-1">
+                          <p className="text-lg font-bold text-slate-900 leading-none">{service.type}</p>
+                          <div className="flex items-center gap-2">
+                             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{service.provider}</p>
+                             <span className="w-1 h-1 rounded-full bg-slate-300" />
+                             <span className="text-[10px] text-slate-400 font-medium uppercase tracking-widest italic">{service.date}</span>
+                          </div>
                        </div>
                     </div>
-                    <div className="text-right">
-                       <p className="font-display font-black text-xs text-text">{service.cost}</p>
-                       <p className="text-[8px] text-accent font-mono uppercase font-black opacity-40 leading-none">{service.odometer}</p>
+                    <div className="flex flex-col sm:text-right gap-1">
+                       <p className="text-xl font-bold text-slate-900 leading-none">AED {service.cost}</p>
+                       <div className="flex items-center sm:justify-end gap-2 text-slate-400">
+                          <Gauge className="w-3.5 h-3.5" />
+                          <p className="text-[10px] font-bold uppercase tracking-widest">{service.odometer}</p>
+                       </div>
                     </div>
                  </div>
                ))}
             </div>
          </div>
       </div>
-      
-      {/* Action Bar */}
-      <div className="fixed bottom-24 left-1/2 -translate-x-1/2 w-full max-w-lg px-4 z-40">
-         <div className="glass p-4 rounded-3xl border border-white/10 shadow-2xl flex items-center gap-4 bg-bg/80 backdrop-blur-2xl">
-            <button className="flex-1 px-6 py-4 bg-accent text-white rounded-2xl font-display font-black text-xs uppercase tracking-[0.2em] shadow-lg shadow-accent/20 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2">
-               <Fuel className="w-4 h-4" />
-               Log Fuel
-            </button>
-            <button className="flex-1 px-6 py-4 glass text-text rounded-2xl font-display font-black text-xs uppercase tracking-[0.2em] border border-white/10 hover:bg-white/5 transition-all flex items-center justify-center gap-2">
-               <AlertCircle className="w-4 h-4" />
-               Report Issue
-            </button>
+
+      <div className="flex flex-col sm:flex-row items-center justify-between py-10 border-t border-slate-100 gap-6">
+         <div className="flex items-center gap-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">
+            <Terminal className="w-4 h-4 text-primary" />
+            V-REF: {vehicle.id.slice(0,8).toUpperCase()} · Asset synchronized
+         </div>
+         <div className="flex items-center gap-3">
+            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Real-time valuation active</span>
          </div>
       </div>
     </div>

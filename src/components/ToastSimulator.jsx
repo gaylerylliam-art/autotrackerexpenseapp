@@ -60,7 +60,7 @@ const ToastSimulator = () => {
                </div>
                <div className="flex-1 space-y-1">
                   <div className="flex items-center justify-between">
-                     <h4 className="font-display font-black text-sm tracking-tightest leading-tight text-white">{t.title}</h4>
+                     <h4 className="font-display font-black text-sm tracking-tighter leading-tight text-white">{t.title}</h4>
                      <span className="text-[8px] font-mono text-muted uppercase font-black bg-white/5 px-1.5 py-0.5 rounded tracking-widest">{t.type}</span>
                   </div>
                   <p className="text-[10px] text-muted leading-relaxed font-body pr-4">{t.message}</p>

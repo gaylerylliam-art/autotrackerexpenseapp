@@ -1,514 +1,303 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
-import { Car, Fuel, Bell, MapPin, Check, ChevronRight, ChevronLeft, Sparkles, Shield, Activity, Wallet, Plus, Loader2, DollarSign } from 'lucide-react'
+import { 
+  CheckCircle2, ShieldCheck, MapPin, Database, ChevronRight, 
+  ArrowRight, Activity, Terminal, Lock, Sparkles, Zap, 
+  FileText, Info, HelpCircle, Eye, Radio, CreditCard,
+  Users, Briefcase, Car, TrendingUp, DollarSign, Loader2,
+  Camera, User, Globe
+} from 'lucide-react'
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { useNavigate } from 'react-router-dom'
+import { supabase } from '../utils/supabase'
 
-function cn(...inputs) {
-  return twMerge(clsx(inputs))
-}
+function cn(...inputs) { return twMerge(clsx(inputs)) }
 
-const steps = [
-  { id: 'vehicle', title: 'Add Vehicle', icon: Car, label: 'Garage Setup' },
-  { id: 'financial', title: 'Asset Value', icon: DollarSign, label: 'Depreciation' },
-  { id: 'toll', title: 'Toll Systems', icon: Activity, label: 'Salik / Darb' },
-  { id: 'fuel', title: 'Fuel & Mileage', icon: Fuel, label: 'Efficiency' },
-  { id: 'tracking', title: 'Auto-Track', icon: MapPin, label: 'Smart Alerts' },
+const PLANS = [
+  { id: 'free', name: 'Free', price: 'AED 0', desc: 'Basic Personal Use', features: ['1 Vehicle', 'Basic Expense Logging', 'Manual Trip Entry', '7 Day History'], color: 'text-text-muted', badge: 'PERSONAL' },
+  { id: 'pro', name: 'Pro', price: 'AED 29', desc: 'Advanced Management', features: ['Up to 5 Vehicles', 'AI Powered Insights', 'Auto-Classification', 'Full Export Options', '365 Day History'], color: 'text-primary', badge: 'MOST_POPULAR', highlight: true },
+  { id: 'fleet', name: 'Fleet', price: 'AED 129', desc: 'Full Fleet Control', features: ['Unlimited Vehicles', 'Driver Management', 'Fleet Dashboards', 'Compliance Audits', 'Priority Support', 'Custom Exports'], color: 'text-accent', badge: 'BUSINESS' },
 ]
 
 const Onboarding = () => {
-  const [currentStep, setCurrentStep] = useState(0)
   const navigate = useNavigate()
+  const [step, setStep] = useState(1) // 1: Consent, 2: Identity, 3: Plan Selection
+  const [loading, setLoading] = useState(false)
+  const [agreed, setAgreed] = useState(false)
+  const [user, setUser] = useState(null)
+  const [formData, setFormData] = useState({
+     full_name: '',
+     company: '',
+     role: 'Fleet Manager',
+     currency: 'AED'
+  })
 
-  // Onboarding Data States
-  const [vehicleData, setVehicleData] = useState({ make: '', plate: '', year: '', color: '#6c63ff' })
-  const [financialData, setFinancialData] = useState({ cost: '', date: '', life: '5', resValue: '' })
-  const [connectedTolls, setConnectedTolls] = useState([])
-  const [connectingToll, setConnectingToll] = useState(null)
-  const [fuelData, setFuelData] = useState({ type: '', mileage: '' })
-  const [trackingFeatures, setTrackingFeatures] = useState({ autoTrack: false, reminders: false })
+  useEffect(() => {
+     checkUser()
+  }, [])
 
-  const progress = ((currentStep) / (steps.length)) * 100
-
-  const handleConnectToll = (sysName) => {
-    if (connectedTolls.includes(sysName)) {
-      setConnectedTolls(prev => prev.filter(t => t !== sysName))
-      return
-    }
-    
-    setConnectingToll(sysName)
-    setTimeout(() => {
-      setConnectedTolls(prev => [...prev, sysName])
-      setConnectingToll(null)
-    }, 1200)
+  const checkUser = async () => {
+     const { data: { user } } = await supabase.auth.getUser()
+     if (!user) {
+        navigate('/auth')
+        return
+     }
+     setUser(user)
+     setFormData(p => ({ ...p, full_name: user?.user_metadata?.full_name || '' }))
   }
 
-  const handleNext = () => {
-    if (currentStep < 5) {
-      setCurrentStep(prev => prev + 1)
-    } else {
-      localStorage.setItem('autotrack_setup_complete', 'true')
-      navigate('/')
-    }
-  }
+  const handleCompleteOnboarding = async (planId) => {
+     setLoading(true)
+     try {
+        const { error } = await supabase
+           .from('profiles')
+           .upsert({
+              id: user.id,
+              full_name: formData.full_name,
+              company: formData.company,
+              role: formData.role,
+              currency: formData.currency,
+              subscription_tier: planId,
+              onboarding_complete: true,
+              updated_at: new Date().toISOString()
+           })
 
-  const handleSkip = () => {
-    localStorage.setItem('autotrack_setup_complete', 'true')
-    navigate('/')
-  }
-
-  const handleBack = () => {
-    if (currentStep > 0) {
-      setCurrentStep(prev => prev - 1)
-    }
+        if (error) throw error
+        navigate('/')
+     } catch (err) {
+        console.error('Onboarding sync failure:', err)
+     } finally {
+        setLoading(false)
+     }
   }
 
   return (
-    <div className="min-h-screen bg-bg text-text selection:bg-accent/30 flex flex-col items-center justify-center p-6 pb-24 relative overflow-hidden">
-      {/* Abstract Background Orbs */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-accent/20 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent2/10 rounded-full blur-[120px] pointer-events-none" />
-
-      {/* Main Content Area */}
-      <div className="w-full max-w-md relative z-10 flex flex-col gap-10">
-        
-        {/* Progress Header */}
-        <div className="space-y-4">
-           <div className="flex items-center justify-between px-1">
-              <span className="text-[10px] text-accent font-mono font-black uppercase tracking-[0.2em]">Setup Progress</span>
-              <span className="text-[10px] text-muted font-mono font-black uppercase tracking-[0.2em]">{Math.round(progress)}% Complete</span>
-           </div>
-           <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden flex">
-              <motion.div 
-                initial={{ width: 0 }}
-                animate={{ width: `${progress}%` }}
-                className="h-full bg-gradient-to-r from-accent to-accent2 shadow-[0_0_12px_rgba(108,99,255,0.4)]"
-              />
-           </div>
-        </div>
-
-        {/* Form Container */}
-        <div className="min-h-[460px] flex flex-col">
-          <AnimatePresence mode="popLayout">
-            <motion.div
-              key={currentStep}
-              initial={{ opacity: 0, x: 20, filter: 'blur(4px)' }}
-              animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, x: -20, filter: 'blur(4px)' }}
-              className="flex-1"
-            >
-               {currentStep === 0 && (
-                 <div className="space-y-8">
-                    <div className="space-y-2">
-                       <h1 className="text-4xl font-display font-black tracking-tightest leading-none">Let's build your <span className="gradient-text">Garage.</span></h1>
-                       <p className="text-muted text-sm leading-relaxed max-w-[300px]">Add your primary vehicle to start tracking expenses and health.</p>
-                    </div>
-                    
-                    <div className="space-y-5">
-                       <div className="space-y-2">
-                          <label className="text-[10px] text-muted font-mono uppercase tracking-widest pl-1 font-black flex justify-between">
-                            <span>Make & Model</span>
-                            {vehicleData.make && <Check className="w-3 h-3 text-accent2" />}
-                          </label>
-                          <input 
-                            type="text" 
-                            placeholder="e.g. BMW X5" 
-                            value={vehicleData.make}
-                            onChange={(e) => setVehicleData(p => ({ ...p, make: e.target.value }))}
-                            className="w-full bg-surface/50 border border-white/5 rounded-2xl px-6 py-4 text-sm focus:outline-none focus:border-accent/40 transition-all placeholder:text-muted/20" 
-                          />
-                       </div>
-                       <div className="space-y-2">
-                          <label className="text-[10px] text-muted font-mono uppercase tracking-widest pl-1 font-black flex justify-between">
-                            <span>Plate Number (Dubai, Abu Dhabi, etc.)</span>
-                            {vehicleData.plate && <Check className="w-3 h-3 text-accent2" />}
-                          </label>
-                          <input 
-                            type="text" 
-                            placeholder="P 12345" 
-                            value={vehicleData.plate}
-                            onChange={(e) => setVehicleData(p => ({ ...p, plate: e.target.value }))}
-                            className="w-full bg-surface/50 border border-white/5 rounded-2xl px-6 py-4 font-display font-black tracking-widest text-base focus:outline-none focus:border-accent/40 transition-all placeholder:text-muted/10 text-center uppercase" 
-                          />
-                       </div>
-                       <div className="grid grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                             <label className="text-[10px] text-muted font-mono uppercase tracking-widest pl-1 font-black">Year</label>
-                             <input 
-                               type="number" 
-                               placeholder="2024" 
-                               value={vehicleData.year}
-                               onChange={(e) => setVehicleData(p => ({ ...p, year: e.target.value }))}
-                               className="w-full bg-surface/50 border border-white/5 rounded-2xl px-6 py-4 text-sm focus:outline-none focus:border-accent/40 transition-all" 
-                             />
-                          </div>
-                          <div className="space-y-2">
-                             <label className="text-[10px] text-muted font-mono uppercase tracking-widest pl-1 font-black">Color</label>
-                             <div className="flex gap-2 py-1 items-center justify-center">
-                               {['#6c63ff', '#3ecf8e', '#f7c948', '#ff6b6b'].map(c => (
-                                 <button 
-                                  key={c} 
-                                  onClick={() => setVehicleData(p => ({ ...p, color: c }))}
-                                  className={cn("w-8 h-8 rounded-full border border-white/10 transition-transform", vehicleData.color === c && 'scale-125 ring-2 ring-white/20')} 
-                                  style={{ backgroundColor: c }} 
-                                 />
-                               ))}
-                             </div>
-                          </div>
-                       </div>
-                    </div>
-                 </div>
-               )}
-
-               {currentStep === 1 && (
-                 <div className="space-y-8">
-                    <div className="space-y-2">
-                       <h1 className="text-4xl font-display font-black tracking-tightest leading-none">Asset <span className="text-accent3">Value.</span></h1>
-                       <p className="text-muted text-sm leading-relaxed max-w-[300px]">Calculate real costs and automated depreciation by entering purchase details.</p>
-                    </div>
-
-                    <div className="space-y-5">
-                       <div className="space-y-2">
-                          <label className="text-[10px] text-muted font-mono uppercase tracking-widest pl-1 font-black flex justify-between">
-                            <span>Purchase Cost (AED)</span>
-                            {financialData.cost && <Check className="w-3 h-3 text-accent2" />}
-                          </label>
-                          <input 
-                            type="number" 
-                            placeholder="e.g. 250000" 
-                            value={financialData.cost}
-                            onChange={(e) => setFinancialData(p => ({ ...p, cost: e.target.value }))}
-                            className="w-full bg-surface/50 border border-white/5 rounded-2xl px-6 py-4 font-display font-black tracking-tightest text-xl focus:outline-none focus:border-accent/40 transition-all placeholder:text-muted/20" 
-                          />
-                       </div>
-
-                       <div className="grid grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                             <label className="text-[10px] text-muted font-mono uppercase tracking-widest pl-1 font-black">Purchase Date</label>
-                             <input 
-                               type="date" 
-                               value={financialData.date}
-                               onChange={(e) => setFinancialData(p => ({ ...p, date: e.target.value }))}
-                               className="w-full bg-surface/50 border border-white/5 rounded-2xl px-4 py-4 text-xs font-mono font-black uppercase tracking-widest text-muted focus:outline-none focus:border-accent/40 transition-all [color-scheme:dark]" 
-                             />
-                          </div>
-                          <div className="space-y-2">
-                             <label className="text-[10px] text-muted font-mono uppercase tracking-widest pl-1 font-black flex justify-between">
-                                Useful Life <span className="text-accent2 italic">{financialData.life} yrs</span>
-                             </label>
-                             <div className="h-full bg-surface/50 border border-white/5 rounded-2xl flex items-center px-4 relative">
-                                <input 
-                                  type="range" 
-                                  min="1" max="15" 
-                                  value={financialData.life}
-                                  onChange={(e) => setFinancialData(p => ({ ...p, life: e.target.value }))}
-                                  className="w-full accent-accent transition-all cursor-pointer" 
-                                />
-                             </div>
-                          </div>
-                       </div>
-
-                       <div className="space-y-2">
-                          <label className="text-[10px] text-muted font-mono uppercase tracking-widest pl-1 font-black flex justify-between">
-                            <span>Est. Resale Value (Optional)</span>
-                          </label>
-                          <input 
-                            type="number" 
-                            placeholder="Defaults to 15% if blank" 
-                            value={financialData.resValue}
-                            onChange={(e) => setFinancialData(p => ({ ...p, resValue: e.target.value }))}
-                            className="w-full bg-surface/50 border border-white/5 rounded-2xl px-6 py-4 text-sm focus:outline-none focus:border-accent/40 transition-all placeholder:text-muted/20" 
-                          />
-                       </div>
-                    </div>
-                 </div>
-               )}
-
-               {currentStep === 2 && (
-                 <div className="space-y-8">
-                    <div className="space-y-2">
-                       <h1 className="text-4xl font-display font-black tracking-tightest leading-none text-text">Connect <span className="text-blue-400 underline decoration-blue-400/20 underline-offset-8">Tolls.</span></h1>
-                       <p className="text-muted text-sm leading-relaxed max-w-[280px]">Automate your gate crossings and account balances. Secure real-time sync.</p>
-                    </div>
-
-                    <div className="space-y-4">
-                       {[
-                         { name: 'Salik (Dubai)', desc: 'Gate crossings & balance', icon: '🛣️' },
-                         { name: 'Darb (Abu Dhabi)', desc: 'Integrated toll system', icon: '🏙️' },
-                         { name: 'Aber (Umm Al Quwain)', desc: 'Regional toll solution', icon: '🚗' },
-                       ].map((sys, i) => {
-                         const isConnected = connectedTolls.includes(sys.name)
-                         const isConnecting = connectingToll === sys.name
-                         
-                         return (
-                         <div 
-                           key={i} 
-                           onClick={() => handleConnectToll(sys.name)}
-                           className={cn(
-                             "glass p-5 rounded-[24px] border flex items-center justify-between group cursor-pointer transition-all active:scale-[0.98]",
-                             isConnected ? "bg-accent2/10 border-accent2/40" : "border-white/5 hover:border-blue-400/40"
-                           )}
-                         >
-                            <div className="flex items-center gap-4">
-                               <div className="w-12 h-12 rounded-[18px] bg-white/[0.02] border border-white/5 flex items-center justify-center text-xl shadow-inner">
-                                  {sys.icon}
-                               </div>
-                               <div className="space-y-0.5">
-                                  <h4 className={cn("font-display font-black text-sm tracking-tightest transition-colors", isConnected ? "text-accent2" : "text-text group-hover:text-blue-400")}>{sys.name}</h4>
-                                  <p className="text-[10px] text-muted font-mono uppercase tracking-widest font-black opacity-60 leading-none">{isConnected ? 'Connected Synced' : sys.desc}</p>
-                               </div>
-                            </div>
-                            <div className={cn(
-                              "w-8 h-8 rounded-full flex items-center justify-center transition-colors",
-                              isConnected ? "bg-accent2 text-bg" : "border border-white/10 text-muted group-hover:border-blue-400/20 group-hover:text-blue-400"
-                            )}>
-                               {isConnecting ? (
-                                 <Loader2 className="w-4 h-4 animate-spin" />
-                               ) : isConnected ? (
-                                 <Check className="w-4 h-4" />
-                               ) : (
-                                 <Plus className="w-4 h-4" />
-                               )}
-                            </div>
-                         </div>
-                       )})}
-                    </div>
-                 </div>
-               )}
-
-               {currentStep === 3 && (
-                 <div className="space-y-8">
-                    <div className="space-y-1">
-                       <h1 className="text-4xl font-display font-black tracking-tightest leading-none">Fuel & <span className="text-accent2">Usage.</span></h1>
-                       <p className="text-muted text-sm leading-relaxed">Let's calibrate your efficiency metrics.</p>
-                    </div>
-
-                    <div className="space-y-10">
-                       <div className="space-y-4">
-                          <label className="text-[10px] text-muted font-mono uppercase tracking-[0.2em] px-1 font-black flex justify-between">
-                             <span>Fuel Type</span>
-                             {fuelData.type && <Check className="w-3 h-3 text-accent2" />}
-                          </label>
-                          <div className="flex gap-2">
-                             {['E-Plus 91', 'Special 95', 'Super 98', 'Diesel'].map(type => (
-                               <button 
-                                key={type} 
-                                onClick={() => setFuelData(p => ({ ...p, type }))}
-                                className={cn(
-                                  "flex-1 py-3 px-1 rounded-xl border border-white/5 font-display font-black text-[9px] uppercase tracking-widest transition-all",
-                                  fuelData.type === type ? "bg-accent2/20 border-accent2 text-accent2 shadow-[0_0_12px_rgba(62,207,142,0.2)]" : "glass text-muted hover:text-text hover:border-accent2/30"
-                                )}
-                               >
-                                  {type}
-                               </button>
-                             ))}
-                          </div>
-                       </div>
-
-                       <div className="space-y-4">
-                          <label className="text-[10px] text-muted font-mono uppercase tracking-[0.2em] px-1 font-black flex justify-between">
-                            <span>Current Odometer</span>
-                            {fuelData.mileage && <Check className="w-3 h-3 text-accent2" />}
-                          </label>
-                          <div className="relative">
-                             <input 
-                              type="number" 
-                              placeholder="0" 
-                              value={fuelData.mileage}
-                              onChange={(e) => setFuelData(p => ({ ...p, mileage: e.target.value }))}
-                              className="w-full bg-surface/50 border border-white/5 rounded-2xl px-6 py-6 text-2xl font-display font-black tracking-tightest focus:outline-none focus:border-accent2 transition-all placeholder:text-muted/10" 
-                             />
-                             <span className="absolute right-6 top-1/2 -translate-y-1/2 text-muted font-mono text-sm font-black uppercase tracking-widest">km</span>
-                          </div>
-                       </div>
-                    </div>
-                 </div>
-               )}
-
-               {currentStep === 4 && (
-                 <div className="space-y-8">
-                    <div className="space-y-1">
-                       <h1 className="text-4xl font-display font-black tracking-tightest leading-none">Set it <span className="text-accent">Auto.</span></h1>
-                       <p className="text-muted text-sm leading-relaxed">Turn on the smart features to track without opening the app.</p>
-                    </div>
-
-                    <div className="space-y-6">
-                       <div 
-                         onClick={() => setTrackingFeatures(p => ({ ...p, autoTrack: !p.autoTrack }))}
-                         className={cn(
-                           "glass p-6 rounded-[32px] border cursor-pointer transition-all",
-                           trackingFeatures.autoTrack ? "bg-gradient-to-br from-accent/20 to-transparent border-accent/40" : "border-white/10 bg-gradient-to-br from-white/[0.04] to-transparent hover:border-accent/20"
-                         )}
-                       >
-                          <div className="flex items-center justify-between">
-                            <div className="space-y-1">
-                               <h4 className="font-display font-black text-lg tracking-tightest">Auto-Tracking</h4>
-                               <p className="text-[10px] text-muted font-mono font-black uppercase tracking-widest italic leading-none opacity-60">Uses GPS to log trips & tolls</p>
-                            </div>
-                            <div className={cn("w-12 h-6 rounded-full relative transition-colors shadow-inner", trackingFeatures.autoTrack ? "bg-accent shadow-[0_0_12px_rgba(108,99,255,0.4)]" : "bg-white/10")}>
-                               <motion.div 
-                                 animate={{ x: trackingFeatures.autoTrack ? 24 : 4 }}
-                                 className={cn("w-4 h-4 rounded-full absolute top-1", trackingFeatures.autoTrack ? "bg-white" : "bg-muted")} 
-                               />
-                            </div>
-                          </div>
-                          
-                          <AnimatePresence>
-                            {trackingFeatures.autoTrack && (
-                              <motion.div 
-                                initial={{ opacity: 0, height: 0, marginTop: 0 }}
-                                animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
-                                exit={{ opacity: 0, height: 0, marginTop: 0 }}
-                                className="overflow-hidden"
-                              >
-                                <div className="p-3 bg-black/20 rounded-xl border border-white/5 flex gap-3 text-xs items-center">
-                                   <MapPin className="w-4 h-4 text-accent animate-pulse" />
-                                   <span className="text-muted">Location permissions will be requested via iOS settings.</span>
-                                </div>
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
-                       </div>
-
-                       <div 
-                         onClick={() => setTrackingFeatures(p => ({ ...p, reminders: !p.reminders }))}
-                         className={cn(
-                           "glass p-6 rounded-[32px] border cursor-pointer transition-all",
-                           trackingFeatures.reminders ? "bg-gradient-to-br from-accent2/10 to-transparent border-accent2/40" : "border-white/10 bg-gradient-to-br from-white/[0.04] to-transparent hover:border-accent2/20"
-                         )}
-                       >
-                          <div className="flex items-center justify-between">
-                            <div className="space-y-1">
-                               <h4 className="font-display font-black text-lg tracking-tightest">Reminders</h4>
-                               <p className="text-[10px] text-muted font-mono font-black uppercase tracking-widest italic leading-none opacity-60">Insurance, Service & Registration</p>
-                            </div>
-                            <div className={cn("w-12 h-6 rounded-full relative transition-colors shadow-inner", trackingFeatures.reminders ? "bg-accent2 shadow-[0_0_12px_rgba(62,207,142,0.4)]" : "bg-white/10")}>
-                               <motion.div 
-                                 animate={{ x: trackingFeatures.reminders ? 24 : 4 }}
-                                 className={cn("w-4 h-4 rounded-full absolute top-1", trackingFeatures.reminders ? "bg-bg" : "bg-muted")} 
-                               />
-                            </div>
-                          </div>
-                          <AnimatePresence>
-                            {trackingFeatures.reminders && (
-                              <motion.div 
-                                initial={{ opacity: 0, height: 0, marginTop: 0 }}
-                                animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
-                                exit={{ opacity: 0, height: 0, marginTop: 0 }}
-                                className="overflow-hidden"
-                              >
-                                <div className="p-3 bg-black/20 rounded-xl border border-white/5 flex gap-3 text-xs items-center">
-                                   <Bell className="w-4 h-4 text-accent2" />
-                                   <span className="text-muted">Push notifications enabled successfully.</span>
-                                </div>
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
-                       </div>
-                    </div>
-                 </div>
-               )}
-
-               {currentStep === 5 && (
-                 <div className="space-y-12 text-center flex flex-col items-center justify-center py-10">
-                    <div className="w-24 h-24 rounded-full bg-accent2/20 border border-accent2/40 flex items-center justify-center text-accent2 shadow-[0_0_40px_rgba(62,207,142,0.2)]">
-                       <motion.div
-                         initial={{ scale: 0 }}
-                         animate={{ scale: 1 }}
-                         transition={{ type: 'spring', damping: 10, stiffness: 100 }}
-                       >
-                          <Check className="w-12 h-12 stroke-[4px]" />
-                       </motion.div>
-                    </div>
-                    
-                    <div className="space-y-4">
-                       <h1 className="text-5xl font-display font-black tracking-tightest leading-tight">All <span className="gradient-text">Set.</span></h1>
-                       <p className="text-muted text-sm leading-relaxed max-w-[260px] mx-auto">Your Autotrack experience is now optimized for the UAE.</p>
-                    </div>
-
-                    <div className="mt-8 flex flex-col gap-4 w-full">
-                       <motion.div 
-                         initial={{ opacity: 0, y: 10 }}
-                         animate={{ opacity: 1, y: 0 }}
-                         transition={{ delay: 0.3 }}
-                         className="flex items-center gap-4 bg-surface2/50 border border-white/5 p-4 rounded-2xl text-left"
-                       >
-                          <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center text-accent">
-                             <Shield className="w-5 h-5" />
-                          </div>
-                          <div className="flex-1">
-                             <h5 className="font-display font-black text-xs tracking-widest uppercase">Verified Setup</h5>
-                             <p className="text-[9px] text-muted font-mono uppercase tracking-widest">{connectedTolls.length || 0} integrations active</p>
-                          </div>
-                          <Check className="w-4 h-4 text-accent" />
-                       </motion.div>
-
-                       <motion.div 
-                         initial={{ opacity: 0, y: 10 }}
-                         animate={{ opacity: 1, y: 0 }}
-                         transition={{ delay: 0.5 }}
-                         className="flex items-center gap-4 bg-surface2/50 border border-white/5 p-4 rounded-2xl text-left"
-                       >
-                          <div className="w-10 h-10 rounded-xl bg-accent2/20 flex items-center justify-center text-accent2">
-                             <Activity className="w-5 h-5" />
-                          </div>
-                          <div className="flex-1">
-                             <h5 className="font-display font-black text-xs tracking-widest uppercase">Telemetry</h5>
-                             <p className="text-[9px] text-muted font-mono uppercase tracking-widest">{trackingFeatures.autoTrack ? 'Active tracking' : 'Manual mode'}</p>
-                          </div>
-                          <Check className="w-4 h-4 text-accent2" />
-                       </motion.div>
-                    </div>
-                 </div>
-               )}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="space-y-4 pt-4">
-           {currentStep < 5 ? (
-             <div className="flex items-center gap-4 relative z-10">
-               {currentStep > 0 && (
-                 <button 
-                  onClick={handleBack}
-                  className="w-16 h-16 rounded-2xl glass border border-white/10 flex items-center justify-center text-muted hover:text-text active:scale-90 transition-all cursor-pointer"
-                 >
-                   <ChevronLeft className="w-6 h-6" />
-                 </button>
-               )}
-               <button 
-                onClick={handleNext}
-                className="flex-1 h-16 rounded-[24px] bg-accent text-white font-display font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-accent/20 flex items-center justify-center gap-2 group active:scale-[0.98] transition-all cursor-pointer hover:bg-accent/90"
+    <div className="min-h-screen bg-bg-deep flex flex-col items-center justify-center p-6 lg:p-12 relative overflow-hidden text-slate-900">
+      <div className="absolute inset-0 pointer-events-none opacity-[0.05] z-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+      
+      <div className="max-w-[1200px] w-full relative z-10">
+         <AnimatePresence mode="wait">
+            {step === 1 && (
+               <motion.div 
+                  key="consent"
+                  initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }}
+                  className="saas-card p-12 lg:p-24 space-y-16 max-w-4xl mx-auto border-white/10 shadow-premium bg-white/5 backdrop-blur-2xl"
                >
-                 {currentStep === 4 ? 'Finish Setup' : 'Continue'}
-                 <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-               </button>
-             </div>
-           ) : (
-             <button 
-              onClick={handleSkip}
-              className="w-full h-20 rounded-[32px] bg-white text-black font-display font-black text-sm uppercase tracking-[0.3em] shadow-2xl active:scale-[0.98] transition-all cursor-pointer hover:bg-white/90 relative z-10"
-             >
-               Go to Dashboard
-             </button>
-           )}
-           
-           {currentStep < 5 && (
-             <button 
-              onClick={handleSkip}
-              className="w-full text-center text-[10px] text-muted font-mono uppercase tracking-[0.2em] py-2 hover:text-white transition-colors cursor-pointer relative z-10"
-             >
-               Skip to dashboard
-             </button>
-           )}
-        </div>
+                  <div className="space-y-6 text-center">
+                     <div className="flex justify-center mb-10">
+                        <div className="w-24 h-24 rounded-[32px] bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-glow shadow-primary/10">
+                           <ShieldCheck className="w-12 h-12 stroke-[2.5]" />
+                        </div>
+                     </div>
+                     <h1 className="text-5xl lg:text-7xl font-display font-black text-white italic uppercase tracking-tighter leading-none underline decoration-primary/20 decoration-8 underline-offset-8">Auto<span className="text-primary">Track</span> <br/> Setup</h1>
+                     <p className="text-[12px] text-text-muted font-mono font-bold uppercase tracking-[0.3em] opacity-40 italic">Secure individual & fleet expense management</p>
+                  </div>
 
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-10 border-t border-white/5">
+                     <div className="space-y-6 flex gap-8 group">
+                        <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                           <MapPin className="w-7 h-7 text-primary" />
+                        </div>
+                        <div className="space-y-3">
+                           <h3 className="text-xl font-display font-black text-white italic uppercase tracking-tighter">Location Tracking</h3>
+                           <p className="text-[11px] text-text-muted font-display leading-relaxed opacity-60">We use GPS coordinates to accurately log your trips and calculate tax reimbursements. All location data is encrypted for your privacy.</p>
+                        </div>
+                     </div>
+                     <div className="space-y-6 flex gap-8 group">
+                        <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500">
+                           <Database className="w-7 h-7 text-primary" />
+                        </div>
+                        <div className="space-y-3">
+                           <h3 className="text-xl font-display font-black text-white italic uppercase tracking-tighter">Smart Insights</h3>
+                           <p className="text-[11px] text-text-muted font-display leading-relaxed opacity-60">We analyze your spending patterns to provide AI-powered cost saving suggestions. We never share your private data with third parties.</p>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div className="flex flex-col items-center gap-10 pt-10">
+                     <label className="flex items-center gap-6 cursor-pointer group">
+                        <input type="checkbox" className="hidden" checked={agreed} onChange={e => setAgreed(e.target.checked)} />
+                        <div className={cn(
+                           "w-10 h-10 rounded-xl flex items-center justify-center border transition-all shadow-premium",
+                           agreed ? "bg-primary border-primary text-white shadow-glow" : "bg-white/5 border-white/10 group-hover:bg-white/10"
+                        )}>
+                           <CheckCircle2 className="w-6 h-6 stroke-[3]" />
+                        </div>
+                        <span className="text-[12px] font-mono font-black text-text-muted uppercase tracking-widest italic leading-none group-hover:text-white transition-colors">I accept the Terms of Service & Privacy Policy</span>
+                     </label>
+
+                     <button disabled={!agreed} onClick={() => setStep(2)} className={cn("h-18 px-16 btn-primary text-sm font-black italic tracking-[0.2em] shadow-glow disabled:opacity-30")}>
+                        Get Started
+                        <ArrowRight className="w-6 h-6 ml-4" />
+                     </button>
+                  </div>
+               </motion.div>
+            )}
+
+            {step === 2 && (
+               <motion.div 
+                  key="identity"
+                  initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}
+                  className="saas-card p-12 lg:p-24 space-y-16 max-w-4xl mx-auto border-white/10 shadow-premium bg-white/5 backdrop-blur-2xl"
+               >
+                  <div className="text-center space-y-6">
+                     <h2 className="text-6xl font-display font-black text-white italic uppercase tracking-tighter leading-none">Your <span className="text-primary glow-text">Profile</span></h2>
+                     <p className="text-[12px] text-text-muted font-mono font-black uppercase tracking-[0.4em] opacity-40 italic">Set up your personal or business account</p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-10">
+                     <div className="space-y-6">
+                        <label className="text-[11px] text-text-muted font-mono font-black uppercase tracking-widest italic pl-2">Your Name</label>
+                        <div className="relative group">
+                           <User className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-white/20 group-focus-within:text-primary transition-all" />
+                           <input 
+                              placeholder="FULL NAME" 
+                              value={formData.full_name} 
+                              onChange={e => setFormData(p => ({ ...p, full_name: e.target.value.toUpperCase() }))}
+                              className="w-full h-18 bg-white/5 border border-white/10 rounded-2xl px-16 text-lg font-display font-black italic text-white focus:outline-none focus:bg-white/10 focus:border-primary/40 transition-all uppercase"
+                           />
+                        </div>
+                     </div>
+                     <div className="space-y-6">
+                        <label className="text-[11px] text-text-muted font-mono font-black uppercase tracking-widest italic pl-2">Company Name</label>
+                        <div className="relative group">
+                           <Briefcase className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-white/20 group-focus-within:text-primary transition-all" />
+                           <input 
+                              placeholder="COMPANY NAME" 
+                              value={formData.company} 
+                              onChange={e => setFormData(p => ({ ...p, company: e.target.value.toUpperCase() }))}
+                              className="w-full h-18 bg-white/5 border border-white/10 rounded-2xl px-16 text-lg font-display font-black italic text-white focus:outline-none focus:bg-white/10 focus:border-primary/40 transition-all uppercase"
+                           />
+                        </div>
+                     </div>
+                     <div className="space-y-6">
+                        <label className="text-[11px] text-text-muted font-mono font-black uppercase tracking-widest italic pl-2">Your Role</label>
+                        <select 
+                           value={formData.role} 
+                           onChange={e => setFormData(p => ({ ...p, role: e.target.value }))}
+                           className="w-full h-18 bg-white/5 border border-white/10 rounded-2xl px-12 text-[12px] font-display font-black italic text-white focus:outline-none focus:bg-white/10 focus:border-primary/40 transition-all uppercase tracking-widest appearance-none"
+                        >
+                           <option value="Fleet Manager">Fleet Manager</option>
+                           <option value="Owner Operator">Owner Driver</option>
+                           <option value="Dispatch Command">Operations</option>
+                        </select>
+                     </div>
+                     <div className="space-y-6">
+                        <label className="text-[11px] text-text-muted font-mono font-black uppercase tracking-widest italic pl-2">Preferred Currency</label>
+                        <div className="grid grid-cols-2 gap-4">
+                           {['AED', 'USD'].map(c => (
+                              <button 
+                                 key={c} onClick={() => setFormData(p => ({ ...p, currency: c }))}
+                                 className={cn(
+                                    "h-18 rounded-2xl border font-display font-black italic text-[11px] tracking-widest transition-all",
+                                    formData.currency === c ? "bg-primary border-primary text-white shadow-glow" : "bg-white/5 border-white/10 text-white/40 hover:bg-white/10"
+                                 )}
+                              >
+                                 {c}
+                              </button>
+                           ))}
+                        </div>
+                     </div>
+                  </div>
+
+                  <div className="flex justify-center pt-10">
+                     <button 
+                        disabled={!formData.full_name || !formData.company} 
+                        onClick={() => setStep(3)} 
+                        className="h-18 px-16 btn-primary text-sm font-black italic tracking-[0.2em] shadow-glow disabled:opacity-30"
+                     >
+                        Continue
+                        <ArrowRight className="w-6 h-6 ml-4" />
+                     </button>
+                  </div>
+               </motion.div>
+            )}
+
+            {step === 3 && (
+               <motion.div 
+                  key="plans"
+                  initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+                  className="space-y-16"
+               >
+                  <div className="text-center space-y-6">
+                     <h2 className="text-6xl font-display font-black text-white italic uppercase tracking-tighter leading-none">Choose <span className="text-primary glow-text">Your Plan</span></h2>
+                     <p className="text-[12px] text-text-muted font-mono font-black uppercase tracking-[0.4em] opacity-40 italic">Select the best fit for your needs</p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                     {PLANS.map((plan, i) => (
+                        <motion.div 
+                           key={plan.id}
+                           initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
+                           className={cn(
+                              "saas-card p-12 flex flex-col justify-between group h-full relative border-white/10 shadow-premium bg-white/5 backdrop-blur-2xl",
+                              plan.highlight && "border-primary/40 bg-primary/2 shadow-glow shadow-primary/10"
+                           )}
+                        >
+                           {plan.highlight && (
+                              <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-2 bg-primary text-white text-[9px] font-black uppercase tracking-[0.3em] italic rounded-full shadow-glow">
+                                 {plan.badge}
+                              </div>
+                           )}
+                           <div className="space-y-12">
+                              <div className="space-y-4">
+                                 <span className={cn("text-[10px] font-mono font-black uppercase tracking-widest italic opacity-40 leading-none block", plan.color)}>{plan.desc}</span>
+                                 <h3 className="text-4xl font-display font-black text-white italic leading-none">{plan.name}</h3>
+                                 <div className="flex items-end gap-3 pt-4">
+                                    <span className="text-5xl font-mono font-black italic tracking-tighter leading-none text-white">{plan.price}</span>
+                                    <span className="text-[11px] text-text-muted uppercase font-black tracking-widest italic opacity-40 mb-1">/MON</span>
+                                 </div>
+                              </div>
+                              <div className="space-y-6 border-t border-white/5 pt-10">
+                                 {plan.features.map((f, j) => (
+                                    <div key={j} className="flex items-center gap-4 group/feat">
+                                       <CheckCircle2 className="w-5 h-5 text-primary opacity-40 group-hover/feat:opacity-100 transition-opacity" />
+                                       <span className="text-[11px] font-display font-bold text-text-secondary leading-none uppercase italic group-hover/feat:text-white transition-colors">{f}</span>
+                                    </div>
+                                 ))}
+                              </div>
+                           </div>
+                           <button 
+                              onClick={() => handleCompleteOnboarding(plan.id)}
+                              disabled={loading}
+                              className={cn(
+                                 "w-full h-16 btn-primary mt-12 text-[10px] font-black italic shadow-premium relative overflow-hidden",
+                                 plan.id === 'free' ? "bg-white/5 text-white/40 border border-white/10 hover:bg-white/10 hover:text-white" : ""
+                              )}
+                           >
+                              {loading ? <Loader2 className="w-6 h-6 animate-spin text-white mx-auto" /> : `Select ${plan.name} Plan`}
+                           </button>
+                        </motion.div>
+                     ))}
+                  </div>
+
+                  <div className="text-center">
+                     <button onClick={() => setStep(2)} className="text-[10px] font-mono font-black text-text-muted uppercase tracking-[0.3em] hover:text-white transition-all italic opacity-40">Go Back</button>
+                  </div>
+               </motion.div>
+            )}
+         </AnimatePresence>
+      </div>
+
+      <div className="absolute bottom-10 left-0 right-0 px-24 hidden lg:flex items-center justify-between opacity-20 pointer-events-none">
+         <div className="flex items-center gap-6 text-[10px] font-mono font-black uppercase tracking-[0.3em] font-black text-white flex-1">
+            <Terminal className="w-5 h-5 text-primary" />
+            Secure Data Processing · Encrypted Storage · 24/7 Monitoring
+         </div>
+         <div className="flex gap-10">
+            <div className="flex items-center gap-3">
+               <Radio className="w-4 h-4 text-primary animate-pulse" />
+               <span className="text-[9px] font-mono font-black text-white uppercase italic">System Status: Online</span>
+            </div>
+            <div className="flex items-center gap-3">
+               <Eye className="w-4 h-4 text-emerald-500" />
+               <span className="text-[10px] font-mono font-black text-white uppercase italic">Secure Connection</span>
+            </div>
+         </div>
       </div>
     </div>
   )
 }
 
 export default Onboarding
-

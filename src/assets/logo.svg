@@ -1,0 +1,22 @@
+<svg 
+  viewBox="0 0 100 100" 
+  fill="none" 
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="#7C3AED" />
+      <stop offset="100%" stopColor="#A855F7" />
+    </linearGradient>
+  </defs>
+
+  {/* Signal Arcs */}
+  <path d="M28 42C25 47 25 53 28 58M22 38C17 44 17 56 22 62M72 42C75 47 75 53 72 58M78 38C83 44 83 56 78 62" stroke="#A855F7" strokeWidth="3.5" strokeLinecap="round" opacity="0.6"/>
+
+  {/* Car Silhouette */}
+  <path d="M34 68C34 72 38 74 42 74H58C62 74 66 72 66 68V62C66 56 60 48 50 48C40 48 34 56 34 62V68Z" fill="url(#logoGradient)"/>
+  
+  {/* Location Pin */}
+  <path d="M50 24C44 24 40 28 40 34C40 42 50 48 50 48C50 48 60 42 60 34C60 28 56 24 50 24Z" fill="#7C3AED" />
+  <circle cx="50" cy="34" r="3.5" fill="white" />
+</svg>
