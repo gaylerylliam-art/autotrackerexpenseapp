@@ -90,8 +90,8 @@ const Onboarding = () => {
                            <ShieldCheck className="w-12 h-12 stroke-[2.5]" />
                         </div>
                      </div>
-                     <h1 className="text-5xl lg:text-7xl font-display font-black text-white italic uppercase tracking-tighter leading-none underline decoration-primary/20 decoration-8 underline-offset-8">Auto<span className="text-primary">Track</span> <br/> Setup</h1>
-                     <p className="text-[12px] text-text-muted font-mono font-bold uppercase tracking-[0.3em] opacity-40 italic">Secure individual & fleet expense management</p>
+                     <h1 className="text-5xl lg:text-7xl font-display font-black text-slate-900 italic uppercase tracking-tighter leading-none underline decoration-primary/20 decoration-8 underline-offset-8">Auto<span className="text-primary">Track</span> <br/> Setup</h1>
+                     <p className="text-[12px] text-slate-500 font-mono font-bold uppercase tracking-[0.3em] opacity-70 italic">Secure individual & fleet expense management</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-10 border-t border-white/5">
@@ -100,8 +100,8 @@ const Onboarding = () => {
                            <MapPin className="w-7 h-7 text-primary" />
                         </div>
                         <div className="space-y-3">
-                           <h3 className="text-xl font-display font-black text-white italic uppercase tracking-tighter">Location Tracking</h3>
-                           <p className="text-[11px] text-text-muted font-display leading-relaxed opacity-60">We use GPS coordinates to accurately log your trips and calculate tax reimbursements. All location data is encrypted for your privacy.</p>
+                           <h3 className="text-xl font-display font-black text-slate-900 italic uppercase tracking-tighter">Location Tracking</h3>
+                           <p className="text-[11px] text-slate-600 font-display font-medium leading-relaxed">We use GPS coordinates to accurately log your trips and calculate tax reimbursements. All location data is encrypted for your privacy.</p>
                         </div>
                      </div>
                      <div className="space-y-6 flex gap-8 group">
@@ -109,8 +109,8 @@ const Onboarding = () => {
                            <Database className="w-7 h-7 text-primary" />
                         </div>
                         <div className="space-y-3">
-                           <h3 className="text-xl font-display font-black text-white italic uppercase tracking-tighter">Smart Insights</h3>
-                           <p className="text-[11px] text-text-muted font-display leading-relaxed opacity-60">We analyze your spending patterns to provide AI-powered cost saving suggestions. We never share your private data with third parties.</p>
+                           <h3 className="text-xl font-display font-black text-slate-900 italic uppercase tracking-tighter">Smart Insights</h3>
+                           <p className="text-[11px] text-slate-600 font-display font-medium leading-relaxed">We analyze your spending patterns to provide AI-powered cost saving suggestions. We never share your private data with third parties.</p>
                         </div>
                      </div>
                   </div>
@@ -124,7 +124,7 @@ const Onboarding = () => {
                         )}>
                            <CheckCircle2 className="w-6 h-6 stroke-[3]" />
                         </div>
-                        <span className="text-[12px] font-mono font-black text-text-muted uppercase tracking-widest italic leading-none group-hover:text-white transition-colors">I accept the Terms of Service & Privacy Policy</span>
+                        <span className="text-[12px] font-mono font-bold text-slate-600 uppercase tracking-widest italic leading-none group-hover:text-slate-900 transition-colors">I accept the Terms of Service & Privacy Policy</span>
                      </label>
 
                      <button disabled={!agreed} onClick={() => setStep(2)} className={cn("h-18 px-16 btn-primary text-sm font-black italic tracking-[0.2em] shadow-glow disabled:opacity-30")}>
@@ -142,13 +142,13 @@ const Onboarding = () => {
                   className="saas-card p-12 lg:p-24 space-y-16 max-w-4xl mx-auto border-white/10 shadow-premium bg-white/5 backdrop-blur-2xl"
                >
                   <div className="text-center space-y-6">
-                     <h2 className="text-6xl font-display font-black text-white italic uppercase tracking-tighter leading-none">Your <span className="text-primary glow-text">Profile</span></h2>
-                     <p className="text-[12px] text-text-muted font-mono font-black uppercase tracking-[0.4em] opacity-40 italic">Set up your personal or business account</p>
+                     <h2 className="text-6xl font-display font-black text-slate-900 italic uppercase tracking-tighter leading-none">Your <span className="text-primary">Profile</span></h2>
+                     <p className="text-[12px] text-slate-500 font-mono font-bold uppercase tracking-[0.4em] opacity-70 italic">Set up your personal or business account</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-10">
                      <div className="space-y-6">
-                        <label className="text-[11px] text-text-muted font-mono font-black uppercase tracking-widest italic pl-2">Your Name</label>
+                        <label className="text-[11px] text-slate-500 font-mono font-black uppercase tracking-widest italic pl-2">Your Name</label>
                         <div className="relative group">
                            <User className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-white/20 group-focus-within:text-primary transition-all" />
                            <input 
@@ -160,7 +160,7 @@ const Onboarding = () => {
                         </div>
                      </div>
                      <div className="space-y-6">
-                        <label className="text-[11px] text-text-muted font-mono font-black uppercase tracking-widest italic pl-2">Company Name</label>
+                        <label className="text-[11px] text-slate-500 font-mono font-black uppercase tracking-widest italic pl-2">Company Name</label>
                         <div className="relative group">
                            <Briefcase className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-white/20 group-focus-within:text-primary transition-all" />
                            <input 
@@ -176,7 +176,7 @@ const Onboarding = () => {
                         <select 
                            value={formData.role} 
                            onChange={e => setFormData(p => ({ ...p, role: e.target.value }))}
-                           className="w-full h-18 bg-white/5 border border-white/10 rounded-2xl px-12 text-[12px] font-display font-black italic text-white focus:outline-none focus:bg-white/10 focus:border-primary/40 transition-all uppercase tracking-widest appearance-none"
+                           className="w-full h-18 bg-white border-2 border-slate-100 rounded-2xl px-12 text-[12px] font-display font-black italic text-slate-900 focus:outline-none focus:bg-white focus:border-primary/40 transition-all uppercase tracking-widest appearance-none"
                         >
                            <option value="Fleet Manager">Fleet Manager</option>
                            <option value="Owner Operator">Owner Driver</option>
@@ -221,8 +221,8 @@ const Onboarding = () => {
                   className="space-y-16"
                >
                   <div className="text-center space-y-6">
-                     <h2 className="text-6xl font-display font-black text-white italic uppercase tracking-tighter leading-none">Choose <span className="text-primary glow-text">Your Plan</span></h2>
-                     <p className="text-[12px] text-text-muted font-mono font-black uppercase tracking-[0.4em] opacity-40 italic">Select the best fit for your needs</p>
+                     <h2 className="text-6xl font-display font-black text-slate-900 italic uppercase tracking-tighter leading-none">Choose <span className="text-primary">Your Plan</span></h2>
+                     <p className="text-[12px] text-slate-500 font-mono font-bold uppercase tracking-[0.4em] opacity-70 italic">Select the best fit for your needs</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -243,17 +243,17 @@ const Onboarding = () => {
                            <div className="space-y-12">
                               <div className="space-y-4">
                                  <span className={cn("text-[10px] font-mono font-black uppercase tracking-widest italic opacity-40 leading-none block", plan.color)}>{plan.desc}</span>
-                                 <h3 className="text-4xl font-display font-black text-white italic leading-none">{plan.name}</h3>
+                                 <h3 className="text-4xl font-display font-black text-slate-900 italic leading-none">{plan.name}</h3>
                                  <div className="flex items-end gap-3 pt-4">
-                                    <span className="text-5xl font-mono font-black italic tracking-tighter leading-none text-white">{plan.price}</span>
-                                    <span className="text-[11px] text-text-muted uppercase font-black tracking-widest italic opacity-40 mb-1">/MON</span>
+                                    <span className="text-5xl font-mono font-black italic tracking-tighter leading-none text-slate-900">{plan.price}</span>
+                                    <span className="text-[11px] text-slate-500 uppercase font-black tracking-widest italic opacity-70 mb-1">/MON</span>
                                  </div>
                               </div>
                               <div className="space-y-6 border-t border-white/5 pt-10">
                                  {plan.features.map((f, j) => (
                                     <div key={j} className="flex items-center gap-4 group/feat">
-                                       <CheckCircle2 className="w-5 h-5 text-primary opacity-40 group-hover/feat:opacity-100 transition-opacity" />
-                                       <span className="text-[11px] font-display font-bold text-text-secondary leading-none uppercase italic group-hover/feat:text-white transition-colors">{f}</span>
+                                       <CheckCircle2 className="w-5 h-5 text-primary" />
+                                       <span className="text-[11px] font-display font-bold text-slate-700 leading-none uppercase italic group-hover/feat:text-slate-900 transition-colors">{f}</span>
                                     </div>
                                  ))}
                               </div>
