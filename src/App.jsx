@@ -42,7 +42,7 @@ function App() {
   return (
     <Router>
       <NotificationProvider>
-        <div className="min-h-screen text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900 overflow-x-hidden relative bg-slate-50">
+        <div className="min-h-screen text-text-main font-sans selection:bg-text-main/10 selection:text-text-main overflow-x-hidden relative bg-bg-page">
           <AnimatePresence mode="wait">
             {showSplash && (
               <SplashScreen key="splash" onComplete={handleSplashComplete} />

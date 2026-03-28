@@ -135,19 +135,19 @@ const Dashboard = () => {
                <img src={logo} alt="AutoTrack" className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500" />
             </div>
             <div>
-               <h1 className="text-3xl font-display font-bold text-slate-900 tracking-tight flex items-center gap-2">
+               <h1 className="text-3xl font-display font-bold text-text-main tracking-tight flex items-center gap-2">
                   Dashboard
                </h1>
-               <p className="text-slate-500 font-medium italic">Monitoring {stats.vehicleCount} vehicles in the {profile?.company || 'Personal'} account.</p>
+               <p className="text-text-secondary font-medium">Monitoring {stats.vehicleCount} vehicles in the {profile?.company || 'Personal'} account.</p>
             </div>
          </div>
          
-         <div className="flex items-center gap-3 bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm">
+         <div className="flex items-center gap-3 bg-white p-1.5 rounded-2xl border border-border shadow-sm">
             <button 
                onClick={() => setIsFleetMode(false)}
                className={cn(
                  "px-6 h-10 rounded-xl text-xs font-bold transition-all", 
-                 !isFleetMode ? "bg-primary text-white shadow-md shadow-blue-500/20" : "text-slate-500 hover:bg-slate-50"
+                 !isFleetMode ? "bg-text-main text-white shadow-md shadow-black/10" : "text-text-helper hover:bg-bg-page"
                )}
             >
                Personal View
@@ -156,11 +156,11 @@ const Dashboard = () => {
                onClick={() => setIsFleetMode(true)}
                className={cn(
                  "px-6 h-10 rounded-xl text-xs font-bold transition-all flex items-center gap-2", 
-                 isFleetMode ? "bg-primary text-white shadow-md shadow-blue-500/20" : "text-slate-500 hover:bg-slate-50"
+                 isFleetMode ? "bg-text-main text-white shadow-md shadow-black/10" : "text-text-helper hover:bg-bg-page"
                )}
             >
                Fleet View
-               {!isFleetMode && <Lock className="w-3 h-3 text-slate-300" />}
+               {!isFleetMode && <Lock className="w-3 h-3 text-text-subtle" />}
             </button>
          </div>
       </div>
@@ -168,22 +168,22 @@ const Dashboard = () => {
       {/* KPI Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
          {KPI_CARDS.map((kpi, i) => (
-            <AppCard key={i} showLogo={true} logoPosition="top-right" className="p-6 flex flex-col justify-between h-40">
+            <AppCard key={i} showLogo={true} logoPosition="top-right" className="p-8 flex flex-col justify-between h-44">
                <div className="flex items-center justify-between mb-4">
                   <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center", kpi.bg)}>
                      <kpi.icon className={cn("w-6 h-6", kpi.color)} />
                   </div>
                   <span className={cn(
                     "text-[10px] font-bold px-2.5 py-1 rounded-full",
-                    kpi.trend.startsWith('+') ? "bg-red-50 text-red-600" : 
-                    kpi.trend.startsWith('-') ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-600"
+                    kpi.trend.startsWith('+') ? "bg-accent/5 text-accent" : 
+                    kpi.trend.startsWith('-') ? "bg-emerald-50 text-emerald-600" : "bg-bg-page text-text-helper"
                   )}>
                     {kpi.trend}
                   </span>
                </div>
                <div className="space-y-0.5">
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">{kpi.label}</p>
-                  <h3 className="text-2xl font-display font-bold text-slate-900">{kpi.value}</h3>
+                  <p className="text-[11px] font-bold text-text-helper uppercase tracking-widest">{kpi.label}</p>
+                  <h3 className="text-2xl font-display font-bold text-text-main italic tracking-tight">{kpi.value}</h3>
                </div>
             </AppCard>
          ))}
@@ -195,35 +195,36 @@ const Dashboard = () => {
          <AppCard showLogo={true} logoPosition="top-right" className="lg:col-span-2 p-8">
             <div className="flex items-center justify-between mb-8">
                <div>
-                  <h3 className="text-lg font-bold text-slate-900">Expense Trends</h3>
-                  <p className="text-xs text-slate-500">Monthly breakdown of all vehicle costs</p>
+                  <h3 className="text-lg font-bold text-text-main">Expense Trends</h3>
+                  <p className="text-xs text-text-secondary">Monthly breakdown of mobility costs</p>
                </div>
-               <button className="p-2.5 bg-slate-50 rounded-xl border border-slate-200 text-slate-400 hover:text-primary transition-all">
+               <button className="p-2.5 bg-bg-page rounded-xl border border-border text-text-subtle hover:text-text-main transition-all">
                   <RefreshCcw className="w-4 h-4" />
                </button>
             </div>
-            <div className="h-80 w-full">
+             <div className="h-80 w-full">
                <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={chartData}>
                      <defs>
                         <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                           <stop offset="5%" stopColor="#2563eb" stopOpacity={0.1}/>
-                           <stop offset="95%" stopColor="#2563eb" stopOpacity={0}/>
+                           <stop offset="5%" stopColor="#0F1010" stopOpacity={0.05}/>
+                           <stop offset="95%" stopColor="#0F1010" stopOpacity={0}/>
                         </linearGradient>
                      </defs>
-                     <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                     <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 600 }} dy={10} />
-                     <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 600 }} />
+                     <CartesianGrid strokeDasharray="3 3" stroke="#eee" vertical={false} />
+                     <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#ABADBB', fontSize: 10, fontWeight: 700 }} dy={10} />
+                     <YAxis axisLine={false} tickLine={false} tick={{ fill: '#ABADBB', fontSize: 10, fontWeight: 700 }} />
                      <Tooltip 
                         contentStyle={{ 
                            backgroundColor: '#fff', 
                            borderRadius: '16px', 
-                           border: '1px solid #e2e8f0', 
-                           boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)',
-                           fontSize: '12px'
+                           border: '1px solid rgba(0,0,0,0.05)', 
+                           boxShadow: '0 10px 15px -3px rgba(0,0,0,0.05)',
+                           fontSize: '12px',
+                           fontWeight: '700'
                         }} 
                      />
-                     <Area type="monotone" dataKey="value" stroke="#2563eb" strokeWidth={4} fillOpacity={1} fill="url(#colorValue)" />
+                     <Area type="monotone" dataKey="value" stroke="#0F1010" strokeWidth={3} fillOpacity={1} fill="url(#colorValue)" />
                   </AreaChart>
                </ResponsiveContainer>
             </div>
@@ -231,8 +232,8 @@ const Dashboard = () => {
 
          {/* Category Breakdown */}
          <AppCard showLogo={true} logoPosition="background" logoOpacity={8} className="p-8 flex flex-col">
-            <h3 className="text-lg font-bold text-slate-900 mb-2">Categories</h3>
-            <p className="text-xs text-slate-500 mb-8">Cost distribution by type</p>
+            <h3 className="text-lg font-bold text-text-main mb-2">Categories</h3>
+            <p className="text-xs text-text-secondary mb-8">Cost distribution by type</p>
             <div className="flex-1 flex flex-col justify-center">
                <div className="h-64 h-full relative">
                   <ResponsiveContainer width="100%" height="100%">
@@ -243,19 +244,19 @@ const Dashboard = () => {
                         <Tooltip />
                      </RePieChart>
                   </ResponsiveContainer>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-                     <span className="text-3xl font-display font-bold text-slate-900">{categorySpecs[0]?.value || 0}%</span>
-                     <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{categorySpecs[0]?.name || 'N/A'}</span>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center pt-2">
+                     <span className="text-4xl font-display font-bold text-text-main tracking-tighter italic">{categorySpecs[0]?.value || 0}%</span>
+                     <span className="text-[10px] text-text-helper font-mono font-bold uppercase tracking-widest">{categorySpecs[0]?.name || 'N/A'}</span>
                   </div>
                </div>
-               <div className="space-y-3 mt-6">
+                <div className="space-y-4 mt-6">
                   {categorySpecs.slice(0, 3).map((cat, i) => (
                      <div key={i} className="flex items-center justify-between text-sm">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3">
                            <div className="w-2.5 h-2.5 rounded-full" style={{ background: cat.color }} />
-                           <span className="font-semibold text-slate-600">{cat.name}</span>
+                           <span className="font-bold text-text-secondary italic uppercase text-[11px] tracking-wide">{cat.name}</span>
                         </div>
-                        <span className="font-bold text-slate-900">{cat.value}%</span>
+                        <span className="font-bold text-text-main">{cat.value}%</span>
                      </div>
                   ))}
                </div>
@@ -265,68 +266,67 @@ const Dashboard = () => {
 
       {/* Recent Activity Section */}
       <AppCard showLogo={true} logoPosition="top-right" className="overflow-hidden">
-         <div className="p-8 border-b border-slate-100 flex items-center justify-between">
+         <div className="p-8 border-b border-border flex items-center justify-between">
             <div>
-               <h3 className="text-lg font-bold text-slate-900">Recent Activity</h3>
-               <p className="text-xs text-slate-500">Your most recent expense entries</p>
+               <h3 className="text-lg font-bold text-text-main">Recent Activity</h3>
+               <p className="text-xs text-text-secondary italic">Your most recent mobility logs</p>
             </div>
-            <button onClick={() => navigate('/expenses')} className="text-sm font-bold text-primary hover:underline">
+            <button onClick={() => navigate('/expenses')} className="text-xs font-bold text-accent uppercase tracking-widest hover:underline">
                View All
             </button>
          </div>
-         <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-border">
             {recentExpenses.length === 0 ? (
-               <div className="p-12 text-center text-slate-400 text-sm italic">No recent activity found.</div>
+               <div className="p-12 text-center text-text-subtle text-[11px] font-bold uppercase tracking-widest italic">No logs found.</div>
             ) : recentExpenses.map((expense, i) => (
-               <div key={i} className="p-6 flex items-center justify-between hover:bg-slate-50 transition-all group">
-                  <div className="flex items-center gap-4">
-                     <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-primary group-hover:text-white transition-all overflow-hidden p-2">
+                <div key={i} className="p-6 flex items-center justify-between hover:bg-bg-page transition-all group">
+                  <div className="flex items-center gap-5">
+                     <div className="w-12 h-12 rounded-xl bg-bg-secondary/40 flex items-center justify-center text-text-helper group-hover:bg-text-main group-hover:text-white transition-all overflow-hidden p-2">
                         <img src={logo} alt="" className="w-full h-full object-contain opacity-20 group-hover:opacity-100 transition-opacity" />
                      </div>
                      <div>
-                        <h4 className="font-bold text-slate-900">{expense.vendor || 'Unknown Provider'}</h4>
-                        <div className="flex items-center gap-3 mt-0.5">
-                           <span className="text-xs text-slate-500 font-medium">{new Date(expense.date).toLocaleDateString()}</span>
-                           <span className="w-1 h-1 rounded-full bg-slate-300" />
-                           <span className="text-xs text-slate-500 font-medium">{expense.vehicles?.name}</span>
+                        <h4 className="font-bold text-text-main uppercase text-[13px] tracking-tight">{expense.vendor || 'Unknown Provider'}</h4>
+                        <div className="flex items-center gap-3 mt-1">
+                           <span className="text-[11px] text-text-helper font-mono font-bold">{new Date(expense.date).toLocaleDateString()}</span>
+                           <span className="w-1 h-1 rounded-full bg-text-subtle" />
+                           <span className="text-[11px] text-text-helper font-mono font-bold italic">{expense.vehicles?.name}</span>
                         </div>
                      </div>
                   </div>
                   <div className="text-right">
-                     <p className="font-display font-bold text-slate-900">AED {parseFloat(expense.amount).toLocaleString()}</p>
-                     <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{expense.category}</p>
+                     <p className="font-display font-bold text-text-main">AED {parseFloat(expense.amount).toLocaleString()}</p>
+                     <p className="text-[10px] text-text-helper font-bold uppercase tracking-wider">{expense.category}</p>
                   </div>
                </div>
             ))}
          </div>
-         <div className="p-4 bg-slate-50/50 flex justify-center">
+          <div className="p-5 bg-white/50 flex justify-center">
             <button 
                onClick={() => setIsExpenseModalOpen(true)}
-               className="flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-primary transition-all"
+               className="flex items-center gap-2 text-[10px] font-bold text-text-helper uppercase tracking-widest hover:text-text-main transition-all"
             >
                <PlusCircle className="w-4 h-4" />
-               Add New Transaction
+               Log New Mobility Expense
             </button>
          </div>
       </AppCard>
       
-      {/* Footer Info */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-4 px-2 text-slate-400">
-         <div className="flex items-center gap-6 text-[11px] font-bold uppercase tracking-wider">
+       {/* Footer Info */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-8 px-2 text-text-subtle">
+         <div className="flex items-center gap-8 text-[11px] font-bold uppercase tracking-[0.2em] italic">
             <div className="flex items-center gap-2">
-               <Signal className="w-3.5 h-3.5 text-emerald-500" />
-               All data synced
+               <Signal className="w-4 h-4 text-emerald-500" />
+               Node: Primary Sync
             </div>
             <div className="flex items-center gap-2">
-               <Heart className="w-3.5 h-3.5 text-red-400" />
-               System Version 6.0
+               <Heart className="w-4 h-4 text-accent/40" />
+               Mobility OS v6.0
             </div>
          </div>
-         <p className="text-[11px] font-bold uppercase tracking-widest italic">Secured by AutoTracker</p>
+         <p className="text-[11px] font-bold uppercase tracking-[0.4em]">Secured by AutoTracker Precision</p>
       </div>
     </div>
   )
 }
 
-export default Dashboard
 

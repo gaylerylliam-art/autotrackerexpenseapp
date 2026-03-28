@@ -27,8 +27,8 @@ const AppCard = ({
 }) => {
   if (loading) {
     return (
-      <div className={cn("premium-card animate-pulse bg-slate-50 border-slate-100 min-h-[100px]", className)}>
-        <div className="h-full w-full bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shimmer" />
+      <div className={cn("saas-card animate-pulse bg-bg-page border-border min-h-[100px]", className)}>
+        <div className="h-full w-full bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" />
       </div>
     )
   }
@@ -37,7 +37,7 @@ const AppCard = ({
     <motion.div 
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={cn("premium-card relative overflow-hidden group", className)}
+      className={cn("saas-card relative overflow-hidden group", className)}
       {...props}
     >
       {/* Background Watermark Mode */}

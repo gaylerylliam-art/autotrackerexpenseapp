@@ -73,24 +73,24 @@ const Onboarding = () => {
      }
   }
 
-  return (
-    <div className="min-h-screen bg-bg-deep flex flex-col items-center justify-center p-6 lg:p-12 relative overflow-hidden text-slate-900">
-      <div className="absolute inset-0 pointer-events-none opacity-[0.05] z-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+   return (
+    <div className="min-h-screen bg-bg-page flex flex-col items-center justify-center p-6 lg:p-12 relative overflow-hidden font-body antialiased">
+      <div className="absolute inset-0 pointer-events-none opacity-[0.03] z-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
       
       <div className="max-w-[1200px] w-full relative z-10">
          <AnimatePresence mode="wait">
             {step === 1 && (
-               <motion.div 
-                  key="consent"
-                  initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }}
-                  className="saas-card p-12 lg:p-24 space-y-16 max-w-4xl mx-auto border-white/10 shadow-premium bg-white/5 backdrop-blur-2xl"
-               >
-                  <div className="space-y-6 text-center">
-                     <div className="flex justify-center mb-8">
-                        <Logo type="full" className="h-20" animate={true} />
+                <motion.div 
+                   key="consent"
+                   initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }}
+                   className="saas-card p-12 lg:px-24 lg:py-20 space-y-16 max-w-4xl mx-auto relative overflow-hidden bg-bg-card"
+                >
+                   <div className="space-y-6 text-center">
+                     <div className="flex justify-center mb-10">
+                        <Logo type="full" className="h-16" animate={true} />
                      </div>
-                     <h1 className="text-5xl lg:text-7xl font-display font-black text-gray-900 italic uppercase tracking-tighter leading-none underline decoration-primary/20 decoration-8 underline-offset-8">Auto<span className="text-primary">Track</span> <br/> Setup</h1>
-                     <p className="text-[12px] text-gray-700 font-mono font-bold uppercase tracking-[0.3em] italic">Secure individual & fleet expense management</p>
+                     <h1 className="text-5xl lg:text-7xl font-display text-text-main italic uppercase tracking-tighter leading-none">Auto<span className="text-accent underline decoration-accent/20 decoration-8 underline-offset-8">Track</span> <br/> Setup</h1>
+                     <p className="text-[12px] text-text-helper font-mono font-bold uppercase tracking-[0.3em]">Premium Fleet & Expense Management</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-10 border-t border-white/5">
@@ -98,18 +98,18 @@ const Onboarding = () => {
                         <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
                            <MapPin className="w-7 h-7 text-primary" />
                         </div>
-                        <div className="space-y-3">
-                           <h3 className="text-xl font-display font-black text-gray-800 italic uppercase tracking-tighter">Location Tracking</h3>
-                           <p className="text-[11px] text-gray-700 font-display font-bold leading-relaxed">We use GPS coordinates to accurately log your trips and calculate tax reimbursements. All location data is encrypted for your privacy.</p>
+                         <div className="space-y-3">
+                           <h3 className="text-xl font-display font-bold text-text-title italic uppercase tracking-tighter">Location Tracking</h3>
+                           <p className="text-[13px] text-text-secondary font-display font-medium leading-relaxed">We use GPS coordinates to accurately log your trips and calculate tax reimbursements. All location data is encrypted for your privacy.</p>
                         </div>
                      </div>
                      <div className="space-y-6 flex gap-8 group">
                         <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500">
                            <Database className="w-7 h-7 text-primary" />
                         </div>
-                        <div className="space-y-3">
-                           <h3 className="text-xl font-display font-black text-gray-800 italic uppercase tracking-tighter">Smart Insights</h3>
-                           <p className="text-[11px] text-gray-700 font-display font-bold leading-relaxed">We analyze your spending patterns to provide AI-powered cost saving suggestions. We never share your private data with third parties.</p>
+                         <div className="space-y-3">
+                           <h3 className="text-xl font-display font-bold text-text-title italic uppercase tracking-tighter">Smart Insights</h3>
+                           <p className="text-[13px] text-text-secondary font-display font-medium leading-relaxed">We analyze your spending patterns to provide AI-powered cost saving suggestions. We never share your private data with third parties.</p>
                         </div>
                      </div>
                   </div>
@@ -119,11 +119,11 @@ const Onboarding = () => {
                         <input type="checkbox" className="hidden" checked={agreed} onChange={e => setAgreed(e.target.checked)} />
                         <div className={cn(
                            "w-10 h-10 rounded-xl flex items-center justify-center border transition-all shadow-premium",
-                           agreed ? "bg-primary border-primary text-white shadow-glow" : "bg-white border-slate-300 group-hover:bg-slate-50"
+                           agreed ? "bg-primary border-primary text-white shadow-glow" : "bg-white border-border group-hover:bg-slate-50"
                         )}>
                            <CheckCircle2 className="w-6 h-6 stroke-[3]" />
                         </div>
-                        <span className="text-[12px] font-mono font-black text-gray-700 uppercase tracking-widest italic leading-none group-hover:text-primary transition-colors">I accept the Terms of Service & Privacy Policy</span>
+                         <span className="text-[12px] font-mono font-black text-text-secondary uppercase tracking-widest italic leading-none group-hover:text-text-main transition-colors">I accept the Terms of Service & Privacy Policy</span>
                      </label>
 
                      <button disabled={!agreed} onClick={() => setStep(2)} className={cn("h-18 px-16 btn-primary text-sm font-black italic tracking-[0.2em] shadow-glow disabled:opacity-30")}>
@@ -135,50 +135,50 @@ const Onboarding = () => {
             )}
 
             {step === 2 && (
-               <motion.div 
-                  key="identity"
-                  initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}
-                  className="saas-card p-12 lg:p-24 space-y-16 max-w-4xl mx-auto border-white/10 shadow-premium bg-white/90 backdrop-blur-2xl"
-               >
-                  <div className="text-center space-y-6">
-                     <div className="flex justify-center mb-8">
-                        <Logo type="icon" className="h-16" />
+                <motion.div 
+                   key="identity"
+                   initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }}
+                   className="saas-card p-12 lg:px-24 lg:py-20 space-y-16 max-w-4xl mx-auto relative overflow-hidden bg-bg-card"
+                >
+                   <div className="text-center space-y-6">
+                     <div className="flex justify-center mb-10">
+                        <Logo type="icon" className="h-14" />
                      </div>
-                     <h2 className="text-6xl font-display font-black text-gray-900 italic uppercase tracking-tighter leading-none">Your <span className="text-primary">Profile</span></h2>
-                     <p className="text-[12px] text-gray-700 font-mono font-bold uppercase tracking-[0.4em] italic leading-relaxed">Set up your personal or business account</p>
+                     <h2 className="text-6xl font-display text-text-main italic uppercase tracking-tighter">Your <span className="text-accent underline decoration-accent/10 decoration-4 underline-offset-4">Profile</span></h2>
+                     <p className="text-[12px] text-text-secondary font-mono font-bold uppercase tracking-[0.4em]">Set up your personal or business account</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-10">
                      <div className="space-y-6">
-                        <label className="text-[11px] text-gray-800 font-mono font-black uppercase tracking-widest italic pl-2">Your Name</label>
+                         <label className="text-[11px] text-text-helper font-mono font-black uppercase tracking-widest pl-2">Your Name</label>
                         <div className="relative group">
-                           <User className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-400 group-focus-within:text-primary transition-all" />
+                           <User className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-text-subtle group-focus-within:text-primary transition-all" />
                            <input 
                               placeholder="FULL NAME" 
                               value={formData.full_name} 
                               onChange={e => setFormData(p => ({ ...p, full_name: e.target.value.toUpperCase() }))}
-                              className="w-full h-18 bg-white border border-slate-200 rounded-2xl px-16 text-lg font-display font-black italic text-slate-950 focus:outline-none focus:bg-white focus:border-primary/40 transition-all uppercase"
+                              className="w-full h-18 bg-white border border-border rounded-2xl px-16 text-lg font-display font-black italic text-text-main focus:outline-none focus:bg-white focus:border-primary/40 transition-all uppercase"
                            />
                         </div>
                      </div>
                      <div className="space-y-6">
-                        <label className="text-[11px] text-gray-800 font-mono font-black uppercase tracking-widest italic pl-2">Company Name</label>
+                         <label className="text-[11px] text-text-helper font-mono font-black uppercase tracking-widest pl-2">Company Name</label>
                         <div className="relative group">
-                           <Briefcase className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-400 group-focus-within:text-primary transition-all" />
+                           <Briefcase className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-text-subtle group-focus-within:text-primary transition-all" />
                            <input 
                               placeholder="COMPANY NAME" 
                               value={formData.company} 
                               onChange={e => setFormData(p => ({ ...p, company: e.target.value.toUpperCase() }))}
-                              className="w-full h-18 bg-white border border-slate-200 rounded-2xl px-16 text-lg font-display font-black italic text-slate-950 focus:outline-none focus:bg-white focus:border-primary/40 transition-all uppercase"
+                              className="w-full h-18 bg-white border border-border rounded-2xl px-16 text-lg font-display font-black italic text-text-main focus:outline-none focus:bg-white focus:border-primary/40 transition-all uppercase"
                            />
                         </div>
                      </div>
                      <div className="space-y-6">
-                        <label className="text-[11px] text-gray-800 font-mono font-black uppercase tracking-widest italic pl-2">Your Role</label>
+                         <label className="text-[11px] text-text-helper font-mono font-black uppercase tracking-widest pl-2">Your Role</label>
                         <select 
                            value={formData.role} 
                            onChange={e => setFormData(p => ({ ...p, role: e.target.value }))}
-                            className="w-full h-18 bg-gray-50 border-2 border-gray-200 rounded-2xl px-12 text-[12px] font-display font-black italic text-gray-900 focus:outline-none focus:bg-white focus:border-primary/40 transition-all uppercase tracking-widest appearance-none"
+                            className="w-full h-18 bg-white border-2 border-border rounded-2xl px-12 text-[12px] font-display font-semibold italic text-text-main focus:outline-none focus:border-text-main transition-all uppercase tracking-widest appearance-none"
                         >
                            <option value="Fleet Manager">Fleet Manager</option>
                            <option value="Owner Operator">Owner Driver</option>
@@ -186,14 +186,14 @@ const Onboarding = () => {
                         </select>
                      </div>
                      <div className="space-y-6">
-                        <label className="text-[11px] text-gray-800 font-mono font-black uppercase tracking-widest italic pl-2">Preferred Currency</label>
+                         <label className="text-[11px] text-text-helper font-mono font-black uppercase tracking-widest pl-2">Preferred Currency</label>
                         <div className="grid grid-cols-2 gap-4">
                            {['AED', 'USD'].map(c => (
                               <button 
                                  key={c} onClick={() => setFormData(p => ({ ...p, currency: c }))}
                                  className={cn(
                                     "h-18 rounded-2xl border font-display font-black italic text-[11px] tracking-widest transition-all",
-                                    formData.currency === c ? "bg-primary border-primary text-white shadow-glow" : "bg-white border-gray-300 text-gray-900 hover:bg-gray-50"
+                                     formData.currency === c ? "bg-text-main border-text-main text-white shadow-md active:scale-95" : "bg-white border-border text-text-subtle hover:text-text-main"
                                  )}
                               >
                                  {c}
@@ -222,24 +222,24 @@ const Onboarding = () => {
                   initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
                   className="space-y-16"
                >
-                  <div className="text-center space-y-6">
-                     <div className="flex justify-center mb-8">
-                        <Logo type="icon" className="h-16" />
+                   <div className="text-center space-y-6">
+                     <div className="flex justify-center mb-10">
+                        <Logo type="icon" className="h-14" />
                      </div>
-                     <h2 className="text-6xl font-display font-black text-gray-900 italic uppercase tracking-tighter leading-none">Choose <span className="text-primary">Your Plan</span></h2>
-                     <p className="text-[12px] text-gray-700 font-mono font-bold uppercase tracking-[0.4em] italic">Select the best fit for your needs</p>
+                     <h2 className="text-6xl font-display text-text-main italic uppercase tracking-tighter">Choose <span className="text-accent underline decoration-accent/10 decoration-4 underline-offset-4">Your Plan</span></h2>
+                     <p className="text-[12px] text-text-secondary font-mono font-bold uppercase tracking-[0.4em]">Select the best fit for your needs</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                      {PLANS.map((plan, i) => (
-                        <motion.div 
-                           key={plan.id}
-                           initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
-                           className={cn(
-                              "saas-card p-12 flex flex-col justify-between group h-full relative border-gray-200 shadow-premium bg-white/90",
-                              plan.highlight && "border-primary/40 ring-2 ring-primary/10 shadow-glow shadow-primary/10"
-                           )}
-                        >
+                         <motion.div 
+                            key={plan.id}
+                            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
+                            className={cn(
+                               "saas-card p-12 flex flex-col justify-between group h-full relative bg-bg-card",
+                               plan.highlight && "border-accent/40 ring-4 ring-accent/5"
+                            )}
+                         >
                            {plan.highlight && (
                               <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-2 bg-primary text-white text-[9px] font-black uppercase tracking-[0.3em] italic rounded-full shadow-glow">
                                  {plan.badge}
@@ -248,18 +248,18 @@ const Onboarding = () => {
                            <div className="space-y-12">
                               <div className="space-y-4">
                                  <span className={cn("text-[10px] font-mono font-black uppercase tracking-widest italic opacity-60 leading-none block", plan.color)}>{plan.desc}</span>
-                                 <h3 className="text-4xl font-display font-black text-gray-900 italic leading-none">{plan.name}</h3>
+                                  <h3 className="text-4xl font-display text-text-main italic tracking-tighter">{plan.name}</h3>
                                  <div className="flex items-end gap-3 pt-4">
-                                    <span className="text-5xl font-mono font-black italic tracking-tighter leading-none text-gray-900">{plan.price}</span>
-                                    <span className="text-[11px] text-gray-500 uppercase font-black tracking-widest italic opacity-80 mb-1">/MON</span>
+                                    <span className="text-5xl font-mono font-bold italic tracking-tighter text-text-main">{plan.price}</span>
+                                    <span className="text-[11px] text-text-helper uppercase font-mono font-bold tracking-widest mb-1 italic">/MON</span>
                                  </div>
                               </div>
-                              <div className="space-y-6 border-t border-slate-200 pt-10">
+                              <div className="space-y-6 border-t border-border pt-10">
                                  {plan.features.map((f, j) => (
-                                    <div key={j} className="flex items-center gap-4 group/feat">
-                                       <CheckCircle2 className="w-5 h-5 text-primary" />
-                                       <span className="text-[11px] font-display font-bold text-gray-700 leading-none uppercase italic group-hover/feat:text-gray-900 transition-colors">{f}</span>
-                                    </div>
+                                     <div key={j} className="flex items-center gap-4 group/feat">
+                                        <CheckCircle2 className="w-5 h-5 text-accent" />
+                                        <span className="text-[11px] font-display font-semibold text-text-secondary leading-none uppercase italic group-hover/feat:text-text-title transition-colors">{f}</span>
+                                     </div>
                                  ))}
                               </div>
                            </div>
@@ -268,7 +268,7 @@ const Onboarding = () => {
                               disabled={loading}
                               className={cn(
                                  "w-full h-16 btn-primary mt-12 text-[10px] font-black italic shadow-premium relative overflow-hidden",
-                                 plan.id === 'free' ? "bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200" : ""
+                                 plan.id === 'free' ? "bg-bg-page text-text-secondary border border-border hover:bg-white" : ""
                               )}
                            >
                               {loading ? <Loader2 className="w-6 h-6 animate-spin text-white mx-auto" /> : `Select ${plan.name} Plan`}
@@ -278,7 +278,7 @@ const Onboarding = () => {
                   </div>
 
                   <div className="text-center">
-                     <button onClick={() => setStep(2)} className="text-[10px] font-mono font-black text-gray-700 uppercase tracking-[0.3em] hover:text-primary transition-all italic underline underline-offset-4">Go Back</button>
+                      <button onClick={() => setStep(2)} className="text-[10px] font-mono font-black text-text-subtle uppercase tracking-[0.3em] hover:text-text-main transition-all italic underline underline-offset-4">Go Back</button>
                   </div>
                </motion.div>
             )}

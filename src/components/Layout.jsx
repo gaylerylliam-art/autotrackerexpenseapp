@@ -42,97 +42,97 @@ const Layout = () => {
   return (
     <div className="min-h-screen bg-bg-page flex flex-col lg:flex-row relative">
       
-      {/* 1. Desktop Sidebar */}
-      <aside className="hidden lg:flex flex-col w-72 h-screen sticky top-0 bg-white border-r border-slate-200/60 p-6 z-50">
-        <div className="mb-8 px-2">
-          <Link to="/" className="flex items-center gap-3">
-             <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
-                <Logo type="icon" />
-             </div>
-             <div>
-                <h1 className="text-xl font-display font-bold tracking-tight text-slate-900">AutoTrack</h1>
-                <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Vehicle Management</p>
-             </div>
-          </Link>
-        </div>
+       {/* 1. Desktop Sidebar */}
+       <aside className="hidden lg:flex flex-col w-72 h-screen sticky top-0 bg-white border-r border-border p-6 z-50">
+         <div className="mb-10 px-2 mt-2">
+           <Link to="/" className="flex items-center gap-4">
+              <div className="w-11 h-11 rounded-2xl bg-text-main flex items-center justify-center text-white shadow-xl shadow-black/10">
+                 <Logo type="icon" className="grayscale invert" />
+              </div>
+              <div>
+                 <h1 className="text-xl font-display font-black tracking-tighter text-text-main uppercase italic leading-none">Auto<span className="opacity-30">Track</span></h1>
+                 <p className="text-[9px] text-text-helper font-black uppercase tracking-[0.4em] mt-1 leading-none italic">Mobility OS</p>
+              </div>
+           </Link>
+         </div>
 
-        <nav className="flex-1 space-y-1">
-          {navItems.map((item) => (
-            <Link 
-              key={item.path} 
-              to={item.path}
-              className={cn(
-                "flex items-center gap-3 px-4 h-12 rounded-2xl text-sm font-semibold transition-all group",
-                isActive(item.path) 
-                  ? "bg-primary/5 text-primary" 
-                  : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-              )}
-            >
-              <item.icon className={cn("w-5 h-5", isActive(item.path) ? "text-primary stroke-[2.5]" : "text-slate-400 group-hover:text-slate-600")} />
-              {item.name}
-              {isActive(item.path) && (
-                <motion.div layoutId="nav-dot" className="ml-auto w-1.5 h-1.5 rounded-full bg-primary" />
-              )}
-            </Link>
-          ))}
+         <nav className="flex-1 space-y-1">
+           {navItems.map((item) => (
+             <Link 
+               key={item.path} 
+               to={item.path}
+               className={cn(
+                 "flex items-center gap-3 px-4 h-12 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all group italic",
+                 isActive(item.path) 
+                   ? "bg-bg-page text-text-main border border-border" 
+                   : "text-text-helper hover:bg-bg-page hover:text-text-main"
+               )}
+             >
+               <item.icon className={cn("w-5 h-5", isActive(item.path) ? "text-text-main stroke-[2.5]" : "text-text-subtle group-hover:text-text-main")} />
+               {item.name}
+               {isActive(item.path) && (
+                 <motion.div layoutId="nav-dot" className="ml-auto w-1 h-1 rounded-full bg-text-main" />
+               )}
+             </Link>
+           ))}
           
-          <div className="mt-8 pt-8 border-t border-slate-100 flex flex-col gap-1">
-             <p className="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Fleet Management</p>
-             <Link to="/fleet" className="flex items-center gap-3 px-4 h-12 rounded-2xl text-sm font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all">
-                <LayoutGrid className="w-5 h-5 text-slate-400" />
-                Fleet Overview
-             </Link>
-             <Link to="/organization" className="flex items-center gap-3 px-4 h-12 rounded-2xl text-sm font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all">
-                <Landmark className="w-5 h-5 text-slate-400" />
-                Organization
-             </Link>
-          </div>
-        </nav>
+           <div className="mt-8 pt-8 border-t border-border flex flex-col gap-1">
+              <p className="px-4 text-[9px] font-black text-text-helper uppercase tracking-[0.4em] mb-3 italic">Enterprise Stack</p>
+              <Link to="/fleet" className="flex items-center gap-3 px-4 h-12 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-text-helper hover:bg-bg-page hover:text-text-main transition-all italic">
+                 <LayoutGrid className="w-5 h-5 text-text-subtle" />
+                 Global Fleet
+              </Link>
+              <Link to="/organization" className="flex items-center gap-3 px-4 h-12 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-text-helper hover:bg-bg-page hover:text-text-main transition-all italic">
+                 <Landmark className="w-5 h-5 text-text-subtle" />
+                 Organization
+              </Link>
+           </div>
+         </nav>
 
-        <div className="pt-6 border-t border-slate-100 space-y-3">
-          <Link to="/settings" className="premium-card p-3 flex items-center gap-3 hover:border-primary/20 group">
-             <div className="w-10 h-10 rounded-full bg-slate-100 overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&h=100&fit=crop" className="w-full h-full object-cover" />
-             </div>
-             <div className="flex-1">
-                <p className="text-xs font-bold text-slate-900">John Wick</p>
-                <p className="text-[10px] text-slate-400 font-medium">Pro Member</p>
-             </div>
-             <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-primary transition-all" />
-          </Link>
-          <button className="flex items-center gap-3 px-4 py-3 w-full text-red-500 font-semibold text-sm hover:text-red-600 transition-all group">
-             <LogOut className="w-5 h-5 text-slate-400 group-hover:text-red-500 transition-colors" />
-             Sign Out
-          </button>
-        </div>
-      </aside>
+         <div className="pt-6 border-t border-border space-y-3">
+           <Link to="/settings" className="saas-card p-3 flex items-center gap-3 hover:border-text-main/10 group bg-white">
+              <div className="w-10 h-10 rounded-full bg-bg-page overflow-hidden border border-border">
+                 <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&h=100&fit=crop" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
+              </div>
+              <div className="flex-1">
+                 <p className="text-[10px] font-black text-text-main uppercase tracking-tighter italic leading-none">John Wick</p>
+                 <p className="text-[9px] text-text-helper font-bold uppercase tracking-widest mt-1 italic">PRO_NODE</p>
+              </div>
+              <ChevronRight className="w-4 h-4 text-text-subtle group-hover:text-text-main transition-all" />
+           </Link>
+           <button className="flex items-center gap-3 px-4 py-3 w-full text-text-helper font-black text-[10px] uppercase tracking-[0.2em] hover:text-accent transition-all group italic">
+              <LogOut className="w-5 h-5 text-text-subtle group-hover:text-accent transition-colors" />
+              Terminate
+           </button>
+         </div>
+       </aside>
 
       {/* 2. Main Content Area */}
       <div className="flex-1 flex flex-col min-h-screen max-w-full">
         
         {/* Desktop Header */}
-        <header className="hidden lg:flex h-20 items-center justify-between px-12 sticky top-0 bg-bg-page/80 backdrop-blur-md z-40 border-b border-slate-200/60">
+        <header className="hidden lg:flex h-24 items-center justify-between px-12 sticky top-0 bg-bg-page/80 backdrop-blur-md z-40 border-b border-border">
            <div>
-              <h2 className="text-xl font-bold text-slate-900">Welcome back, John!</h2>
-              <p className="text-xs text-slate-500">Here's what's happening with your fleet today.</p>
+              <h2 className="text-xl font-bold text-text-main tracking-tighter uppercase italic">Welcome back, John!</h2>
+              <p className="text-[10px] text-text-helper font-black uppercase tracking-[0.2em] italic mt-1">Status: All mobility nodes synchronized</p>
            </div>
 
-           <div className="flex items-center gap-6">
-              <div className="relative group w-64">
-                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+           <div className="flex items-center gap-8">
+              <div className="relative group w-80">
+                 <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-subtle" />
                  <input 
-                   placeholder="Search..." 
-                   className="w-full h-10 bg-white border border-slate-200 rounded-xl px-12 text-sm focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all" 
+                   placeholder="QUERY DATA REGISTRY..." 
+                   className="w-full h-12 bg-white border border-border rounded-2xl px-14 text-[10px] font-black tracking-widest focus:outline-none focus:border-text-main transition-all placeholder:italic uppercase" 
                  />
               </div>
-              <div className="flex items-center gap-3 relative">
+              <div className="flex items-center gap-4 relative">
                  <button 
                   onClick={() => setIsNotificationOpen(!isNotificationOpen)}
-                  className="h-10 w-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-500 hover:text-primary hover:border-primary/20 transition-all relative shadow-sm"
+                  className="h-12 w-12 rounded-2xl bg-white border border-border flex items-center justify-center text-text-subtle hover:text-text-main transition-all relative shadow-sm"
                  >
                     <Bell className="w-5 h-5" />
                     {unreadCount > 0 && (
-                      <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary" />
+                      <span className="absolute top-3 right-3 w-1.5 h-1.5 rounded-full bg-accent" />
                     )}
                  </button>
                  <NotificationDropdown 
@@ -141,28 +141,28 @@ const Layout = () => {
                  />
                  <button 
                    onClick={() => setIsExpenseModalOpen(true)}
-                   className="h-10 px-6 btn-primary"
+                   className="h-12 px-8 bg-text-main text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.4em] flex items-center gap-4 hover:opacity-90 active:scale-95 transition-all italic"
                  >
                     <Plus className="w-4 h-4 stroke-[3]" />
-                    Add Expense
+                    Add Ledger Entry
                  </button>
               </div>
            </div>
         </header>
 
         {/* Mobile Header */}
-        <header className="lg:hidden h-16 flex items-center justify-between px-6 bg-white border-b border-slate-100 sticky top-0 z-40">
-           <Link to="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
-                 <Logo type="icon" />
+        <header className="lg:hidden h-18 flex items-center justify-between px-6 bg-white border-b border-border sticky top-0 z-40">
+           <Link to="/" className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-text-main flex items-center justify-center text-white shadow-lg shadow-black/10">
+                 <Logo type="icon" className="grayscale invert scale-75" />
               </div>
-              <h1 className="text-lg font-display font-bold text-slate-900 tracking-tight">AutoTrack</h1>
+              <h1 className="text-lg font-display font-black text-text-main tracking-tighter uppercase italic">Auto<span className="opacity-30">Track</span></h1>
            </Link>
            <div className="flex items-center gap-4">
-              <button className="text-slate-500">
+              <button className="text-text-subtle">
                  <Bell className="w-5 h-5" />
               </button>
-              <button onClick={() => setIsMobileMenuOpen(true)} className="text-slate-900">
+              <button onClick={() => setIsMobileMenuOpen(true)} className="text-text-main">
                  <Menu className="w-6 h-6" />
               </button>
            </div>
@@ -185,18 +185,18 @@ const Layout = () => {
       </div>
 
       {/* 3. Bottom Mobile Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white/80 backdrop-blur-xl border-t border-slate-100 px-6 flex items-center justify-between lg:hidden z-50 pb-safe">
+      <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white/90 backdrop-blur-xl border-t border-border px-6 flex items-center justify-between lg:hidden z-50 pb-safe">
         {navItems.map((item) => (
           <Link 
             key={item.path} 
             to={item.path}
             className={cn(
-              "mobile-nav-item flex-1",
-              isActive(item.path) ? "text-primary" : "text-slate-400"
+              "mobile-nav-item flex-1 italic",
+              isActive(item.path) ? "text-text-main" : "text-text-subtle"
             )}
           >
             <item.icon className={cn("w-6 h-6", isActive(item.path) && "stroke-[2.5]")} />
-            <span className="text-[10px] font-bold tracking-tight uppercase">{item.name}</span>
+            <span className="text-[9px] font-black tracking-[0.2em] uppercase mt-1">{item.name}</span>
           </Link>
         ))}
       </nav>
@@ -204,7 +204,7 @@ const Layout = () => {
       {/* FAB for Mobile */}
       <button 
         onClick={() => setIsExpenseModalOpen(true)}
-        className="fixed lg:hidden bottom-24 right-6 w-14 h-14 rounded-[20px] bg-primary text-white shadow-xl shadow-blue-500/30 flex items-center justify-center z-50 hover:scale-110 active:scale-95 transition-all"
+        className="fixed lg:hidden bottom-24 right-6 w-14 h-14 rounded-[22px] bg-text-main text-white shadow-2xl shadow-black/20 flex items-center justify-center z-50 hover:scale-110 active:scale-95 transition-all text-white"
       >
         <Plus className="w-7 h-7 stroke-[3]" />
       </button>
@@ -220,36 +220,36 @@ const Layout = () => {
                />
                <motion.div 
                   initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
-                  className="fixed right-0 top-0 bottom-0 w-72 bg-white z-[110] p-8 lg:hidden shadow-2xl"
+                  className="fixed right-0 top-0 bottom-0 w-72 bg-white z-[110] p-8 lg:hidden shadow-2xl border-l border-border"
                >
                   <div className="flex items-center justify-between mb-8">
-                     <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Menu</p>
-                     <button onClick={() => setIsMobileMenuOpen(false)} className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+                     <p className="text-[10px] font-black text-text-helper uppercase tracking-[0.4em] italic">Navigation</p>
+                     <button onClick={() => setIsMobileMenuOpen(false)} className="w-8 h-8 rounded-full bg-bg-page flex items-center justify-center text-text-helper">
                         <X className="w-5 h-5" />
                      </button>
                   </div>
                   <nav className="space-y-4">
-                     <Link to="/settings" className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl mb-8">
-                        <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden">
-                           <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&h=100&fit=crop" className="w-full h-full object-cover" />
+                     <Link to="/settings" className="flex items-center gap-3 p-4 bg-bg-page rounded-2xl mb-8 border border-border">
+                        <div className="w-10 h-10 rounded-full bg-border overflow-hidden border border-border">
+                           <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&h=100&fit=crop" className="w-full h-full object-cover grayscale" />
                         </div>
                         <div>
-                           <p className="text-sm font-bold text-slate-900">John Wick</p>
-                           <p className="text-[10px] text-slate-500">Settings & Profile</p>
+                           <p className="text-[10px] font-black text-text-main uppercase tracking-tighter italic leading-none">John Wick</p>
+                           <p className="text-[9px] text-text-helper font-bold uppercase tracking-widest mt-1 italic">PRO_NODE</p>
                         </div>
                      </Link>
                      <div className="space-y-2">
-                        <Link to="/fleet" className="flex items-center gap-3 px-4 h-12 rounded-2xl text-sm font-semibold text-slate-600 hover:bg-slate-50">
-                           <LayoutGrid className="w-5 h-5 text-slate-400" />
-                           Fleet Overview
+                        <Link to="/fleet" className="flex items-center gap-3 px-4 h-12 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-text-helper hover:bg-bg-page italic">
+                           <LayoutGrid className="w-5 h-5 text-text-subtle" />
+                           Global Fleet
                         </Link>
-                        <Link to="/organization" className="flex items-center gap-3 px-4 h-12 rounded-2xl text-sm font-semibold text-slate-600 hover:bg-slate-50">
-                           <Landmark className="w-5 h-5 text-slate-400" />
-                           Organization Settings
+                        <Link to="/organization" className="flex items-center gap-3 px-4 h-12 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-text-helper hover:bg-bg-page italic">
+                           <Landmark className="w-5 h-5 text-text-subtle" />
+                           Organization
                         </Link>
-                        <Link to="/pricing" className="flex items-center gap-3 px-4 h-12 rounded-2xl text-sm font-semibold text-slate-600 hover:bg-slate-50">
-                           <Zap className="w-5 h-5 text-amber-500" />
-                           Upgrade Account
+                        <Link to="/pricing" className="flex items-center gap-3 px-4 h-12 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-text-helper hover:bg-bg-page italic">
+                           <Zap className="w-5 h-5 text-accent" />
+                           Asset Expansion
                         </Link>
                      </div>
                   </nav>
