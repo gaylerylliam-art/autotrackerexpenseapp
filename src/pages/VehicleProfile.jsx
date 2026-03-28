@@ -7,13 +7,14 @@ import {
   Car, ShieldCheck, TrendingUp, MapPin, Gauge, Fuel, User,
   ArrowUpRight, ArrowDownRight, Zap, Info, ShieldAlert,
   Loader2, Globe, Clock, Landmark, Navigation, Wrench, Database,
-  Terminal, Signal
+  Terminal, Signal, Hash, Sparkles
 } from 'lucide-react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { supabase } from '../utils/supabase'
-import { calculateDepreciation, calculateTCO } from '../utils/depreciationEngine'
+import { buildVehicleSummary } from '../modules/depreciation/depreciation.service'
+import DepreciationCard from '../components/DepreciationCard'
 
 function cn(...inputs) { return twMerge(clsx(inputs)) }
 
@@ -52,17 +53,17 @@ const VehicleProfile = () => {
 
       if (eErr) throw eErr
 
-      const dep = calculateDepreciation(v)
       const totalSpend = exps?.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0) || 0
+      const depSummary = buildVehicleSummary(v, totalSpend)
       
-      setVehicle({ ...v, ...dep })
+      setVehicle({ ...v, ...depSummary })
       setExpenses(exps || [])
-      setTco(calculateTCO(v, totalSpend))
+      setTco({ totalTCO: depSummary.tcoIncludingDepreciation })
       
       setValuationTrend([
-        { name: 'Purchase', value: parseFloat(v.purchase_price) },
-        { name: 'Current', value: dep.currentValue },
-        { name: 'Residual', value: dep.residualValue }
+        { name: 'Purchase', value: depSummary.purchasePrice },
+        { name: 'Current', value: depSummary.currentValue },
+        { name: 'Accumulated', value: depSummary.accumulatedDepreciation }
       ])
 
       setRecentServices(exps?.filter(e => e.category === 'Service' || e.category === 'Maintenance' || e.category === 'Repair').slice(0, 3).map(e => ({
@@ -236,50 +237,8 @@ const VehicleProfile = () => {
             </div>
          </div>
 
-         <div className="premium-card p-10 space-y-8 flex flex-col justify-between group">
-            <div className="space-y-8">
-               <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                        <Zap className="w-6 h-6" />
-                     </div>
-                     <h4 className="font-display font-bold text-xl tracking-tight text-slate-900">Predictive <span className="text-primary">ROI</span></h4>
-                  </div>
-                  <Info className="w-5 h-5 text-slate-300" />
-               </div>
-               
-               <div className="space-y-10">
-                  <div className="p-6 rounded-3xl bg-slate-50 border border-slate-100 relative group/insight">
-                     <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center shadow-lg transform group-hover/insight:scale-110 transition-all">
-                        <Sparkles className="w-4 h-4" />
-                     </div>
-                     <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Sell Signal</p>
-                     <p className="text-base font-bold text-slate-900 leading-tight">Optimal replacement window opens in <span className="text-primary">14 months</span>.</p>
-                  </div>
-
-                  <div className="space-y-6">
-                     {[
-                        { label: 'Maintenance ROI', val: '2.4x', percentage: 70, color: 'bg-primary' },
-                        { label: 'Fuel efficiency', val: '+12%', percentage: 85, color: 'bg-emerald-500' },
-                        { label: 'Market Resale', val: 'High', percentage: 92, color: 'bg-blue-500' },
-                     ].map((item, idx) => (
-                        <div key={idx} className="space-y-2">
-                           <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest mb-1">
-                              <span className="text-slate-400">{item.label}</span>
-                              <span className="text-slate-900">{item.val}</span>
-                           </div>
-                           <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                              <motion.div initial={{ width: 0 }} animate={{ width: `${item.percentage}%` }} transition={{ duration: 1, delay: idx * 0.1 }} className={cn("h-full rounded-full", item.color)} />
-                           </div>
-                        </div>
-                     ))}
-                  </div>
-               </div>
-            </div>
-
-            <button className="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold text-xs hover:bg-primary transition-all shadow-xl shadow-slate-200 group-hover:scale-[1.02]">
-               Full Valuation Analysis
-            </button>
+         <div className="lg:col-span-1">
+            <DepreciationCard vehicleId={id} />
          </div>
       </div>
 

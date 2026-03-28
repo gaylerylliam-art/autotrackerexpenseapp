@@ -15,7 +15,7 @@ import {
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { supabase } from '../utils/supabase'
-import { calculateDepreciation, calculateTCO } from '../utils/depreciationEngine'
+import { calculateFleetDepreciationSummary, buildVehicleSummary } from '../modules/depreciation/depreciation.service'
 import AppCard from '../components/AppCard'
 import logo from '../assets/logo.png'
 
@@ -42,23 +42,27 @@ const Fleet = () => {
       const { data: vData, error: vErr } = await supabase.from('vehicles').select('*')
       if (vErr) throw vErr
 
-      const fleetAnalysis = vData.map(v => {
-        const dep = calculateDepreciation(v)
-        // For TCO, we'd need expense sums per vehicle. For this summary, we aggregate.
-        return { ...v, ...dep }
-      })
-
       const { data: eData } = await supabase.from('expenses').select('amount, vehicle_id')
       
-      const totalSpend = eData?.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0) || 0
-      const totalAssetValue = fleetAnalysis.reduce((s, v) => s + v.currentValue, 0)
-      const totalTCO = totalSpend + fleetAnalysis.reduce((s, v) => s + v.accumulatedDepreciation, 0)
+      // Group expenses by vehicle
+      const expenseMap = (eData || []).reduce((acc, curr) => {
+        acc[curr.vehicle_id] = (acc[curr.vehicle_id] || 0) + parseFloat(curr.amount || 0);
+        return acc;
+      }, {});
 
-      setVehicles(fleetAnalysis)
+      const vehiclesWithExpenses = vData.map(v => ({
+        ...v,
+        total_expenses: expenseMap[v.id] || 0
+      }));
+
+      const fleetSummary = calculateFleetDepreciationSummary(vehiclesWithExpenses);
+      const fleetAnalysis = vehiclesWithExpenses.map(v => buildVehicleSummary(v, v.total_expenses));
+
+      setVehicles(fleetAnalysis.filter(s => s.status === 'ok'))
       setStats({
-        totalTCO,
-        totalAssetValue,
-        avgCPK: totalSpend > 0 ? (totalSpend / 10000).toFixed(2) : 0, // Placeholder dist
+        totalTCO: fleetSummary.fleetWideTCO,
+        totalAssetValue: fleetSummary.totalFleetAssetValue,
+        avgCPK: fleetSummary.fleetWideTCO > 0 ? (fleetSummary.fleetWideTCO / 10000).toFixed(2) : 0, 
         issues: vData.filter(v => v.health === 'Critical').length
       })
     } catch (err) {
