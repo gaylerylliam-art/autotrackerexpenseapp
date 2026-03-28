@@ -20,6 +20,8 @@ import { supabase } from '../utils/supabase'
 import AppCard from '../components/AppCard'
 import logo from '../assets/logo.png'
 
+const cn = (...inputs) => twMerge(clsx(inputs))
+
 const Dashboard = () => {
   const navigate = useNavigate()
   const { setIsExpenseModalOpen } = useOutletContext()
@@ -64,7 +66,7 @@ const Dashboard = () => {
 
       const { data: expenses } = await supabase.from('expenses').select('amount, category, date, vendor, vehicles(name)').order('date', { ascending: false })
       const { data: rawVehicles, count: vehiclesCount } = await supabase.from('vehicles').select('*', { count: 'exact' })
-      const { data: trips } = await supabase.from('trips').select('distance, category')
+      const { data: trips } = await supabase.from('trips').select('distance, classification')
       
       const total = expenses?.reduce((acc, curr) => acc + (parseFloat(curr.amount) || 0), 0) || 0
       const totalDistance = trips?.reduce((acc, curr) => acc + (parseFloat(curr.distance) || 0), 0) || 0
