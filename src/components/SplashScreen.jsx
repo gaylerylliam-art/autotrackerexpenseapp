@@ -38,12 +38,8 @@ const SplashScreen = ({ onComplete }) => {
           className="flex flex-col items-center gap-6"
         >
           <div className="text-center">
-             <h1 className="text-3xl font-display font-black text-slate-900 tracking-tighter uppercase leading-none">
-                Auto<span className="text-primary italic">Track</span>
-             </h1>
-             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.4em] mt-3">
-                Vehicle Intelligence OS
-             </p>
+             <h1 className="mb-2">AutoTracker</h1>
+             <p className="caption normal-case tracking-normal">Vehicle Intelligence OS</p>
           </div>
           
           <div className="w-32 h-1 rounded-full bg-slate-100 overflow-hidden relative mt-4 shadow-sm">
@@ -59,7 +55,7 @@ const SplashScreen = ({ onComplete }) => {
 
       <motion.div 
         initial={{ opacity: 0 }} animate={{ opacity: 0.4 }} transition={{ delay: 2 }}
-        className="absolute bottom-12 text-[8px] font-bold tracking-[0.6em] text-slate-400 uppercase"
+        className="caption absolute bottom-12 normal-case tracking-widest"
       >
         Enterprise Node • V 6.0.4
       </motion.div>
