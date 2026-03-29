@@ -115,7 +115,7 @@ const Fleet = () => {
             { label: 'Cost per km', val: `AED ${stats.avgCPK}`, trend: '↓ 4%', icon: Activity, color: 'text-emerald-600', bg: 'bg-emerald-50' },
             { label: 'Safety issues', val: stats.issues, trend: 'Urgent', icon: ShieldCheck, color: 'text-rose-600', bg: 'bg-rose-50' },
           ].map((card, i) => (
-            <AppCard key={i} className="p-4 lg:p-5 flex flex-col justify-between h-32 lg:h-36">
+            <AppCard key={i} showLogo={true} logoPosition="background" logoOpacity={5} className="p-4 lg:p-5 flex flex-col justify-between h-32 lg:h-36">
                <div className="flex items-center gap-2 lg:gap-2.5">
                   <div className={cn("w-7 h-7 lg:w-8 lg:h-8 rounded-lg flex items-center justify-center", card.bg)}>
                      <card.icon className={cn("w-4 h-4 lg:w-4.5 lg:h-4.5", card.color)} />
@@ -196,7 +196,7 @@ const Fleet = () => {
          {/* 🧠 INTELLIGENCE & ANALYSIS */}
          <div className="lg:col-span-4 space-y-6">
             {/* Cost Distribution Chart */}
-            <AppCard className="p-5 lg:p-8 space-y-6">
+            <AppCard showLogo={true} logoPosition="background" logoOpacity={6} className="p-5 lg:p-8 space-y-6">
                <div className="space-y-1">
                   <h2 className="text-[18px]">Cost Distribution</h2>
                   <p className="caption">Fleet-wide efficiency matrix</p>
@@ -272,9 +272,6 @@ const Fleet = () => {
        </button>
     </div>
   )
-}
-
-export default Fleet
 }
 
 export default Fleet

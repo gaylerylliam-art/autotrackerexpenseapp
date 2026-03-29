@@ -126,7 +126,7 @@ const Dashboard = () => {
       {/* 📊 KPI GRID */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
          {KPI_CARDS.map((card, i) => (
-            <AppCard key={i} className="p-4 lg:p-5 flex flex-col justify-between h-32 lg:h-36">
+            <AppCard key={i} showLogo={true} logoPosition="background" logoOpacity={5} className="p-4 lg:p-5 flex flex-col justify-between h-32 lg:h-36">
                <div className="flex items-center gap-2 lg:gap-2.5">
                   <div className={cn("w-7 h-7 lg:w-8 lg:h-8 rounded-lg flex items-center justify-center", card.bg)}>
                      <card.icon className={cn("w-4 h-4 lg:w-4.5 lg:h-4.5", card.color)} />
@@ -153,7 +153,7 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
          {/* 🚘 VEHICLE NODE */}
          <div className="lg:col-span-2 space-y-6">
-            <AppCard className="p-5 lg:p-8 overflow-hidden">
+            <AppCard showLogo={true} logoPosition="background" logoOpacity={4} className="p-5 lg:p-8 overflow-hidden">
                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 lg:gap-8">
                   <div className="space-y-5 lg:space-y-6 flex-1">
                      <div className="flex items-center gap-2">

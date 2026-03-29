@@ -39,16 +39,19 @@ const AppCard = ({
       className={cn("saas-card relative overflow-hidden group font-body", className)}
       {...props}
     >
-      {/* Background Watermark Mode */}
+      {/* Background Watermark Mode (iPhone 13 / SaaS Minimal) */}
       {showLogo && logoPosition === 'background' && (
         <div 
-          className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden"
-          style={{ opacity: logoOpacity / 100 }}
+          className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden z-0"
+          style={{ 
+            opacity: logoOpacity / 100,
+            filter: 'blur(1.5px) grayscale(100%) brightness(1.2)'
+          }}
         >
           <img 
             src={logo} 
             alt="" 
-            className="w-48 h-48 object-contain grayscale brightness-150 rotate-[-10deg] transform scale-125" 
+            className="w-40 h-40 object-contain translate-x-4 translate-y-4 opacity-70" 
           />
         </div>
       )}
