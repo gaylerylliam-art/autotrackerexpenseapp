@@ -47,9 +47,10 @@ const Layout = () => {
     <div className="min-h-screen bg-bg-page flex flex-col lg:flex-row relative">
       
        {/* 1. Desktop Sidebar */}
-       <aside className="hidden lg:flex flex-col w-72 h-screen sticky top-0 bg-primary bg-gradient-to-b from-primary via-primary to-secondary p-6 z-50 shadow-2xl overflow-hidden">
+        <aside className="hidden lg:flex flex-col w-72 h-screen sticky top-0 bg-primary bg-gradient-to-br from-[#0A66C2] to-[#00C6FF] p-7 z-50 shadow-[10px_0_30px_rgba(10,102,194,0.15)] overflow-hidden">
          {/* Sidebar Glows */}
-         <div className="absolute -top-20 -left-20 w-40 h-40 bg-accent/20 blur-[80px] rounded-full pointer-events-none" />
+         <div className="absolute top-[-100px] left-[-100px] w-64 h-64 bg-white/20 blur-[120px] rounded-full pointer-events-none" />
+         <div className="absolute bottom-[-50px] right-[-50px] w-48 h-48 bg-white/10 blur-[80px] rounded-full pointer-events-none" />
          
          <div className="mb-10 px-2 mt-2 relative z-10">
             <Link to="/" className="flex items-center gap-4 group/logo">

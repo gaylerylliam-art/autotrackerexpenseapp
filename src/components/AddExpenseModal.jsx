@@ -179,27 +179,30 @@ const AddExpenseModal = ({ isOpen, onClose, onSave }) => {
 
           <motion.div 
             initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="w-full max-w-lg bg-white rounded-[32px] shadow-2xl border border-slate-200 overflow-hidden relative flex flex-col"
+            className="w-full max-w-lg bg-white/90 backdrop-blur-xl rounded-[32px] shadow-2xl border border-white/50 overflow-hidden relative flex flex-col"
           >
             <div className="p-8 pb-4 flex items-center justify-between relative z-10 border-b border-slate-50">
                <div>
-                  <h2 className="text-xl font-display font-bold text-slate-900 tracking-tight">Add Expense</h2>
-                  <p className="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Step {step} of 3</p>
+                  <h2 className="text-xl font-display font-black text-slate-900 tracking-tight flex items-center gap-3 italic uppercase">
+                     <span className="w-2 h-8 bg-primary rounded-full" />
+                     Add <span className="text-primary italic">Ledger Node</span>
+                  </h2>
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5 pl-5">Sequence Node Uplink · DXB</p>
                </div>
                <button 
                  onClick={onClose} 
-                 className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-all"
+                 className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-900 hover:bg-white hover:border-primary/20 transition-all shadow-sm"
                >
                  <X className="w-5 h-5" />
                </button>
             </div>
 
-            <div className="px-8 py-4 relative z-10">
-               <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+            <div className="px-8 py-5 relative z-10">
+               <div className="h-1 w-full bg-slate-100 rounded-full overflow-hidden">
                   <motion.div 
                     initial={{ width: 0 }} 
                     animate={{ width: `${(step / 3) * 100}%` }} 
-                    className="h-full bg-primary rounded-full" 
+                    className="h-full bg-gradient-to-r from-primary to-accent rounded-full shadow-[0_0_10px_rgba(10,102,194,0.3)]" 
                   />
                </div>
             </div>
@@ -361,16 +364,16 @@ const AddExpenseModal = ({ isOpen, onClose, onSave }) => {
                   <button 
                     onClick={step === 3 ? handleSave : handleNext}
                     disabled={loading || scanning || (step === 1 && !formData.amount)}
-                    className="flex-1 h-12 bg-primary rounded-xl flex items-center justify-center gap-2 text-xs font-bold text-white shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:scale-100"
+                    className="flex-1 h-12 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center gap-2 text-xs font-bold text-white shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:scale-100"
                   >
                      {loading ? (
                         <>
                            <Loader2 className="w-4 h-4 animate-spin" />
-                           <span>Saving...</span>
+                           <span>Syncing...</span>
                         </>
                      ) : (
                         <>
-                           <span>{step === 3 ? 'Save Expense' : 'Continue'}</span>
+                           <span>{step === 3 ? 'COMMIT NODE' : 'CONTINUE'}</span>
                            <ChevronRight className="w-4 h-4" />
                         </>
                      )}
