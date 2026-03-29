@@ -109,7 +109,14 @@ const Layout = () => {
        </aside>
 
        {/* 2. Main Content Area */}
-       <div className="flex-1 flex flex-col min-h-screen">
+      <main className="flex-1 relative overflow-x-hidden">
+        {/* Immersive Brand Gradient Background Layer (Mobile-first) */}
+        <div className="absolute top-0 left-0 right-0 h-[300px] bg-app-header pointer-events-none z-0 lg:hidden" />
+        
+        {/* Tablet/Desktop Decorative Glows */}
+        <div className="absolute top-[-200px] right-[-200px] w-[500px] h-[500px] bg-primary/5 blur-[120px] rounded-full pointer-events-none hidden lg:block" />
+        
+        <div className="relative z-10 p-5 lg:p-10 max-w-7xl mx-auto">
          
          {/* Desktop Header */}
          <header className="hidden lg:flex h-20 items-center justify-between px-10 sticky top-0 bg-white border-b border-slate-100 z-40">

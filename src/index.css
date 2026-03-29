@@ -12,6 +12,8 @@
   --color-text-primary: #0F172A;
   --color-text-secondary: #64748B;
   --color-text-accent: #0A66C2;
+  
+  --gradient-brand: linear-gradient(135deg, #0A66C2 0%, #1E88E5 50%, #00C6FF 100%);
 }
 
 @layer base {
