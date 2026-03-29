@@ -118,9 +118,12 @@ const Dashboard = () => {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-24 lg:pb-12">
       
       {/* 🚀 DASHBOARD HEADER */}
-      <div className="flex flex-col gap-1.5 pb-2 border-b border-slate-100">
-         <h1>Dashboard</h1>
-         <p className="caption text-text-secondary font-normal mb-0">All systems synchronized · Node: Alpha-7</p>
+      <div className="flex items-center gap-4 pb-2 border-b border-slate-100">
+         <Logo type="icon" variant="dark" className="w-10 h-10" />
+         <div className="flex flex-col gap-1.5">
+            <h1>Dashboard</h1>
+            <p className="caption text-text-secondary font-normal mb-0">All systems synchronized · Node: Alpha-7</p>
+         </div>
       </div>
 
       {/* 📊 KPI GRID */}

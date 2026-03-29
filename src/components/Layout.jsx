@@ -52,17 +52,11 @@ const Layout = () => {
          <div className="absolute top-[-100px] left-[-100px] w-64 h-64 bg-white/20 blur-[120px] rounded-full pointer-events-none" />
          <div className="absolute bottom-[-50px] right-[-50px] w-48 h-48 bg-white/10 blur-[80px] rounded-full pointer-events-none" />
          
-          <div className="mb-10 px-2 mt-2 relative z-10">
-            <Link to="/" className="flex items-center gap-4 group/logo">
-               <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white transition-transform">
-                  <Logo type="icon" className="text-white" />
-               </div>
-               <div>
-                  <h1 className="text-[20px] lg:text-[22px] font-bold tracking-tight text-white mb-0 uppercase tracking-widest leading-none">AutoTracker</h1>
-                  <p className="text-[10px] text-white/50 font-semibold uppercase tracking-[0.2em] mt-1 mb-0 opacity-80">SaaS Command</p>
-               </div>
+          <div className="mb-10 mt-2 relative z-10">
+            <Link to="/">
+               <Logo type="full" variant="light" />
             </Link>
-         </div>
+          </div>
 
          {/* Organization Switcher */}
          <div className="mb-8 relative z-10 space-y-2">
@@ -159,11 +153,14 @@ const Layout = () => {
 
          {/* Mobile Header (SaaS Minimal) */}
          <header className="lg:hidden h-14 flex items-center justify-between px-5 bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-40">
-            <div className="flex flex-col">
-               <span className="text-[17px] font-semibold text-text-primary leading-none">
-                  {navItems.find(i => isActive(i.path))?.name || 'Dashboard'}
-               </span>
-               <span className="text-[10px] text-text-secondary font-medium mt-0.5">Alpha-7 Node</span>
+            <div className="flex items-center gap-3">
+               <Logo type="icon" variant="dark" className="w-10 h-10" />
+               <div className="flex flex-col">
+                  <span className="text-[17px] font-semibold text-text-primary leading-none">
+                     {navItems.find(i => isActive(i.path))?.name || 'Dashboard'}
+                  </span>
+                  <span className="text-[10px] text-text-secondary font-medium mt-0.5">Alpha-7 Node</span>
+               </div>
             </div>
             <div className="flex items-center gap-3">
                <button className="w-9 h-9 flex items-center justify-center text-slate-400">

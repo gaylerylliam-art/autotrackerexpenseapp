@@ -81,13 +81,16 @@ const Fleet = () => {
       
       {/* 🚀 MOBILE-OPTIMIZED HEADER */}
       <div className="flex flex-col gap-6 lg:flex-row lg:items-center justify-between pb-2 border-b border-slate-100">
-         <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-2">
-               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-               <span className="text-[11px] font-bold text-emerald-600 uppercase tracking-wider">Live</span>
+         <div className="flex items-center gap-4">
+            <Logo type="icon" variant="dark" />
+            <div className="flex flex-col gap-1">
+               <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-[11px] font-bold text-emerald-600 uppercase tracking-wider">Live</span>
+               </div>
+               <h1>Fleet Intelligence</h1>
+               <p className="caption text-text-secondary font-medium">Monitoring 48 active assets</p>
             </div>
-            <h1>Fleet Intelligence</h1>
-            <p className="caption text-text-secondary font-medium">Monitoring 48 active assets</p>
          </div>
          
          {/* Segmented Control Tabs */}
@@ -237,9 +240,7 @@ const Fleet = () => {
             {/* Premium Upgrade CTA */}
             <AppCard className="p-6 bg-text-primary text-white border-none shadow-lg shadow-slate-900/10">
                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-accent">
-                     <Sparkles className="w-5 h-5" />
-                  </div>
+                  <Logo type="icon" variant="light" />
                   <div>
                      <p className="text-[14px] font-semibold text-white">Cross-Fleet Analytics</p>
                      <p className="text-[11px] text-white/50 font-medium">SaaS Pro Feature</p>
