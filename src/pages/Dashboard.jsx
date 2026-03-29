@@ -17,6 +17,7 @@ import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 import { supabase } from '../utils/supabase'
+import { useOrganization } from '../context/OrganizationContext'
 import AppCard from '../components/AppCard'
 import logo from '../assets/logo.png'
 
@@ -25,6 +26,7 @@ function cn(...inputs) { return twMerge(clsx(inputs)) }
 const Dashboard = () => {
   const navigate = useNavigate()
   const { setIsExpenseModalOpen } = useOutletContext()
+  const { currentOrg } = useOrganization()
   const [stats, setStats] = useState({
     totalSpend: 0,
     vehicleCount: 0,
@@ -45,7 +47,12 @@ const Dashboard = () => {
     fetchDashboardData()
     
     const expensesChannel = supabase.channel('dashboard-expenses-sync')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'expenses' }, () => {
+      .on('postgres_changes', { 
+        event: '*', 
+        schema: 'public', 
+        table: 'expenses',
+        filter: currentOrg ? `organization_id=eq.${currentOrg.id}` : undefined
+      }, () => {
         fetchDashboardData(false)
       })
       .subscribe()
@@ -53,7 +60,7 @@ const Dashboard = () => {
     return () => {
       supabase.removeChannel(expensesChannel)
     }
-  }, [])
+  }, [currentOrg])
 
   const fetchDashboardData = async (showLoading = true) => {
     if (showLoading) setLoading(true)
@@ -64,9 +71,19 @@ const Dashboard = () => {
       const { data: prof } = await supabase.from('profiles').select('*').eq('id', user.id).single()
       setProfile(prof)
 
-      const { data: expenses } = await supabase.from('expenses').select('amount, category, date, vendor, vehicles(name)').order('date', { ascending: false })
-      const { data: rawVehicles, count: vehiclesCount } = await supabase.from('vehicles').select('*', { count: 'exact' })
-      const { data: trips } = await supabase.from('trips').select('distance, classification')
+      let expensesQuery = supabase.from('expenses').select('amount, category, date, vendor, vehicles(name)').order('date', { ascending: false })
+      let vehiclesQuery = supabase.from('vehicles').select('*', { count: 'exact' })
+      let tripsQuery = supabase.from('trips').select('distance, classification')
+
+      if (currentOrg) {
+        expensesQuery = expensesQuery.eq('organization_id', currentOrg.id)
+        vehiclesQuery = vehiclesQuery.eq('organization_id', currentOrg.id)
+        tripsQuery = tripsQuery.eq('organization_id', currentOrg.id)
+      }
+
+      const { data: expenses } = await expensesQuery
+      const { data: rawVehicles, count: vehiclesCount } = await vehiclesQuery
+      const { data: trips } = await tripsQuery
       
       const total = expenses?.reduce((acc, curr) => acc + (parseFloat(curr.amount) || 0), 0) || 0
       const totalDistance = trips?.reduce((acc, curr) => acc + (parseFloat(curr.distance) || 0), 0) || 0
@@ -140,7 +157,7 @@ const Dashboard = () => {
                <h1 className="text-3xl font-display font-bold text-text-main tracking-tight flex items-center gap-2">
                   Dashboard
                </h1>
-               <p className="text-text-secondary font-medium">Monitoring {stats.vehicleCount} vehicles in the {profile?.company || 'Personal'} account.</p>
+                <p className="text-text-secondary font-medium">Monitoring {stats.vehicleCount} vehicles in the <span className="text-primary font-bold italic">{currentOrg?.name || 'Personal'}</span> account.</p>
             </div>
          </div>
          
@@ -332,3 +349,4 @@ const Dashboard = () => {
 }
 
 
+export default Dashboard

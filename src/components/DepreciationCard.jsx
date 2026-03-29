@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import * as controller from '../modules/depreciation/depreciation.controller'
-import { DollarSign, Date, AlertCircle, History } from 'lucide-react'
+import { DollarSign, AlertCircle, History } from 'lucide-react'
 
 /**
  * DEPRECIATION CARD COMPONENT

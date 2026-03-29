@@ -1,3 +1,4 @@
+import { supabase } from '../../utils/supabase'
 import * as service from './depreciation.service'
 
 /**
@@ -17,8 +18,8 @@ export const getBriefing = async (vehicleId) => {
  * Fetches all vehicles then returns aggregation.
  */
 export const getFleetBriefing = async () => {
-  const { data: vehicles } = await service.supabase.from('vehicles').select('*');
-  const { data: expenses } = await service.supabase.from('expenses').select('vehicle_id, amount');
+  const { data: vehicles } = await supabase.from('vehicles').select('*');
+  const { data: expenses } = await supabase.from('expenses').select('vehicle_id, amount');
 
   // Group expenses by vehicle
   const expenseMap = (expenses || []).reduce((acc, curr) => {

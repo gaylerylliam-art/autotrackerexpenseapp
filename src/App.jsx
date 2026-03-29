@@ -25,6 +25,7 @@ import Layout from './components/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
 import SplashScreen from './components/SplashScreen'
 import { NotificationProvider } from './context/NotificationContext'
+import { OrganizationProvider } from './context/OrganizationContext'
 
 function App() {
   const [showSplash, setShowSplash] = React.useState(true)
@@ -42,54 +43,56 @@ function App() {
   return (
     <Router>
       <NotificationProvider>
-        <div className="min-h-screen text-text-main font-sans selection:bg-text-main/10 selection:text-text-main overflow-x-hidden relative bg-bg-page">
-          <AnimatePresence mode="wait">
-            {showSplash && (
-              <SplashScreen key="splash" onComplete={handleSplashComplete} />
+        <OrganizationProvider>
+          <div className="min-h-screen text-text-main font-sans selection:bg-primary/10 overflow-x-hidden relative bg-bg-page">
+            <AnimatePresence mode="wait">
+              {showSplash && (
+                <SplashScreen key="splash" onComplete={handleSplashComplete} />
+              )}
+            </AnimatePresence>
+
+            {!showSplash && (
+              <motion.div 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                transition={{ duration: 0.5, ease: 'easeOut' }}
+                key="app-content"
+                className="flex flex-col min-h-screen"
+              >
+                <Routes>
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/onboarding" element={
+                    <ProtectedRoute>
+                       <Onboarding />
+                    </ProtectedRoute>
+                  } />
+
+                  <Route element={
+                    <ProtectedRoute>
+                      <Layout />
+                    </ProtectedRoute>
+                  }>
+                    <Route index element={<Dashboard />} />
+                    <Route path="fleet" element={<Fleet />} />
+                    <Route path="expenses" element={<Expenses />} />
+                    <Route path="maintenance" element={<Maintenance />} />
+                    <Route path="vault" element={<Vault />} />
+                    <Route path="tolls" element={<Tolls />} />
+                    <Route path="trips" element={<Trips />} />
+                    <Route path="vehicles" element={<Vehicles />} />
+                    <Route path="vehicles/:id" element={<VehicleProfile />} />
+                    <Route path="reports" element={<Reports />} />
+                    <Route path="settings" element={<Settings />} />
+                    <Route path="organization" element={<Organization />} />
+                    <Route path="pricing" element={<Pricing />} />
+                    <Route path="dashboard" element={<Navigate to="/" replace />} />
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                  </Route>
+                </Routes>
+              </motion.div>
             )}
-          </AnimatePresence>
-
-          {!showSplash && (
-            <motion.div 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
-              transition={{ duration: 0.5, ease: 'easeOut' }}
-              key="app-content"
-              className="flex flex-col min-h-screen"
-            >
-              <Routes>
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/onboarding" element={
-                  <ProtectedRoute>
-                     <Onboarding />
-                  </ProtectedRoute>
-                } />
-
-                <Route element={
-                  <ProtectedRoute>
-                    <Layout />
-                  </ProtectedRoute>
-                }>
-                  <Route index element={<Dashboard />} />
-                  <Route path="fleet" element={<Fleet />} />
-                  <Route path="expenses" element={<Expenses />} />
-                  <Route path="maintenance" element={<Maintenance />} />
-                  <Route path="vault" element={<Vault />} />
-                  <Route path="tolls" element={<Tolls />} />
-                  <Route path="trips" element={<Trips />} />
-                  <Route path="vehicles" element={<Vehicles />} />
-                  <Route path="vehicles/:id" element={<VehicleProfile />} />
-                  <Route path="reports" element={<Reports />} />
-                  <Route path="settings" element={<Settings />} />
-                  <Route path="organization" element={<Organization />} />
-                  <Route path="pricing" element={<Pricing />} />
-                  <Route path="dashboard" element={<Navigate to="/" replace />} />
-                  <Route path="*" element={<Navigate to="/" replace />} />
-                </Route>
-              </Routes>
-            </motion.div>
-          )}
-        </div>
+          </div>
+        </OrganizationProvider>
       </NotificationProvider>
     </Router>
   )

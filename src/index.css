@@ -1,34 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
-
 @theme {
-  --color-primary: #1A1C1E; /* Neutral dark for structure */
-  --color-accent: #E11D48; /* Muted red for selective highlights */
-  --color-bg-page: #F8F9FB; /* Very light neutral gray */
-  --color-bg-card: #F4F5F7; /* Soft off-white gray */
-  --color-bg-secondary: #D8D7DC; /* Softened secondary tint */
+  --color-primary: #0B5ED7; /* Production Blue */
+  --color-secondary: #3A8DFF; /* Accent Blue */
+  --color-accent: #4FD1C5; /* Cyan Accent */
+  --color-bg-page: #F0F4F8; /* Soft blueish gray */
+  --color-bg-card: rgba(255, 255, 255, 0.7); /* Translucent White for glass */
+  --color-bg-secondary: #E2E8F0;
 
-  --color-text-main: #0F1010; /* Primary Headings */
-  --color-text-title: #1A1C1E; /* Section Headings */
-  --color-text-secondary: #5B5D61; /* Body Text */
-  --color-text-helper: #767E8E; /* Helper text */
-  --color-text-subtle: #ABADBB; /* Disabled text */
+  --color-text-main: #1A365D; /* Deep Blue text */
+  --color-text-title: #2A4365;
+  --color-text-secondary: #4A5568;
+  --color-text-helper: #718096;
+  --color-text-subtle: #A0AEC0;
 
-  --color-border: rgba(26, 28, 30, 0.08); /* Subtle 1px neutral */
-  --color-border-hover: rgba(26, 28, 30, 0.15);
+  --color-border: rgba(11, 94, 215, 0.1); 
+  --color-border-hover: rgba(11, 94, 215, 0.2);
   
   --font-display: 'Inter', 'SF Pro Display', ui-sans-serif, system-ui, sans-serif;
   --font-body: 'Inter', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  --shadow-premium: 0 4px 24px -4px rgba(0, 0, 0, 0.04), 0 2px 8px -2px rgba(0, 0, 0, 0.02);
-  --shadow-glow: 0 0 20px rgba(15, 16, 16, 0.05); /* Reduced glow */
+  --shadow-premium: 0 10px 30px -5px rgba(11, 94, 215, 0.08), 0 4px 12px -3px rgba(11, 94, 215, 0.04);
+  --shadow-glow: 0 0 20px rgba(79, 209, 197, 0.2); 
 }
 
 @layer base {
   body {
     background-color: var(--color-bg-page);
+    background-image: radial-gradient(at 0% 0%, rgba(79, 209, 197, 0.1) 0, transparent 50%),
+                      radial-gradient(at 100% 100%, rgba(11, 94, 215, 0.1) 0, transparent 50%);
     color: var(--color-text-secondary);
     @apply font-body antialiased;
     min-height: 100vh;
@@ -43,53 +45,79 @@
 
   /* Custom Scrollbar */
   ::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
+    width: 6px;
+    height: 6px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: var(--color-bg-secondary);
+    background: rgba(11, 94, 215, 0.2);
     border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(11, 94, 215, 0.4);
   }
 }
 
 @layer components {
   .saas-card {
-    background-color: var(--color-bg-card);
-    border: 1px solid var(--color-border);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 24px;
     box-shadow: var(--shadow-premium);
-    @apply transition-all duration-300 ease-in-out;
+    @apply transition-all duration-500 ease-in-out;
   }
 
   .saas-card:hover {
-    border-color: var(--color-border-hover);
-    @apply -translate-y-0.5;
+    @apply -translate-y-1 shadow-xl border-primary/20;
+    background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 100%);
+  }
+
+  /* Gradient Cards */
+  .card-gradient-blue {
+    background: linear-gradient(135deg, #0B5ED7 0%, #3A8DFF 100%);
+    color: white;
+    @apply border-none shadow-lg shadow-blue-500/20;
+  }
+
+  .card-gradient-cyan {
+    background: linear-gradient(135deg, #3A8DFF 0%, #4FD1C5 100%);
+    color: white;
+    @apply border-none shadow-lg shadow-cyan-500/20;
   }
 
   .btn-primary {
-    @apply bg-primary text-white font-display font-semibold text-sm px-8 py-4 rounded-[14px] transition-all duration-200 shadow-md active:scale-[0.98] flex items-center justify-center gap-2;
+    background: linear-gradient(135deg, #0B5ED7 0%, #3A8DFF 100%);
+    @apply text-white font-display font-bold text-sm px-8 py-4 rounded-[16px] transition-all duration-300 shadow-lg shadow-blue-500/25 active:scale-[0.96] flex items-center justify-center gap-2 border-none;
   }
 
   .btn-primary:hover {
-    @apply bg-black opacity-90;
+    @apply opacity-95 brightness-110 shadow-blue-500/40 -translate-y-0.5;
   }
 
   .btn-secondary {
-    @apply bg-white border border-gray-200 text-gray-700 font-display font-semibold text-sm px-8 py-4 rounded-[14px] transition-all duration-200 hover:bg-gray-50 flex items-center justify-center gap-2;
+    @apply bg-white/80 backdrop-blur-sm border border-blue-100 text-blue-600 font-display font-bold text-sm px-8 py-4 rounded-[16px] transition-all duration-300 hover:bg-white hover:shadow-lg hover:shadow-blue-500/10 flex items-center justify-center gap-2;
   }
 
   .badge {
-    @apply px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center justify-center;
+    @apply px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center justify-center border;
   }
   
-  .badge-accent { @apply bg-accent/5 text-accent border border-accent/10; }
-  .badge-neutral { @apply bg-gray-100 text-gray-600 border border-gray-200; }
+  .badge-accent { @apply bg-accent/10 text-emerald-700 border-accent/20; }
+  .badge-neutral { @apply bg-blue-50 text-blue-700 border-blue-100; }
 
   .glass-effect {
-    @apply backdrop-blur-md bg-white/80 border border-white/20;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .glow-text {
+    text-shadow: 0 0 20px rgba(79, 209, 197, 0.5);
   }
 }
 

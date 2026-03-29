@@ -39,6 +39,8 @@ const AddExpenseModal = ({ isOpen, onClose, onSave }) => {
     description: '',
     vehicle_id: '',
     vendor: '',
+    taxInclusive: true,
+    organization_id: ''
   })
 
   useEffect(() => {
@@ -101,14 +103,29 @@ const AddExpenseModal = ({ isOpen, onClose, onSave }) => {
       }
 
       const selectedCurrency = CURRENCIES.find(c => c.id === formData.currency)
-      const convertedAmount = parseFloat(formData.amount) * (selectedCurrency?.rate || 1)
+      const convertedTotal = parseFloat(formData.amount) * (selectedCurrency?.rate || 1)
+      
+      const taxRate = 0.05 // UAE Standard VAT
+      let baseAmount, taxAmount
+      
+      if (formData.taxInclusive) {
+        baseAmount = convertedTotal / (1 + taxRate)
+        taxAmount = convertedTotal - baseAmount
+      } else {
+        baseAmount = convertedTotal
+        taxAmount = baseAmount * taxRate
+      }
 
       const { error: insertError } = await supabase
         .from('expenses')
         .insert([{
           user_id: user.id,
           vehicle_id: formData.vehicle_id || null,
-          amount: convertedAmount,
+          amount: convertedTotal + (formData.taxInclusive ? 0 : taxAmount),
+          base_amount: baseAmount,
+          tax_amount: taxAmount,
+          tax_rate: taxRate,
+          tax_inclusive: formData.taxInclusive,
           original_amount: parseFloat(formData.amount),
           original_currency: formData.currency,
           exchange_rate: selectedCurrency?.rate || 1,
@@ -144,6 +161,8 @@ const AddExpenseModal = ({ isOpen, onClose, onSave }) => {
       description: '',
       vehicle_id: '',
       vendor: '',
+      taxInclusive: true,
+      organization_id: ''
     })
     setReceipt(null)
     setScanning(false)
@@ -222,6 +241,25 @@ const AddExpenseModal = ({ isOpen, onClose, onSave }) => {
                                 </p>
                              </motion.div>
                           )}
+                          <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                             <div className="space-y-0.5">
+                                <p className="text-[10px] font-bold text-slate-900 uppercase tracking-widest">Tax Inclusive</p>
+                                <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">UAE VAT 5%</p>
+                             </div>
+                             <button 
+                                onClick={() => setFormData(p => ({ ...p, taxInclusive: !p.taxInclusive }))}
+                                className={cn(
+                                   "w-12 h-6 rounded-full transition-all relative p-1",
+                                   formData.taxInclusive ? "bg-primary" : "bg-slate-200"
+                                )}
+                             >
+                                <motion.div 
+                                   animate={{ x: formData.taxInclusive ? 24 : 0 }} 
+                                   className="w-4 h-4 bg-white rounded-full shadow-sm"
+                                />
+                             </button>
+                          </div>
+                          
                           <div className="flex items-center gap-3 p-4 bg-blue-50/50 rounded-2xl border border-blue-100/50">
                              <Sparkles className="w-4 h-4 text-primary" />
                              <p className="text-[11px] font-medium text-blue-700">Scan receipts for automatic data entry.</p>

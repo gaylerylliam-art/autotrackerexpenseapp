@@ -9,6 +9,7 @@ import {
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { supabase } from '../utils/supabase'
+import { useOrganization } from '../context/OrganizationContext'
 
 function cn(...inputs) { return twMerge(clsx(inputs)) }
 
@@ -30,7 +31,7 @@ const DocumentCard = ({ doc, onDelete }) => {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      className="premium-card group p-6 hover:translate-y-[-2px] transition-all cursor-pointer"
+      className="saas-card group p-6 hover:translate-y-[-2px] transition-all cursor-pointer"
     >
       <div className="flex flex-col h-full space-y-6">
          <div className="flex justify-between items-start">
@@ -42,7 +43,7 @@ const DocumentCard = ({ doc, onDelete }) => {
                   <h3 className="text-base font-bold text-slate-900 group-hover:text-primary transition-colors">{doc.name}</h3>
                   <div className="flex items-center gap-2">
                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{doc.category}</span>
-                     <span className="w-1 h-1 rounded-full bg-slate-200" />
+                     <span className="w-0.5 h-0.5 rounded-full bg-slate-200" />
                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{doc.vehicles?.name || 'General'}</span>
                   </div>
                </div>
@@ -56,7 +57,7 @@ const DocumentCard = ({ doc, onDelete }) => {
             </div>
          </div>
 
-         <div className="grid grid-cols-2 gap-4 py-4 border-y border-slate-100/60">
+         <div className="grid grid-cols-2 gap-4 py-4 border-y border-slate-100/60 font-body">
             <div className="space-y-1">
                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Expiry Date</span>
                <p className="text-sm font-bold text-slate-900">
@@ -73,15 +74,15 @@ const DocumentCard = ({ doc, onDelete }) => {
          </div>
 
          <div className="flex items-center justify-between pt-2">
-            <button className="flex items-center gap-2 text-[11px] font-bold text-slate-500 hover:text-primary transition-colors">
+            <button className="flex items-center gap-2 text-[11px] font-bold text-slate-500 hover:text-primary transition-colors italic">
                <Eye className="w-4 h-4" />
                Preview
             </button>
             <div className="flex items-center gap-2">
-               <button className="h-9 w-9 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 hover:text-primary hover:bg-white transition-all">
+               <button className="h-9 w-9 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 hover:text-primary hover:bg-white transition-all shadow-sm">
                   <Download className="w-4 h-4" />
                </button>
-               <button onClick={() => onDelete(doc.id)} className="h-9 w-9 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-white transition-all">
+               <button onClick={() => onDelete(doc.id)} className="h-9 w-9 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-white transition-all shadow-sm">
                   <Trash2 className="w-4 h-4" />
                </button>
             </div>
@@ -96,24 +97,36 @@ const Vault = () => {
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('All')
   const [search, setSearch] = useState('')
+  const { currentOrg } = useOrganization()
 
   useEffect(() => {
     fetchDocs()
     
     const channel = supabase.channel('vault-sync')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'documents' }, () => fetchDocs(false))
+      .on('postgres_changes', { 
+        event: '*', 
+        schema: 'public', 
+        table: 'documents',
+        filter: currentOrg ? `organization_id=eq.${currentOrg.id}` : undefined
+      }, () => fetchDocs(false))
       .subscribe()
 
     return () => supabase.removeChannel(channel)
-  }, [])
+  }, [currentOrg])
 
   const fetchDocs = async (showLoading = true) => {
     if (showLoading) setLoading(true)
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from('documents')
         .select('*, vehicles(name)')
         .order('created_at', { ascending: false })
+      
+      if (currentOrg) {
+        query = query.eq('organization_id', currentOrg.id)
+      }
+
+      const { data, error } = await query
       
       if (error) throw error
       setDocs(data || [])
