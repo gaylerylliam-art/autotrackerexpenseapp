@@ -82,6 +82,16 @@
     @apply w-full h-10 px-3 rounded-lg bg-white border border-slate-200 text-text-primary placeholder:text-text-secondary/40 focus:border-primary/40 focus:ring-4 focus:ring-primary/5 outline-none transition-all;
   }
 }
+@layer utilities {
+  .bg-brand-gradient {
+    background: var(--gradient-brand);
+  }
+
+  .bg-app-header {
+    background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-bg-page) 100%);
+    opacity: 0.08;
+  }
+}
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
