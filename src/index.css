@@ -1,15 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Inter", "Outfit", sans-serif;
-  --font-body: "Inter", sans-serif;
+  --font-display: "Inter", "system-ui", sans-serif;
+  --font-body: "Inter", "system-ui", sans-serif;
   --font-mono: "Fira Code", monospace;
   
   --color-primary: #0A66C2;
   --color-accent: #00C6FF;
   --color-bg-page: #F8FAFC;
   
-  /* Strict Typography Colors */
   --color-text-primary: #0F172A;
   --color-text-secondary: #64748B;
   --color-text-accent: #0A66C2;
@@ -20,15 +19,9 @@
     --primary: #0A66C2;
     --accent: #00C6FF;
     --bg-page: #F8FAFC;
-    
     --text-primary: #0F172A;
     --text-secondary: #64748B;
-    
-    --radius-main: 16px;
-    --radius-sm: 8px;
-    
-    --shadow-main: 0 4px 6px -1px rgb(15 23 42 / 0.05), 0 2px 4px -2px rgb(15 23 42 / 0.05);
-    --shadow-lg: 0 10px 15px -3px rgb(15 23 42 / 0.08);
+    --radius-main: 12px;
   }
 
   body {
@@ -38,38 +31,41 @@
     @apply antialiased;
   }
 
-  /* 8pt Typography System */
-  h1 { @apply font-display font-semibold text-[26px] lg:text-[28px] leading-tight mb-4 text-text-primary; }
-  h2 { @apply font-display font-medium text-[20px] lg:text-[22px] leading-snug mb-3 text-text-primary; }
-  h3 { @apply font-display font-medium text-[16px] lg:text-[18px] leading-normal mb-2 text-text-primary; }
+  /* SaaS Typography System (Stripe/Linear Style) */
+  h1 { @apply font-display font-semibold text-[26px] lg:text-[28px] leading-tight text-text-primary tracking-tight; }
+  h2 { @apply font-display font-medium text-[15px] lg:text-[16px] leading-relaxed text-text-secondary font-normal; }
   
-  .body-text { @apply font-body font-normal text-[14px] lg:text-[16px] leading-relaxed text-text-secondary; }
-  .caption { @apply font-body font-normal text-[12px] lg:text-[13px] text-text-secondary opacity-80 uppercase tracking-wide; }
-  .price-text { @apply font-display font-bold text-[28px] lg:text-[32px] text-text-primary tracking-tight; }
+  /* Metric card elements */
+  .card-label { @apply text-[12px] lg:text-[13px] font-medium text-text-secondary tracking-[0.02em] leading-none; }
+  .metric-value { @apply text-[24px] lg:text-[28px] font-bold text-text-primary tracking-tight leading-none; }
+  .status-label { @apply text-[11px] lg:text-[12px] font-medium px-2 py-0.5 rounded-md; }
   
-  button, .btn { @apply font-display font-semibold text-[14px] lg:text-[16px] transition-all active:scale-[0.98]; }
+  .body-text { @apply font-body font-normal text-[14px] lg:text-[15px] leading-relaxed text-text-secondary; }
+  .caption { @apply font-body font-normal text-[12px] text-text-secondary opacity-80; }
+  
+  button, .btn { @apply font-display font-semibold text-[14px] lg:text-[15px] transition-all active:scale-[0.98]; }
 }
 
 @layer components {
   .saas-card {
-    @apply bg-white border border-slate-100 shadow-sm transition-all duration-300;
+    @apply bg-white border border-slate-100 shadow-[0_1px_3px_0_rgba(0,0,0,0.02),0_1px_2px_-1px_rgba(0,0,0,0.03)] transition-all duration-200;
     border-radius: var(--radius-main);
   }
 
   .saas-card:hover {
-    @apply shadow-lg -translate-y-1 border-slate-200;
+    @apply shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] border-slate-200;
   }
 
   .btn-primary {
-     @apply h-12 px-6 rounded-xl bg-primary text-white hover:bg-primary-dark transition-all flex items-center justify-center gap-2;
+     @apply h-10 px-4 rounded-lg bg-text-primary text-white hover:opacity-90 transition-all flex items-center justify-center gap-2;
   }
 
   .btn-outline {
-     @apply h-12 px-6 rounded-xl bg-white border border-slate-200 text-text-primary hover:border-primary/40 transition-all flex items-center justify-center gap-2;
+     @apply h-10 px-4 rounded-lg bg-white border border-slate-200 text-text-primary hover:bg-slate-50 transition-all flex items-center justify-center gap-2;
   }
 
   .input-field {
-    @apply w-full h-12 px-4 rounded-xl bg-slate-50 border border-slate-100 text-text-primary placeholder:text-text-secondary/50 focus:bg-white focus:border-primary/40 focus:ring-4 focus:ring-primary/5 outline-none transition-all;
+    @apply w-full h-10 px-3 rounded-lg bg-white border border-slate-200 text-text-primary placeholder:text-text-secondary/40 focus:border-primary/40 focus:ring-4 focus:ring-primary/5 outline-none transition-all;
   }
 }
 
