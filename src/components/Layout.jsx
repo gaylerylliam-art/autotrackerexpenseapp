@@ -157,14 +157,23 @@ const Layout = () => {
             </div>
          </header>
 
-         {/* Mobile Header */}
-         <header className="lg:hidden h-16 flex items-center justify-between px-6 bg-white border-b border-slate-100 sticky top-0 z-40">
-            <Link to="/" className="flex items-center gap-3">
-               <Logo type="icon" className="w-7 h-7 text-primary" />
-               <h2 className="text-[18px] mb-0 tracking-tight font-bold">AutoTracker</h2>
-            </Link>
-            <div className="flex items-center gap-4">
-               <button onClick={() => setIsMobileMenuOpen(true)} className="text-slate-600">
+         {/* Mobile Header (SaaS Minimal) */}
+         <header className="lg:hidden h-14 flex items-center justify-between px-5 bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-40">
+            <div className="flex flex-col">
+               <span className="text-[17px] font-semibold text-text-primary leading-none">
+                  {navItems.find(i => isActive(i.path))?.name || 'Dashboard'}
+               </span>
+               <span className="text-[10px] text-text-secondary font-medium mt-0.5">Alpha-7 Node</span>
+            </div>
+            <div className="flex items-center gap-3">
+               <button className="w-9 h-9 flex items-center justify-center text-slate-400">
+                  <Search className="w-5 h-5" />
+               </button>
+               <button onClick={() => setIsNotificationOpen(!isNotificationOpen)} className="w-9 h-9 flex items-center justify-center text-slate-400 relative">
+                  <Bell className="w-5 h-5" />
+                  {unreadCount > 0 && <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-accent border-2 border-white" />}
+               </button>
+               <button onClick={() => setIsMobileMenuOpen(true)} className="w-9 h-9 flex items-center justify-center text-slate-600 ml-1">
                   <Menu className="w-6 h-6" />
                </button>
             </div>
@@ -187,29 +196,29 @@ const Layout = () => {
        </div>
 
        {/* 3. Bottom Mobile Navigation */}
-       <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white/90 backdrop-blur-xl border-t border-blue-50 px-6 flex items-center justify-between lg:hidden z-50 pb-safe font-body">
-         {navItems.slice(0, 4).map((item) => (
-           <Link 
-             key={item.path} 
-             to={item.path}
-             className={cn(
-               "mobile-nav-item flex-1 italic flex flex-col items-center gap-1",
-               isActive(item.path) ? "text-primary" : "text-text-subtle"
-             )}
-           >
-             <item.icon className={cn("w-6 h-6", isActive(item.path) && "stroke-[2.5]")} />
-             <span className="text-[9px] font-black tracking-[0.2em] uppercase">{item.name}</span>
-           </Link>
-         ))}
-       </nav>
-
-       {/* FAB for Mobile */}
-       <button 
-         onClick={() => setIsExpenseModalOpen(true)}
-         className="fixed lg:hidden bottom-24 right-6 w-14 h-14 rounded-[22px] bg-primary text-white shadow-2xl shadow-primary/30 flex items-center justify-center z-50 hover:scale-110 active:scale-95 transition-all"
-       >
-         <Plus className="w-7 h-7 stroke-[3]" />
-       </button>
+        <nav className="fixed bottom-0 left-0 right-0 h-16 bg-white/95 backdrop-blur-xl border-t border-slate-100 px-6 flex items-center justify-between lg:hidden z-50 pb-safe">
+          {navItems.slice(0, 4).map((item) => (
+            <Link 
+              key={item.path} 
+              to={item.path}
+              className={cn(
+                "flex-1 flex flex-col items-center gap-1 transition-all h-full justify-center",
+                isActive(item.path) ? "text-primary" : "text-text-secondary/60"
+              )}
+            >
+              <item.icon className={cn("w-5.5 h-5.5", isActive(item.path) && "stroke-[2]")} />
+              <span className="text-[10px] font-medium tracking-tight h-3 overflow-hidden">{item.name}</span>
+            </Link>
+          ))}
+        </nav>
+ 
+        {/* Floating Action Button (FAB) - 56px Circular */}
+        <button 
+          onClick={() => setIsExpenseModalOpen(true)}
+          className="fixed lg:hidden bottom-20 right-6 w-14 h-14 rounded-full bg-text-primary text-white shadow-xl shadow-slate-900/20 flex items-center justify-center z-50 hover:bg-slate-800 active:scale-95 transition-all"
+        >
+          <Plus className="w-8 h-8 stroke-[2.5]" />
+        </button>
 
        {/* Mobile Sidebar Overlay */}
        <AnimatePresence>

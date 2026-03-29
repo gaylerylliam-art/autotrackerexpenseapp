@@ -31,17 +31,16 @@
     @apply antialiased;
   }
 
-  /* SaaS Typography System (Stripe/Linear Style) */
-  h1 { @apply font-display font-semibold text-[26px] lg:text-[28px] leading-tight text-text-primary tracking-tight; }
-  h2 { @apply font-display font-medium text-[15px] lg:text-[16px] leading-relaxed text-text-secondary font-normal; }
+  /* Mobile-First SaaS Typography (iPhone 13 Optimized) */
+  h1 { @apply font-display font-semibold text-[22px] lg:text-[28px] leading-tight text-text-primary tracking-tight; }
+  h2 { @apply font-display font-medium text-[14px] lg:text-[16px] leading-relaxed text-text-secondary font-normal; }
   
-  /* Metric card elements */
-  .card-label { @apply text-[12px] lg:text-[13px] font-medium text-text-secondary tracking-[0.02em] leading-none; }
-  .metric-value { @apply text-[24px] lg:text-[28px] font-bold text-text-primary tracking-tight leading-none; }
+  .card-label { @apply text-[11px] lg:text-[13px] font-medium text-text-secondary tracking-[0.02em] leading-none; }
+  .metric-value { @apply text-[20px] lg:text-[28px] font-bold text-text-primary tracking-tight leading-none; }
   .status-label { @apply text-[11px] lg:text-[12px] font-medium px-2 py-0.5 rounded-md; }
   
-  .body-text { @apply font-body font-normal text-[14px] lg:text-[15px] leading-relaxed text-text-secondary; }
-  .caption { @apply font-body font-normal text-[12px] text-text-secondary opacity-80; }
+  .body-text { @apply font-body font-normal text-[13px] lg:text-[15px] leading-relaxed text-text-secondary; }
+  .caption { @apply font-body font-normal text-[11px] lg:text-[12px] text-text-secondary opacity-80; }
   
   button, .btn { @apply font-display font-semibold text-[14px] lg:text-[15px] transition-all active:scale-[0.98]; }
 }
