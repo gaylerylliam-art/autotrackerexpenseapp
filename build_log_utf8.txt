@@ -1,0 +1,57 @@
+﻿
+> autotracker@0.0.0 build
+> vite build
+
+node.exe : X [ERROR] 
+Cannot start service: 
+Host version "0.21.5" 
+does not match binary 
+version "0.25.12"
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo       
+       : NotSpecified:   
+  (X [ERROR] Canno...r   
+ sion "0.25.12":Strin    
+g) [], RemoteExcepti    
+on
+    + FullyQualifiedErro 
+   rId : NativeCommandE  
+  rror
+ 
+
+1 error
+[31mfailed to load 
+config from C:\Users\Publ
+ic\Autotracker\vite.confi
+g.js[39m
+[31merror during build:
+Error: The service was 
+stopped
+    at C:\Users\Public\Au
+totracker\node_modules\es
+build\lib\main.js:968:34
+    at responseCallbacks.
+<computed> (C:\Users\Publ
+ic\Autotracker\node_modul
+es\esbuild\lib\main.js:62
+2:9)
+    at Socket.afterClose 
+(C:\Users\Public\Autotrac
+ker\node_modules\esbuild\
+lib\main.js:613:28)
+    at Socket.emit 
+(node:events:520:35)
+    at endReadableNT (nod
+e:internal/streams/readab
+le:1729:12)
+    at process.processTic
+ksAndRejections (node:int
+ernal/process/task_queues
+:90:21)[39m

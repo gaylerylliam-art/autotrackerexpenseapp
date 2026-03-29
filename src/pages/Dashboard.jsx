@@ -20,7 +20,7 @@ import { supabase } from '../utils/supabase'
 import AppCard from '../components/AppCard'
 import logo from '../assets/logo.png'
 
-const cn = (...inputs) => twMerge(clsx(inputs))
+function cn(...inputs) { return twMerge(clsx(inputs)) }
 
 const Dashboard = () => {
   const navigate = useNavigate()

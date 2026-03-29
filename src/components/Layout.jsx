@@ -14,7 +14,6 @@ import AddExpenseModal from './AddExpenseModal'
 import AddVehicleModal from './AddVehicleModal'
 import NotificationDropdown from './NotificationDropdown'
 import { useNotifications } from '../context/NotificationContext'
-
 function cn(...inputs) { return twMerge(clsx(inputs)) }
 
 const Layout = () => {

@@ -3,7 +3,6 @@ import { motion } from 'framer-motion'
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import logo from '../assets/logo.png'
-
 function cn(...inputs) { return twMerge(clsx(inputs)) }
 
 /**
