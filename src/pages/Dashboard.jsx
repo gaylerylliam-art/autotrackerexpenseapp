@@ -145,204 +145,181 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20">
       
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-         <div className="flex items-center gap-6">
-            <div className="w-16 h-16 rounded-3xl bg-white border border-slate-100 shadow-xl shadow-blue-500/5 flex items-center justify-center p-3 relative group">
-               <img src={logo} alt="AutoTrack" className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500" />
+      {/* 🚀 COMMAND HEADER */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+         <div className="space-y-2">
+            <div className="flex items-center gap-3">
+               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+               <span className="caption-text font-black uppercase tracking-[0.3em] text-emerald-600">Manual Uplink Active</span>
             </div>
-            <div>
-               <h1 className="text-3xl font-display font-bold text-text-main tracking-tight flex items-center gap-2">
-                  Dashboard
-               </h1>
-                <p className="text-text-secondary font-medium">Monitoring {stats.vehicleCount} vehicles in the <span className="text-primary font-bold italic">{currentOrg?.name || 'Personal'}</span> account.</p>
-            </div>
+            <h1 className="text-text-main">Control <span className="text-primary italic font-black">Center</span></h1>
+            <p className="body-text text-text-helper max-w-md">Welcome back, {profile?.full_name?.split(' ')[0] || 'Commander'}. Operational fleet status is at 98.4% efficiency.</p>
          </div>
          
-         <div className="flex items-center gap-3 bg-white p-1.5 rounded-2xl border border-border shadow-sm">
+         <div className="flex items-center gap-3">
             <button 
-               onClick={() => setIsFleetMode(false)}
-               className={cn(
-                 "px-6 h-10 rounded-xl text-xs font-bold transition-all", 
-                 !isFleetMode ? "bg-text-main text-white shadow-md shadow-black/10" : "text-text-helper hover:bg-bg-page"
-               )}
+               onClick={() => setIsExpenseModalOpen(true)}
+               className="btn-primary"
             >
-               Personal View
+               <Plus className="w-5 h-5" />
+               LOG EVENT
             </button>
             <button 
-               onClick={() => setIsFleetMode(true)}
-               className={cn(
-                 "px-6 h-10 rounded-xl text-xs font-bold transition-all flex items-center gap-2", 
-                 isFleetMode ? "bg-text-main text-white shadow-md shadow-black/10" : "text-text-helper hover:bg-bg-page"
-               )}
+               onClick={() => navigate('/trips')}
+               className="btn-outline"
             >
-               Fleet View
-               {!isFleetMode && <Lock className="w-3 h-3 text-text-subtle" />}
+               <MapPin className="w-5 h-5 text-primary" />
+               START TRIP
             </button>
          </div>
       </div>
 
-      {/* KPI Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-         {KPI_CARDS.map((kpi, i) => (
-            <AppCard key={i} showLogo={true} logoPosition="top-right" className="p-8 flex flex-col justify-between h-44">
-               <div className="flex items-center justify-between mb-4">
-                  <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center", kpi.bg)}>
-                     <kpi.icon className={cn("w-6 h-6", kpi.color)} />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+         {/* 🚘 VEHICLE STATUS NODE */}
+         <div className="lg:col-span-2 space-y-8">
+            <AppCard showLogo={true} logoPosition="top-right" className="p-8 lg:p-12 bg-gradient-to-br from-white to-slate-50 relative overflow-hidden group">
+               <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[80px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none group-hover:bg-primary/10 transition-all duration-700" />
+               
+               <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 relative z-10">
+                  <div className="space-y-6">
+                     <div className="inline-flex items-center gap-3 px-4 py-2 bg-emerald-50 border border-emerald-100 rounded-full">
+                        <ShieldCheck className="w-4 h-4 text-emerald-500" />
+                        <span className="caption-text font-black text-emerald-600 uppercase tracking-widest italic">Asset Secured</span>
+                     </div>
+                     <div className="space-y-1">
+                        <h2 className="text-text-main text-4xl italic">Nissan Patrol <span className="text-primary font-black">V8</span></h2>
+                        <p className="caption-text font-black text-text-helper uppercase tracking-[0.4em]">Hardware ID: {profile?.company || 'AUTO-99'} · DUBAI F-12345</p>
+                     </div>
+                     <div className="flex items-center gap-10">
+                        <div className="space-y-1">
+                           <p className="caption-text uppercase font-black opacity-40 italic mt-1">Operational Range</p>
+                           <p className="price-header text-text-main">412<span className="text-sm ml-1 text-primary">KM</span></p>
+                        </div>
+                        <div className="w-[1px] h-12 bg-slate-200" />
+                        <div className="space-y-1">
+                           <p className="caption-text uppercase font-black opacity-40 italic mt-1">Health Index</p>
+                           <p className="price-header text-emerald-500">98<span className="text-sm ml-1">%</span></p>
+                        </div>
+                     </div>
                   </div>
-                  <span className={cn(
-                    "text-[10px] font-bold px-2.5 py-1 rounded-full",
-                    kpi.trend.startsWith('+') ? "bg-accent/5 text-accent" : 
-                    kpi.trend.startsWith('-') ? "bg-emerald-50 text-emerald-600" : "bg-bg-page text-text-helper"
-                  )}>
-                    {kpi.trend}
-                  </span>
-               </div>
-               <div className="space-y-0.5">
-                  <p className="text-[11px] font-bold text-text-helper uppercase tracking-widest">{kpi.label}</p>
-                  <h3 className="text-2xl font-display font-bold text-text-main italic tracking-tight">{kpi.value}</h3>
+                  <div className="w-full md:w-64 h-40 bg-white/40 rounded-3xl border border-white/60 shadow-inner flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
+                     <Car className="w-20 h-20 text-slate-200 group-hover:text-primary/20 transition-colors" strokeWidth={1} />
+                  </div>
                </div>
             </AppCard>
-         ))}
-      </div>
 
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-         {/* Main Expenditure Chart */}
-         <AppCard showLogo={true} logoPosition="top-right" className="lg:col-span-2 p-8">
-            <div className="flex items-center justify-between mb-8">
-               <div>
-                  <h3 className="text-lg font-bold text-text-main">Expense Trends</h3>
-                  <p className="text-xs text-text-secondary">Monthly breakdown of mobility costs</p>
-               </div>
-               <button className="p-2.5 bg-bg-page rounded-xl border border-border text-text-subtle hover:text-text-main transition-all">
-                  <RefreshCcw className="w-4 h-4" />
-               </button>
-            </div>
-             <div className="h-80 w-full">
-               <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={chartData}>
-                     <defs>
-                        <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                           <stop offset="5%" stopColor="#0F1010" stopOpacity={0.05}/>
-                           <stop offset="95%" stopColor="#0F1010" stopOpacity={0}/>
-                        </linearGradient>
-                     </defs>
-                     <CartesianGrid strokeDasharray="3 3" stroke="#eee" vertical={false} />
-                     <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#ABADBB', fontSize: 10, fontWeight: 700 }} dy={10} />
-                     <YAxis axisLine={false} tickLine={false} tick={{ fill: '#ABADBB', fontSize: 10, fontWeight: 700 }} />
-                     <Tooltip 
-                        contentStyle={{ 
-                           backgroundColor: '#fff', 
-                           borderRadius: '16px', 
-                           border: '1px solid rgba(0,0,0,0.05)', 
-                           boxShadow: '0 10px 15px -3px rgba(0,0,0,0.05)',
-                           fontSize: '12px',
-                           fontWeight: '700'
-                        }} 
-                     />
-                     <Area type="monotone" dataKey="value" stroke="#0F1010" strokeWidth={3} fillOpacity={1} fill="url(#colorValue)" />
-                  </AreaChart>
-               </ResponsiveContainer>
-            </div>
-         </AppCard>
+            {/* 📍 LIVE TRACKING / LAST TRIP */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <AppCard className="p-8 space-y-6 group">
+                   <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                         <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                            <Navigation className="w-5 h-5 text-primary" />
+                         </div>
+                         <h3 className="text-sm font-black uppercase tracking-widest italic">Last Telemetry</h3>
+                      </div>
+                      <span className="caption-text font-bold text-text-helper italic">24m ago</span>
+                   </div>
+                   <div className="space-y-4">
+                      <div className="flex gap-4">
+                         <div className="flex flex-col items-center gap-1">
+                            <div className="w-2.5 h-2.5 rounded-full border-2 border-primary bg-white" />
+                            <div className="w-[2px] h-6 bg-slate-100" />
+                            <div className="w-2.5 h-2.5 rounded-full bg-accent" />
+                         </div>
+                         <div className="flex-1 space-y-4">
+                            <div className="space-y-0.5">
+                               <p className="text-[10px] uppercase font-black opacity-40 tracking-widest">Origin</p>
+                               <p className="text-[12px] font-bold text-text-main italic">Dubai Design District</p>
+                            </div>
+                            <div className="space-y-0.5">
+                               <p className="text-[10px] uppercase font-black opacity-40 tracking-widest">Destination</p>
+                               <p className="text-[12px] font-bold text-text-main italic">Mall of the Emirates</p>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                   <button onClick={() => navigate('/trips')} className="w-full py-4 rounded-2xl bg-slate-50 border border-slate-100 font-display font-black text-[10px] uppercase tracking-[0.3em] italic hover:bg-white hover:border-primary/20 transition-all">View Details</button>
+                </AppCard>
 
-         {/* Category Breakdown */}
-         <AppCard showLogo={true} logoPosition="background" logoOpacity={8} className="p-8 flex flex-col">
-            <h3 className="text-lg font-bold text-text-main mb-2">Categories</h3>
-            <p className="text-xs text-text-secondary mb-8">Cost distribution by type</p>
-            <div className="flex-1 flex flex-col justify-center">
-               <div className="h-64 h-full relative">
-                  <ResponsiveContainer width="100%" height="100%">
-                     <RePieChart>
-                        <Pie data={categorySpecs} innerRadius={70} outerRadius={90} paddingAngle={8} dataKey="value">
-                           {categorySpecs.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
-                        </Pie>
-                        <Tooltip />
-                     </RePieChart>
-                  </ResponsiveContainer>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center pt-2">
-                     <span className="text-4xl font-display font-bold text-text-main tracking-tighter italic">{categorySpecs[0]?.value || 0}%</span>
-                     <span className="text-[10px] text-text-helper font-mono font-bold uppercase tracking-widest">{categorySpecs[0]?.name || 'N/A'}</span>
-                  </div>
-               </div>
-                <div className="space-y-4 mt-6">
-                  {categorySpecs.slice(0, 3).map((cat, i) => (
-                     <div key={i} className="flex items-center justify-between text-sm">
-                        <div className="flex items-center gap-3">
-                           <div className="w-2.5 h-2.5 rounded-full" style={{ background: cat.color }} />
-                           <span className="font-bold text-text-secondary italic uppercase text-[11px] tracking-wide">{cat.name}</span>
+                <AppCard className="p-8 space-y-6">
+                   <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                         <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center">
+                            <PieChartIcon className="w-5 h-5 text-purple-600" />
+                         </div>
+                         <h3 className="text-sm font-black uppercase tracking-widest italic">Mobility Spend</h3>
+                      </div>
+                      <span className="caption-text font-bold text-text-helper italic">Monthly Cycle</span>
+                   </div>
+                   <div className="space-y-1">
+                      <p className="text-4xl price-header text-text-main">AED {stats.totalSpend.toLocaleString()}</p>
+                      <div className="flex items-center gap-2">
+                         <TrendingUp className="w-4 h-4 text-emerald-500" />
+                         <span className="text-[11px] font-black text-emerald-600 uppercase italic">+12.4% vs LMT</span>
+                      </div>
+                   </div>
+                   <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                      <motion.div initial={{ width: 0 }} animate={{ width: '65%' }} className="h-full bg-primary" />
+                   </div>
+                   <p className="caption-text italic font-bold">AED 1,840 remaining in provisioned budget.</p>
+                </AppCard>
+            </div>
+         </div>
+
+         {/* ⚡ QUICK ACTIONS & UTILITIES */}
+         <div className="space-y-8">
+            <div className="saas-card p-8 space-y-8 bg-white">
+               <h3 className="text-sm font-black uppercase tracking-widest italic flex items-center gap-3">
+                  <Zap className="w-5 h-5 text-primary" />
+                  Quick Protocols
+               </h3>
+               <div className="grid grid-cols-1 gap-4">
+                  {[
+                     { label: 'Export Tax Logs', icon: Download, action: () => {} },
+                     { label: 'Sync GPS Node', icon: RefreshCcw, action: () => fetchDashboardData() },
+                     { label: 'View Analytics', icon: BarChartIcon, action: () => navigate('/analytics') },
+                     { label: 'Access Vault', icon: Lock, action: () => navigate('/settings') }
+                  ].map((btn, i) => (
+                     <button 
+                        key={i} onClick={btn.action}
+                        className="flex items-center justify-between p-5 rounded-2xl border border-slate-100 bg-slate-50/50 hover:bg-white hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all group"
+                     >
+                        <div className="flex items-center gap-4">
+                           <div className="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center group-hover:scale-110 transition-all">
+                              <btn.icon className="w-5 h-5 text-primary" />
+                           </div>
+                           <span className="text-[11px] font-black uppercase tracking-widest italic text-text-main">{btn.label}</span>
                         </div>
-                        <span className="font-bold text-text-main">{cat.value}%</span>
-                     </div>
+                        <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                     </button>
                   ))}
                </div>
             </div>
-         </AppCard>
-      </div>
 
-      {/* Recent Activity Section */}
-      <AppCard showLogo={true} logoPosition="top-right" className="overflow-hidden">
-         <div className="p-8 border-b border-border flex items-center justify-between">
-            <div>
-               <h3 className="text-lg font-bold text-text-main">Recent Activity</h3>
-               <p className="text-xs text-text-secondary italic">Your most recent mobility logs</p>
-            </div>
-            <button onClick={() => navigate('/expenses')} className="text-xs font-bold text-accent uppercase tracking-widest hover:underline">
-               View All
-            </button>
+            <AppCard className="p-8 space-y-4 bg-primary text-white border-none shadow-xl shadow-primary/30">
+               <h3 className="text-sm font-black uppercase tracking-widest italic opacity-60">System Notification</h3>
+               <p className="body-text font-bold">Vehicle maintenance window opens in 3 days for <span className="underline decoration-white/20">Nissan Patrol V8</span></p>
+               <button className="w-full py-4 mt-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 font-black text-[10px] uppercase tracking-widest italic transition-all">Configure Service</button>
+            </AppCard>
          </div>
-          <div className="divide-y divide-border">
-            {recentExpenses.length === 0 ? (
-               <div className="p-12 text-center text-text-subtle text-[11px] font-bold uppercase tracking-widest italic">No logs found.</div>
-            ) : recentExpenses.map((expense, i) => (
-                <div key={i} className="p-6 flex items-center justify-between hover:bg-bg-page transition-all group">
-                  <div className="flex items-center gap-5">
-                     <div className="w-12 h-12 rounded-xl bg-bg-secondary/40 flex items-center justify-center text-text-helper group-hover:bg-text-main group-hover:text-white transition-all overflow-hidden p-2">
-                        <img src={logo} alt="" className="w-full h-full object-contain opacity-20 group-hover:opacity-100 transition-opacity" />
-                     </div>
-                     <div>
-                        <h4 className="font-bold text-text-main uppercase text-[13px] tracking-tight">{expense.vendor || 'Unknown Provider'}</h4>
-                        <div className="flex items-center gap-3 mt-1">
-                           <span className="text-[11px] text-text-helper font-mono font-bold">{new Date(expense.date).toLocaleDateString()}</span>
-                           <span className="w-1 h-1 rounded-full bg-text-subtle" />
-                           <span className="text-[11px] text-text-helper font-mono font-bold italic">{expense.vehicles?.name}</span>
-                        </div>
-                     </div>
-                  </div>
-                  <div className="text-right">
-                     <p className="font-display font-bold text-text-main">AED {parseFloat(expense.amount).toLocaleString()}</p>
-                     <p className="text-[10px] text-text-helper font-bold uppercase tracking-wider">{expense.category}</p>
-                  </div>
-               </div>
-            ))}
-         </div>
-          <div className="p-5 bg-white/50 flex justify-center">
-            <button 
-               onClick={() => setIsExpenseModalOpen(true)}
-               className="flex items-center gap-2 text-[10px] font-bold text-text-helper uppercase tracking-widest hover:text-text-main transition-all"
-            >
-               <PlusCircle className="w-4 h-4" />
-               Log New Mobility Expense
-            </button>
-         </div>
-      </AppCard>
+      </div>
       
-       {/* Footer Info */}
+       {/* 🧩 FOOTER STATUS */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-8 px-2 text-text-subtle">
          <div className="flex items-center gap-8 text-[11px] font-bold uppercase tracking-[0.2em] italic">
             <div className="flex items-center gap-2">
                <Signal className="w-4 h-4 text-emerald-500" />
-               Node: Primary Sync
+               Node: Control-Alpha
             </div>
             <div className="flex items-center gap-2">
-               <Heart className="w-4 h-4 text-accent/40" />
-               Mobility OS v6.0
+               <Lock className="w-4 h-4 text-primary/40" />
+               AES-256 Provisioned
             </div>
          </div>
-         <p className="text-[11px] font-bold uppercase tracking-[0.4em]">Secured by AutoTracker Precision</p>
+         <p className="text-[11px] font-bold uppercase tracking-[0.4em]">AutoTracker Precision Architecture</p>
       </div>
     </div>
   )
