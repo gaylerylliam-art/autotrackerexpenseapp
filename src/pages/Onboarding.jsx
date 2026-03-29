@@ -230,35 +230,41 @@ const Onboarding = () => {
                      <p className="text-[12px] text-text-secondary font-mono font-bold uppercase tracking-[0.4em]">Select the best fit for your needs</p>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                      {PLANS.map((plan, i) => (
                          <motion.div 
                             key={plan.id}
                             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
+                            whileHover={{ y: -8 }}
                             className={cn(
-                               "saas-card p-12 flex flex-col justify-between group h-full relative bg-bg-card",
-                               plan.highlight && "border-accent/40 ring-4 ring-accent/5"
+                               "saas-card p-10 flex flex-col justify-between group h-full relative border-slate-100",
+                               plan.highlight ? "ring-2 ring-primary bg-white shadow-elevated z-10 scale-105" : "bg-white/80"
                             )}
                          >
                            {plan.highlight && (
-                              <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-2 bg-primary text-white text-[9px] font-black uppercase tracking-[0.3em] italic rounded-full shadow-glow">
-                                 {plan.badge}
+                              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-6 py-2 bg-primary text-white text-[9px] font-black uppercase tracking-[0.3em] italic rounded-full shadow-lg shadow-primary/20 z-20">
+                                 MOST POPULAR NODE
                               </div>
                            )}
-                           <div className="space-y-12">
+                           <div className="space-y-10">
                               <div className="space-y-4">
-                                 <span className={cn("text-[10px] font-mono font-black uppercase tracking-widest italic opacity-60 leading-none block", plan.color)}>{plan.desc}</span>
-                                  <h3 className="text-4xl font-display text-text-main italic tracking-tighter">{plan.name}</h3>
-                                 <div className="flex items-end gap-3 pt-4">
-                                    <span className="text-5xl font-mono font-bold italic tracking-tighter text-text-main">{plan.price}</span>
-                                    <span className="text-[11px] text-text-helper uppercase font-mono font-bold tracking-widest mb-1 italic">/MON</span>
+                                 <span className={cn("text-[10px] font-mono font-black uppercase tracking-[0.3em] italic opacity-60 leading-none block", plan.color)}>{plan.desc}</span>
+                                  <h3 className="text-3xl font-display font-black text-text-main italic tracking-tighter uppercase">{plan.name}</h3>
+                                 <div className="flex flex-col pt-2">
+                                    <div className="flex items-baseline gap-2">
+                                       <span className="text-[14px] font-black text-primary italic">AED</span>
+                                       <span className="text-6xl font-display font-black italic tracking-tighter text-text-main leading-none">
+                                          {plan.price.replace('AED ', '')}
+                                       </span>
+                                    </div>
+                                    <span className="text-[10px] text-text-helper uppercase font-black tracking-widest mt-1 italic opacity-60">Provisioning Cycle</span>
                                  </div>
                               </div>
-                              <div className="space-y-6 border-t border-border pt-10">
+                              <div className="space-y-5 border-t border-slate-50 pt-8">
                                  {plan.features.map((f, j) => (
                                      <div key={j} className="flex items-center gap-4 group/feat">
-                                        <CheckCircle2 className="w-5 h-5 text-accent" />
-                                        <span className="text-[11px] font-display font-semibold text-text-secondary leading-none uppercase italic group-hover/feat:text-text-title transition-colors">{f}</span>
+                                        <CheckCircle2 className={cn("w-5 h-5", plan.highlight ? "text-primary" : "text-emerald-500")} />
+                                        <span className="text-[11px] font-bold text-text-helper leading-none uppercase italic group-hover/feat:text-text-main transition-colors">{f}</span>
                                      </div>
                                  ))}
                               </div>
@@ -267,11 +273,20 @@ const Onboarding = () => {
                               onClick={() => handleCompleteOnboarding(plan.id)}
                               disabled={loading}
                               className={cn(
-                                 "w-full h-16 btn-primary mt-12 text-[10px] font-black italic shadow-premium relative overflow-hidden",
-                                 plan.id === 'free' ? "bg-bg-page text-text-secondary border border-border hover:bg-white" : ""
+                                 "w-full h-16 mt-10 rounded-2xl text-[10px] uppercase font-black tracking-[0.3em] transition-all duration-300 flex items-center justify-center gap-3 italic group/btn",
+                                 plan.highlight 
+                                   ? "bg-primary text-white shadow-xl shadow-primary/20 hover:shadow-2xl hover:scale-[1.02]" 
+                                   : "bg-slate-50 text-text-main border border-slate-100 hover:bg-white hover:border-primary/20 hover:shadow-lg"
                               )}
                            >
-                              {loading ? <Loader2 className="w-6 h-6 animate-spin text-white mx-auto" /> : `Select ${plan.name} Plan`}
+                              {loading ? (
+                                 <Loader2 className="w-5 h-5 animate-spin mx-auto" />
+                              ) : (
+                                 <>
+                                    <span>{plan.id === 'free' ? 'START FREE' : plan.id === 'pro' ? 'GET PRO' : 'GO FLEET'}</span>
+                                    <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                                 </>
+                              )}
                            </button>
                         </motion.div>
                      ))}
