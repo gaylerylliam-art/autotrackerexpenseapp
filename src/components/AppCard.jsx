@@ -39,6 +39,9 @@ const AppCard = ({
       className={cn("saas-card relative overflow-hidden group font-body", className)}
       {...props}
     >
+      {/* 🧊 3D Light Layer */}
+      <div className="glass-depth z-0 opacity-40 group-hover:opacity-70 transition-opacity duration-500" />
+
       {/* Background Watermark Mode (iPhone 13 / SaaS Minimal) */}
       {showLogo && logoPosition === 'background' && (
         <div 
