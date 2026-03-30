@@ -44,13 +44,12 @@ const Layout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-bg-page flex flex-col lg:flex-row relative overflow-x-hidden">
+    <div className="min-h-screen flex flex-col lg:flex-row relative overflow-x-hidden selection:bg-white/20 selection:text-white">
       
-      {/* 1. Desktop Sidebar */}
-      <aside className="hidden lg:flex flex-col w-72 h-screen sticky top-0 bg-brand-gradient p-7 z-50 shadow-[10px_0_30px_rgba(10,102,194,0.15)] overflow-hidden">
+      {/* 1. Desktop Sidebar (Glassmorphic) */}
+      <aside className="hidden lg:flex flex-col w-72 h-screen sticky top-0 bg-white/5 backdrop-blur-3xl border-r border-white/10 p-7 z-50 overflow-hidden shadow-[20px_0_50px_rgba(0,0,0,0.1)]">
         {/* Sidebar Glows */}
-        <div className="absolute top-[-100px] left-[-100px] w-64 h-64 bg-white/20 blur-[120px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-[-50px] right-[-50px] w-48 h-48 bg-white/10 blur-[80px] rounded-full pointer-events-none" />
+        <div className="absolute top-[-100px] left-[-100px] w-64 h-64 bg-accent/20 blur-[120px] rounded-full pointer-events-none" />
         
         <div className="mb-10 mt-2 relative z-10">
           <Link to="/">
@@ -58,9 +57,9 @@ const Layout = () => {
           </Link>
         </div>
 
-        {/* Organization Switcher */}
+        {/* Organization Switcher (Glass) */}
         <div className="mb-8 relative z-10 space-y-2">
-          <span className="caption text-white/40 ml-1">Current Node</span>
+          <span className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] ml-1">Connectivity Node</span>
           <button 
             onClick={() => setIsOrgMenuOpen(!isOrgMenuOpen)}
             className="w-full h-12 bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 rounded-xl p-3 flex items-center gap-3 transition-all text-white text-left group"
@@ -70,7 +69,7 @@ const Layout = () => {
             </div>
             <div className="flex-1 overflow-hidden">
               <p className="text-[12px] font-semibold truncate leading-none mb-0.5">{currentOrg?.name || 'Loading...'}</p>
-              <p className="text-[10px] text-white/40 font-medium truncate uppercase leading-none mb-0 opacity-80">{currentOrg?.role || 'Admin'}</p>
+              <p className="text-[9px] text-white/40 font-bold truncate uppercase leading-none mb-0 opacity-80">{currentOrg?.role || 'Admin'}</p>
             </div>
             <ChevronRight className={cn("w-3.5 h-3.5 text-white/40 transition-transform", isOrgMenuOpen && "rotate-90")} />
           </button>
@@ -84,11 +83,11 @@ const Layout = () => {
               className={cn(
                 "flex items-center gap-3 px-4 h-11 rounded-xl text-[13px] font-medium transition-all group",
                 isActive(item.path) 
-                  ? "bg-white text-primary shadow-sm" 
-                  : "text-white/70 hover:bg-white/5 hover:text-white"
+                  ? "bg-white text-primary shadow-[0_8px_20px_rgba(0,0,0,0.1)]" 
+                  : "text-white/60 hover:bg-white/5 hover:text-white"
               )}
             >
-              <item.icon className={cn("w-4.5 h-4.5", isActive(item.path) ? "text-primary stroke-[2]" : "text-white/40 group-hover:text-white")} />
+              <item.icon className={cn("w-4.5 h-4.5 transition-colors", isActive(item.path) ? "text-primary stroke-[2.5]" : "text-white/30 group-hover:text-white")} />
               {item.name}
             </Link>
           ))}
@@ -101,9 +100,9 @@ const Layout = () => {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-[13px] font-semibold text-white leading-none mb-1 truncate">John Wick</p>
-              <p className="text-[10px] text-white/40 font-medium uppercase leading-none mb-0">Authorized</p>
+              <p className="text-[9px] text-white/30 font-bold uppercase leading-none mb-0">Identity Verified</p>
             </div>
-            <ChevronRight className="w-4 h-4 text-white/40" />
+            <ChevronRight className="w-4 h-4 text-white/20" />
           </Link>
         </div>
       </aside>
@@ -111,35 +110,33 @@ const Layout = () => {
       {/* 2. Content Shell */}
       <div className="flex-1 flex flex-col min-h-screen relative overflow-hidden">
         
-        {/* Immersive Brand Gradient Layer (Mobile Header Area) */}
-        <div className="absolute top-0 left-0 right-0 h-[320px] bg-app-header pointer-events-none z-0 lg:hidden" />
-        
-        {/* Decorative Desktop Glow */}
-        <div className="absolute top-[-200px] right-[-200px] w-[500px] h-[500px] bg-primary/5 blur-[120px] rounded-full pointer-events-none hidden lg:block" />
+        {/* Ambient Page Glows */}
+        <div className="absolute top-[-300px] right-[-300px] w-[800px] h-[800px] bg-white/5 blur-[160px] rounded-full pointer-events-none z-0" />
+        <div className="absolute bottom-[-200px] left-[-200px] w-[500px] h-[500px] bg-accent/5 blur-[120px] rounded-full pointer-events-none z-0" />
 
-        {/* Desktop Header */}
-        <header className="hidden lg:flex h-20 items-center justify-between px-10 sticky top-0 bg-white/80 backdrop-blur-md border-b border-slate-100 z-40">
+        {/* Desktop Header (Glass) */}
+        <header className="hidden lg:flex h-20 items-center justify-between px-10 sticky top-0 bg-white/5 backdrop-blur-xl border-b border-white/5 z-40">
           <div>
-            <h2 className="mb-0">Control Panel</h2>
-            <p className="caption mb-0 normal-case tracking-normal">System operational · Node: Alpha-7</p>
+            <h1 className="text-[22px] mb-0 text-white">System Monitor</h1>
+            <p className="text-[11px] text-white/40 font-bold uppercase tracking-widest mt-0.5">Connectivity: Operational · Core: Alpha-7</p>
           </div>
 
           <div className="flex items-center gap-6">
             <div className="relative group w-72">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-focus-within:text-white transition-colors" />
               <input 
-                placeholder="Search operations..." 
-                className="w-full h-10 pl-11 pr-4 bg-slate-50 border border-slate-100 rounded-xl text-[13px] focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium" 
+                placeholder="Query data registry..." 
+                className="w-full h-10 pl-11 pr-4 bg-white/5 border border-white/10 rounded-xl text-[13px] text-white placeholder:text-white/20 focus:outline-none focus:bg-white/10 focus:border-white/20 focus:ring-4 focus:ring-white/5 transition-all font-medium" 
               />
             </div>
             <div className="flex items-center gap-4 relative">
               <button 
                 onClick={() => setIsNotificationOpen(!isNotificationOpen)}
-                className="h-10 w-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-500 hover:text-primary transition-all relative"
+                className="h-10 w-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all relative"
               >
                 <Bell className="w-5 h-5" />
                 {unreadCount > 0 && (
-                  <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 rounded-full bg-accent" />
+                  <span className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-accent border-2 border-primary" />
                 )}
               </button>
               <NotificationDropdown 
@@ -148,49 +145,45 @@ const Layout = () => {
               />
               <button 
                 onClick={() => setIsExpenseModalOpen(true)}
-                className="h-10 px-6 rounded-xl bg-text-primary text-white font-semibold text-[13px] hover:opacity-90 transition-all flex items-center gap-2"
+                className="h-10 px-6 rounded-xl bg-white text-primary font-bold text-[13px] hover:bg-opacity-90 active:scale-95 shadow-lg shadow-black/10 transition-all flex items-center gap-2"
               >
                 <Plus className="w-4 h-4" />
-                Add Ledger
+                Record Nexus
               </button>
             </div>
           </div>
         </header>
 
-        {/* Mobile Header (SaaS Minimal) */}
-        <header className="lg:hidden h-14 flex items-center justify-between px-5 bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-40">
+        {/* Mobile Header (True Glass) */}
+        <header className="lg:hidden h-16 flex items-center justify-between px-5 bg-white/10 backdrop-blur-2xl border-b border-white/10 sticky top-0 z-40">
           <div className="flex items-center gap-3">
-            <Logo type="icon" variant="dark" className="w-10 h-10" />
+            <Logo type="icon" variant="light" className="w-10 h-10" />
             <div className="flex flex-col">
-              <span className="text-[17px] font-semibold text-text-primary leading-none">
-                {navItems.find(i => isActive(i.path))?.name || 'Dashboard'}
+              <span className="text-[17px] font-bold text-white leading-none">
+                {navItems.find(i => isActive(i.path))?.name || 'Monitor'}
               </span>
-              <span className="text-[10px] text-text-secondary font-medium mt-0.5 uppercase tracking-wider">Alpha-7</span>
+              <span className="text-[9px] text-white/40 font-bold mt-1 uppercase tracking-[0.2em] leading-none">System Active</span>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <button className="w-9 h-9 flex items-center justify-center text-slate-400">
-              <Search className="w-5 h-5" />
+          <div className="flex items-center gap-2">
+            <button className="w-10 h-10 flex items-center justify-center text-white/50">
+              <Search className="w-5.5 h-5.5" />
             </button>
-            <button onClick={() => setIsNotificationOpen(!isNotificationOpen)} className="w-9 h-9 flex items-center justify-center text-slate-400 relative">
-              <Bell className="w-5 h-5" />
-              {unreadCount > 0 && <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-accent border-2 border-white" />}
-            </button>
-            <button onClick={() => setIsMobileMenuOpen(true)} className="w-9 h-9 flex items-center justify-center text-slate-600 ml-1">
-              <Menu className="w-6 h-6" />
+            <button onClick={() => setIsMobileMenuOpen(true)} className="w-10 h-10 flex items-center justify-center text-white ml-2">
+              <Menu className="w-7 h-7" />
             </button>
           </div>
         </header>
 
         {/* Page Content Viewport */}
-        <main className="flex-1 relative z-10 px-5 py-6 lg:p-10 max-w-7xl mx-auto w-full pb-28 lg:pb-12">
+        <main className="flex-1 relative z-10 px-5 py-6 lg:p-10 max-w-7xl mx-auto w-full pb-32 lg:pb-12">
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
             >
               <Outlet context={{ setIsExpenseModalOpen, setIsVehicleModalOpen }} />
             </motion.div>
@@ -198,72 +191,75 @@ const Layout = () => {
         </main>
       </div>
 
-      {/* 3. Mobile Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 h-16 bg-white/95 backdrop-blur-xl border-t border-slate-100 px-6 flex items-center justify-between lg:hidden z-50 pb-safe">
-        {navItems.slice(0, 4).map((item) => (
-          <Link 
-            key={item.path} 
-            to={item.path}
-            className={cn(
-              "flex-1 flex flex-col items-center gap-1 transition-all h-full justify-center",
-              isActive(item.path) ? "text-primary" : "text-text-secondary/60"
-            )}
+      {/* 3. Mobile Bottom Navigation (Floating Glass) */}
+      <div className="fixed bottom-6 left-6 right-6 lg:hidden z-50">
+        <nav className="h-16 bg-white/10 backdrop-blur-2xl border border-white/10 rounded-[24px] px-6 flex items-center justify-between shadow-2xl shadow-black/20">
+          {navItems.slice(0, 4).map((item) => (
+            <Link 
+              key={item.path} 
+              to={item.path}
+              className={cn(
+                "flex-1 flex flex-col items-center gap-1 transition-all h-full justify-center relative",
+                isActive(item.path) ? "text-white" : "text-white/40"
+              )}
+            >
+              <item.icon className={cn("w-6 h-6", isActive(item.path) && "stroke-[2.5]")} />
+              <span className="text-[9px] font-bold tracking-tight uppercase">{item.name}</span>
+              {isActive(item.path) && (
+                <motion.div layoutId="nav-glow" className="absolute -bottom-1 w-1 h-1 bg-accent rounded-full shadow-[0_0_10px_rgba(0,198,255,1)]" />
+              )}
+            </Link>
+          ))}
+          <button 
+            onClick={() => setIsExpenseModalOpen(true)}
+            className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-primary shadow-xl active:scale-90 transition-all ml-2"
           >
-            <item.icon className={cn("w-5.5 h-5.5", isActive(item.path) && "stroke-[2]")} />
-            <span className="text-[10px] font-medium tracking-tight h-3 overflow-hidden">{item.name}</span>
-          </Link>
-        ))}
-      </nav>
+            <Plus className="w-7 h-7 stroke-[3]" />
+          </button>
+        </nav>
+      </div>
 
-      {/* Floating Action Button (FAB) */}
-      <button 
-        onClick={() => setIsExpenseModalOpen(true)}
-        className="fixed lg:hidden bottom-20 right-6 w-14 h-14 rounded-full bg-text-primary text-white shadow-xl shadow-slate-900/20 flex items-center justify-center z-50 hover:bg-slate-800 active:scale-95 transition-all"
-      >
-        <Plus className="w-8 h-8 stroke-[2.5]" />
-      </button>
-
-      {/* Mobile Sidebar Overlay */}
+      {/* Mobile Sidebar Overlay (Glass) */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
             <motion.div 
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] lg:hidden"
+              className="fixed inset-0 bg-black/60 backdrop-blur-md z-[100] lg:hidden"
               onClick={() => setIsMobileMenuOpen(false)}
             />
             <motion.div 
               initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
-              className="fixed right-0 top-0 bottom-0 w-72 bg-white z-[110] p-8 lg:hidden shadow-2xl border-l border-slate-100"
+              className="fixed right-0 top-0 bottom-0 w-80 bg-slate-900/40 backdrop-blur-3xl z-[110] p-8 lg:hidden shadow-2xl border-l border-white/10"
             >
-              <div className="flex items-center justify-between mb-8">
-                <p className="text-[10px] font-bold text-text-secondary uppercase tracking-[0.3em] leading-none">Management</p>
-                <button onClick={() => setIsMobileMenuOpen(false)} className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-text-secondary">
-                  <X className="w-5 h-5" />
+              <div className="flex items-center justify-between mb-10">
+                <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.4em] leading-none">Infrastructure</p>
+                <button onClick={() => setIsMobileMenuOpen(false)} className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/60">
+                  <X className="w-6 h-6" />
                 </button>
               </div>
-              <nav className="space-y-4">
-                <Link to="/settings" className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl mb-8 border border-slate-100">
-                  <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&h=100&fit=crop" className="w-full h-full object-cover grayscale" />
+              <nav className="space-y-6">
+                <Link to="/settings" className="flex items-center gap-4 p-5 bg-white/5 rounded-[24px] mb-10 border border-white/10 border-t-white/20">
+                  <div className="w-12 h-12 rounded-full bg-white/10 overflow-hidden border border-white/20">
+                    <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&h=100&fit=crop" className="w-full h-full object-cover" />
                   </div>
                   <div>
-                    <p className="text-[13px] font-bold text-text-primary leading-none">John Wick</p>
-                    <p className="text-[10px] text-text-secondary font-medium uppercase tracking-widest mt-1">Authorized</p>
+                    <p className="text-[15px] font-bold text-white leading-none">John Wick</p>
+                    <p className="text-[10px] text-accent font-black uppercase tracking-widest mt-1.5 underline decoration-accent/30 decoration-2">Administrator</p>
                   </div>
                 </Link>
-                <div className="space-y-2">
-                  <Link to="/fleet" className="flex items-center gap-3 px-4 h-12 rounded-2xl text-[12px] font-semibold text-text-secondary hover:bg-slate-50">
-                    <LayoutGrid className="w-5 h-5 text-text-secondary/40" />
+                <div className="space-y-3">
+                  <Link to="/fleet" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-4 px-5 h-14 rounded-2xl text-[14px] font-bold text-white/70 hover:text-white hover:bg-white/5 transition-all">
+                    <LayoutGrid className="w-6 h-6 text-white/30" />
                     Fleet Intelligence
                   </Link>
-                  <Link to="/pricing" className="flex items-center gap-3 px-4 h-12 rounded-2xl text-[12px] font-semibold text-primary hover:bg-slate-50">
-                    <Zap className="w-5 h-5" />
-                    Scale Account
+                  <Link to="/pricing" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-4 px-5 h-14 rounded-2xl text-[14px] font-bold text-accent hover:bg-accent/10 transition-all">
+                    <Zap className="w-6 h-6" />
+                    Ascend Account
                   </Link>
-                  <button onClick={() => {}} className="flex items-center gap-3 px-4 h-12 rounded-2xl text-[12px] font-semibold text-red-500 hover:bg-red-50 w-full text-left mt-10">
-                    <LogOut className="w-5 h-5" />
-                    Terminate Session
+                  <button onClick={() => {}} className="flex items-center gap-4 px-5 h-14 rounded-2xl text-[14px] font-bold text-rose-400 hover:bg-rose-500/10 w-full text-left mt-12">
+                    <LogOut className="w-6 h-6 opaicy-50" />
+                    Terminate Connection
                   </button>
                 </div>
               </nav>

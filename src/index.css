@@ -6,36 +6,37 @@
   --font-mono: "Fira Code", monospace;
   
   --color-primary: #0A66C2;
+  --color-primary-mid: #1E88E5;
+  --color-primary-light: #00C6FF;
   --color-accent: #00C6FF;
   --color-bg-page: #F8FAFC;
   
   --color-text-primary: #0F172A;
   --color-text-secondary: #64748B;
-  --color-text-accent: #0A66C2;
-  
-  --gradient-brand: linear-gradient(135deg, #0A66C2 0%, #1E88E5 50%, #00C6FF 100%);
 }
 
 @layer base {
   :root {
     --primary: #0A66C2;
+    --primary-mid: #1E88E5;
+    --primary-light: #00C6FF;
     --accent: #00C6FF;
     --bg-page: #F8FAFC;
     --text-primary: #0F172A;
     --text-secondary: #64748B;
-    --radius-main: 12px;
+    --gradient-brand: linear-gradient(135deg, #0A66C2 0%, #1E88E5 50%, #00C6FF 100%);
   }
 
   body {
-    background-color: var(--bg-page);
+    @apply antialiased min-h-screen;
+    background: var(--gradient-brand);
+    background-attachment: fixed;
     color: var(--text-primary);
     font-family: var(--font-body);
-    @apply antialiased;
   }
 
-  /* Mobile-First SaaS Typography (iPhone 13 Optimized) */
-  h1 { @apply font-display font-semibold text-[22px] lg:text-[28px] leading-tight text-text-primary tracking-tight; }
-  h2 { @apply font-display font-medium text-[14px] lg:text-[16px] leading-relaxed text-text-secondary font-normal; }
+  h1 { @apply font-display font-semibold text-[22px] lg:text-[28px] leading-tight text-white tracking-tight; }
+  h2 { @apply font-display font-medium text-[14px] lg:text-[16px] leading-relaxed text-white/70 font-normal; }
   
   .card-label { @apply text-[11px] lg:text-[13px] font-medium text-text-secondary tracking-[0.02em] leading-none; }
   .metric-value { @apply text-[20px] lg:text-[28px] font-bold text-text-primary tracking-tight leading-none; }
@@ -49,25 +50,29 @@
 
 @layer components {
    .saas-card {
-      @apply bg-white border border-slate-100 rounded-[22px] transition-all duration-300;
+      @apply bg-white/90 backdrop-blur-md border border-white/20 rounded-[22px] transition-all duration-300;
       box-shadow: 
-         0 2px 4px rgba(0,0,0,0.02),
+         0 4px 6px rgba(0,0,0,0.02),
          0 10px 40px -10px rgba(0,0,0,0.04),
          inset 0 1px 1px rgba(255,255,255,1);
    }
 
    .saas-card:hover {
-      @apply border-slate-200;
+      @apply border-white/40 bg-white/95;
       box-shadow: 
-         0 4px 8px rgba(0,0,0,0.02),
+         0 8px 12px rgba(0,0,0,0.02),
          0 20px 50px -12px rgba(0,0,0,0.08),
          inset 0 1px 1.5px rgba(255,255,255,1);
    }
 
    .glass-depth {
       @apply absolute inset-0 pointer-events-none;
-      background: radial-gradient(circle at top left, rgba(255,255,255,0.8) 0%, transparent 40%),
-                  radial-gradient(circle at bottom right, rgba(10,102,194,0.03) 0%, transparent 40%);
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.4) 0%, transparent 40%),
+                  radial-gradient(circle at bottom right, rgba(0,0,0,0.02) 0%, transparent 40%);
+   }
+
+   .glass-panel {
+      @apply bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl;
    }
 
   .btn-primary {
@@ -75,25 +80,25 @@
   }
 
   .btn-outline {
-     @apply h-10 px-4 rounded-lg bg-white border border-slate-200 text-text-primary hover:bg-slate-50 transition-all flex items-center justify-center gap-2;
+     @apply h-10 px-4 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all flex items-center justify-center gap-2;
   }
 
   .input-field {
-    @apply w-full h-10 px-3 rounded-lg bg-white border border-slate-200 text-text-primary placeholder:text-text-secondary/40 focus:border-primary/40 focus:ring-4 focus:ring-primary/5 outline-none transition-all;
+    @apply w-full h-10 px-3 rounded-lg bg-white/5 backdrop-blur-md border border-white/10 text-white placeholder:text-white/40 focus:border-white/40 focus:ring-4 focus:ring-white/5 outline-none transition-all;
   }
 }
+
 @layer utilities {
   .bg-brand-gradient {
     background: var(--gradient-brand);
   }
 
   .bg-app-header {
-    background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-bg-page) 100%);
-    opacity: 0.08;
+    background: linear-gradient(180deg, rgba(10, 102, 194, 0.4) 0%, rgba(10, 102, 194, 0) 100%);
   }
 }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: #CBD5E1; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
