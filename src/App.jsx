@@ -44,7 +44,7 @@ function App() {
     <Router>
       <NotificationProvider>
         <OrganizationProvider>
-          <div className="min-h-screen text-text-main font-sans selection:bg-primary/10 overflow-x-hidden relative bg-bg-page">
+          <div className="min-h-screen text-text-main font-sans selection:bg-white/10 selection:text-white overflow-x-hidden relative bg-transparent">
             <AnimatePresence mode="wait">
               {showSplash && (
                 <SplashScreen key="splash" onComplete={handleSplashComplete} />
